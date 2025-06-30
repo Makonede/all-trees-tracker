@@ -1,0 +1,12 @@
+[submodule "botw-symbols"]
+	path = backend/lib/botw-symbols
+	url = https://github.com/Pistonight/botw-symbols.git
+[submodule "botw"]
+	path = backend/lib/botw
+	url = https://github.com/zeldaret/botw.git
+[submodule "sead"]
+	path = backend/lib/sead
+	url = https://github.com/open-ead/sead.git
+[submodule "nnheaders"]
+	path = backend/lib/nnheaders
+	url = https://github.com/open-ead/nnheaders.git

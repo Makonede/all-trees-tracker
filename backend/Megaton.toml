@@ -1,0 +1,13 @@
+[module]
+name = "all-trees-tracker"
+title-id = 0x01007EF00011E000
+
+[build]
+sources = ["src", "lib/botw-symbols/src"]
+includes = ["lib/botw-symbols/include", "lib/botw/src", "lib/nnheaders/include", "lib/sead/include"]
+ldscripts = ["lib/botw-symbols/ld/ld160.ld"]
+
+[build.flags]
+common = ["-DNNSDK", "-fPIC"]
+c = ["-DBOTW_VERSION=160"]
+cxx = ["-std=gnu++2c"]

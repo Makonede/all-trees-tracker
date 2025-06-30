@@ -1,0 +1,58 @@
+name: Build Megaton project
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: devkitpro/devkita64
+      env:
+        CARGO_TERM_COLOR: always
+    steps:
+      - id: checkout
+        name: Check out repository
+        uses: actions/checkout@v4
+      - id: build-essential
+        name: Install build-essential
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential
+      - id: rustup
+        name: Install Rust
+        run: |
+          curl -fsSL --tlsv1.3 https://sh.rustup.rs | bash -s -- -vy --no-modify-path
+          realpath ~/.cargo/bin >> "$GITHUB_PATH"
+      - id: clone-megaton
+        name: Clone Megaton
+        run: git clone https://github.com/Pistonite/megaton.git
+      - id: build-megaton
+        name: Build Megaton
+        run: |
+          echo "MEGATON_HOME=`pwd`" >> "$GITHUB_ENV"
+          cargo run -vr --bin megaton-buildtool -- install || true
+          chmod +x bin/megaton
+          realpath bin >> "$GITHUB_PATH"
+        working-directory: megaton
+      - id: megaton
+        name: Install Megaton
+        run: bash -c '. megaton install -V'
+      - id: build
+        name: Build project
+        run: bash -c '. megaton build -LV'
+        working-directory: backend
+      - id: package
+        name: Package artifact
+        run: |
+          mkdir out
+          cp *.nso out/subsdk9
+          cp main.npdm out
+        working-directory: backend/target/megaton/none
+      - id: upload
+        name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: botw-autosplitter-client
+          path: ${{ github.workspace }}/target/megaton/none/out

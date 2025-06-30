@@ -1,0 +1,92 @@
+name: Build Tauri app
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+env:
+  CI: true
+  CARGO_TERM_COLOR: always
+jobs:
+  build:
+    strategy:
+      matrix:
+        platform: [ubuntu-latest, windows-2025, macos-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - id: checkout
+        name: Check out repository
+        uses: actions/checkout@v4
+      - id: tauri-dependencies
+        name: Install Tauri dependencies (Ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          sudo apt update
+          sudo apt install -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
+      - id: rustup-unix
+        name: Install Rust (UNIX)
+        if: matrix.platform != 'windows-2025'
+        run: |
+          curl -fsSL --tlsv1.3 https://sh.rustup.rs | bash -s -- -vy --no-modify-path
+          realpath ~/.cargo/bin >> "$GITHUB_PATH"
+      - id: rustup-windows
+        name: Install Rust (Windows)
+        if: matrix.platform == 'windows-2025'
+        run: |
+          rustup update
+          rustup default stable-msvc
+      - id: rust-macos
+        name: Add aarch64-apple-darwin target (macOS only)
+        if: matrix.platform == 'macos-latest'
+        run: rustup target add aarch64-apple-darwin
+      - id: jetbrains-runtime
+        name: Install JetBrains Runtime (Ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
+        uses: actions/setup-java@v4
+        with:
+          distribution: jetbrains
+          java-version: 21
+      - id: ndk-home
+        name: Set NDK_HOME (Ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
+        run: echo "NDK_HOME=$ANDROID_NDK_HOME" >> "$GITHUB_ENV"
+      - id: rust-android
+        name: Install Android Rust targets (Ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
+        run: rustup target add aarch64-linux-android x86_64-linux-android
+      - id: bun
+        name: Install Bun
+        uses: oven-sh/setup-bun@v2
+      - id: dependencies
+        name: Install app dependencies
+        run: bun i --frozen-lockfile
+        working-directory: frontend
+      - id: build
+        name: Build app
+        uses: tauri-apps/tauri-action@v0
+        with:
+          args: ${{ matrix.platform == 'macos-latest' && '-t universal-apple-darwin' || '' }}
+      - id: upload-linux
+        name: Upload Linux artifact
+        if: matrix.platform == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries-linux
+          path: |
+            ${{ github.workspace }}/frontend/src-tauri/target/release/bundle/**/*.deb
+            ${{ github.workspace }}/frontend/src-tauri/target/release/bundle/**/*.rpm
+            ${{ github.workspace }}/frontend/src-tauri/target/release/bundle/**/*.AppImage
+      - id: upload-windows
+        name: Upload Windows artifact
+        if: matrix.platform == 'windows-2025'
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries-windows
+          path: ${{ github.workspace }}/frontend/src-tauri/target/release/bundle/**/*.exe
+      - id: upload-macos
+        name: Upload macOS artifact
+        if: matrix.platform == 'macos-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries-macos
+          path: ${{ github.workspace }}/frontend/src-tauri/target/release/bundle/**/*.dmg
