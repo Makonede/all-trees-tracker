@@ -28,6 +28,7 @@ jobs:
       - id: clone-megaton
         name: Clone Megaton
         run: git clone https://github.com/Pistonite/megaton.git
+        working-directory: ${{ runner.temp }}
       - id: build-megaton
         name: Build Megaton
         run: |
@@ -35,7 +36,7 @@ jobs:
           cargo run -vr --bin megaton-buildtool -- install || true
           chmod +x bin/megaton
           realpath bin >> "$GITHUB_PATH"
-        working-directory: megaton
+        working-directory: ${{ runner.temp }}/megaton
       - id: megaton
         name: Install Megaton
         run: bash -c '. megaton install -V'

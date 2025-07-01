@@ -64,6 +64,15 @@ jobs:
         name: Add Android Rust targets (Ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
         run: rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
+      - id: android-signing
+        name: Setup Android signing (Ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          echo "password=${{ secrets.ANDROID_KEY_PASSWORD }}" > keystore.properties
+          echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> keystore.properties
+          base64 -d <<< "${{ secrets.ANDROID_KEY_BASE64 }}" > $RUNNER_TEMP/keystore.jks
+          echo "storeFile=$RUNNER_TEMP/keystore.jks" >> keystore.properties
+        working-directory: frontend/src-tauri/gen/android
       - id: bun
         name: Install Bun
         uses: oven-sh/setup-bun@v2
