@@ -8,6 +8,7 @@ jobs:
   build:
     env:
       CI: true
+      DO_NOT_TRACK: 1
       CARGO_TERM_COLOR: always
     strategy:
       matrix:
@@ -70,6 +71,7 @@ jobs:
         name: Build app for desktop
         uses: tauri-apps/tauri-action@v0
         with:
+          projectPath: ${{ github.workspace }}/frontend
           tauriScript: turbo tauri --
           args: ${{ matrix.platform == 'macos-latest' && '-t universal-apple-darwin' || '' }}
       - id: build-android
@@ -77,6 +79,7 @@ jobs:
         if: matrix.platform == 'ubuntu-latest'
         uses: tauri-apps/tauri-action@v0
         with:
+          projectPath: ${{ github.workspace }}/frontend
           tauriScript: turbo tauri -- android
       - id: upload-linux
         name: Upload Linux artifact
@@ -102,4 +105,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: binaries-macos
-          path: ${{ github.workspace }}/frontend/src-tauri/target/release/bundle/**/*.dmg
+          path: ${{ github.workspace }}/frontend/src-tauri/target/universal-apple-darwin/release/bundle/**/*.dmg
