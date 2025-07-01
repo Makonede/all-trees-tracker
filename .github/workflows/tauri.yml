@@ -40,7 +40,7 @@ jobs:
           rustup update
           rustup default stable-msvc
       - id: rust-macos
-        name: Add macOS targets (macOS only)
+        name: Add macOS Rust targets (macOS only)
         if: matrix.platform == 'macos-latest'
         run: rustup target add aarch64-apple-darwin x86_64-apple-darwin
       - id: jetbrains-runtime
@@ -61,9 +61,9 @@ jobs:
         if: matrix.platform == 'ubuntu-latest'
         run: yes | sdkmanager --licenses > /dev/null
       - id: rust-android
-        name: Install Android Rust targets (Ubuntu only)
+        name: Add Android Rust targets (Ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
-        run: rustup target add aarch64-linux-android x86_64-linux-android
+        run: rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
       - id: bun
         name: Install Bun
         uses: oven-sh/setup-bun@v2
