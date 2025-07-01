@@ -62,7 +62,9 @@ jobs:
         uses: oven-sh/setup-bun@v2
       - id: dependencies
         name: Install app dependencies
-        run: bun i --frozen-lockfile
+        run: |
+          bun i --frozen-lockfile
+          bun i -g turbo
         working-directory: frontend
       - id: build-desktop
         name: Build app for desktop
