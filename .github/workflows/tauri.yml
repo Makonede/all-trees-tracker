@@ -76,9 +76,10 @@ jobs:
         with:
           name: binaries-linux
           path: |
+            ${{ github.workspace }}/frontend/src-tauri/target/release/bundle/**/*.AppImage
             ${{ github.workspace }}/frontend/src-tauri/target/release/bundle/**/*.deb
             ${{ github.workspace }}/frontend/src-tauri/target/release/bundle/**/*.rpm
-            ${{ github.workspace }}/frontend/src-tauri/target/release/bundle/**/*.AppImage
+            ${{ github.workspace }}/frontend/src-tauri/target/release/bundle/**/*.apk
       - id: upload-windows
         name: Upload Windows artifact
         if: matrix.platform == 'windows-2025'
