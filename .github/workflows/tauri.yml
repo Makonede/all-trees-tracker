@@ -36,9 +36,9 @@ jobs:
           rustup update
           rustup default stable-msvc
       - id: rust-macos
-        name: Add aarch64-apple-darwin target (macOS only)
+        name: Add macOS targets (macOS only)
         if: matrix.platform == 'macos-latest'
-        run: rustup target add aarch64-apple-darwin
+        run: rustup target add aarch64-apple-darwin x86_64-apple-darwin
       - id: jetbrains-runtime
         name: Install JetBrains Runtime (Ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
