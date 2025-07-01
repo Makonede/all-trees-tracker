@@ -18,8 +18,8 @@ jobs:
       - id: build-essential
         name: Install build-essential
         run: |
-          sudo apt update
-          sudo apt install -y build-essential
+          sudo apt-get update
+          sudo apt-get install -y build-essential
       - id: rustup
         name: Install Rust
         run: |
