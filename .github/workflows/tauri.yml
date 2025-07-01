@@ -69,7 +69,7 @@ jobs:
         if: matrix.platform == 'ubuntu-latest'
         run: |
           echo "password=${{ secrets.ANDROID_KEY_PASSWORD }}" > keystore.properties
-          echo "keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}" >> keystore.properties
+          echo "keyAlias=upload" >> keystore.properties
           base64 -d <<< "${{ secrets.ANDROID_KEY_BASE64 }}" > $RUNNER_TEMP/keystore.jks
           echo "storeFile=$RUNNER_TEMP/keystore.jks" >> keystore.properties
         working-directory: frontend/src-tauri/gen/android
