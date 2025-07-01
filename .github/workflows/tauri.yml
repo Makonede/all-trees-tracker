@@ -64,11 +64,18 @@ jobs:
         name: Install app dependencies
         run: bun i --frozen-lockfile
         working-directory: frontend
-      - id: build
-        name: Build app
+      - id: build-desktop
+        name: Build app for desktop
         uses: tauri-apps/tauri-action@v0
         with:
+          tauriScript: turbo tauri --
           args: ${{ matrix.platform == 'macos-latest' && '-t universal-apple-darwin' || '' }}
+      - id: build-android
+        name: Build app for Android (Ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
+        uses: tauri-apps/tauri-action@v0
+        with:
+          tauriScript: turbo tauri -- android
       - id: upload-linux
         name: Upload Linux artifact
         if: matrix.platform == 'ubuntu-latest'
