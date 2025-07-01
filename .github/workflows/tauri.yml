@@ -59,7 +59,7 @@ jobs:
       - id: android-licenses
         name: Accept Android SDK licenses (Ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
-        run: yes | sdkmanager --licenses
+        run: yes | sdkmanager --licenses > /dev/null
       - id: rust-android
         name: Install Android Rust targets (Ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
