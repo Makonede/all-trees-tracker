@@ -54,6 +54,10 @@ jobs:
         name: Set NDK_HOME (Ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
         run: echo "NDK_HOME=$ANDROID_NDK_HOME" >> "$GITHUB_ENV"
+      - id: android-licenses
+        name: Accept Android SDK licenses (Ubuntu only)
+        if: matrix.platform == 'ubuntu-latest'
+        run: yes | sdkmanager --licenses
       - id: rust-android
         name: Install Android Rust targets (Ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
@@ -72,7 +76,7 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         with:
           projectPath: ${{ github.workspace }}/frontend
-          tauriScript: turbo tauri --
+          tauriScript: turbo --ui stream tauri --
           args: ${{ matrix.platform == 'macos-latest' && '-t universal-apple-darwin' || '' }}
       - id: build-android
         name: Build app for Android (Ubuntu only)
@@ -80,7 +84,7 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         with:
           projectPath: ${{ github.workspace }}/frontend
-          tauriScript: turbo tauri -- android
+          tauriScript: turbo --ui stream tauri -- android
       - id: upload-linux
         name: Upload Linux artifact
         if: matrix.platform == 'ubuntu-latest'
@@ -91,7 +95,7 @@ jobs:
             ${{ github.workspace }}/frontend/src-tauri/target/release/bundle/**/*.AppImage
             ${{ github.workspace }}/frontend/src-tauri/target/release/bundle/**/*.deb
             ${{ github.workspace }}/frontend/src-tauri/target/release/bundle/**/*.rpm
-            ${{ github.workspace }}/frontend/src-tauri/target/release/bundle/**/*.apk
+            ${{ github.workspace }}/frontend/src-tauri/gen/android/app/build/outputs/apk/universal/release/*.apk
       - id: upload-windows
         name: Upload Windows artifact
         if: matrix.platform == 'windows-2025'

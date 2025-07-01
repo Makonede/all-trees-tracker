@@ -1,0 +1,12 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {},
+  "globalPassThroughEnv": [
+    "CI",
+    "JAVA_HOME",
+    "ANDROID_HOME",
+    "NDK_HOME",
+    "CARGO_TERM_COLOR"
+  ],
+  "ui": "tui"
+}
