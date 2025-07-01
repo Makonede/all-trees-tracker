@@ -103,7 +103,7 @@ jobs:
           mkdir binaries-linux
           cd binaries-linux
           for ext in AppImage deb rpm; do
-            cp "$GITHUB_WORKSPACE/frontend/src-tauri/target/release/bundle/**/*.$ext" "${{ github.event.repository.name }}.$ext"
+            cp "${{ github.workspace }}/frontend/src-tauri/target/release/bundle/**/*.$ext" "${{ github.event.repository.name }}.$ext"
           done
         working-directory: ${{ runner.temp }}
       - id: bundle-android
@@ -112,7 +112,7 @@ jobs:
         run: |
           mkdir binaries-android
           cd binaries-android
-          cp "$GITHUB_WORKSPACE/frontend/src-tauri/gen/android/app/build/outputs/apk/universal/release/*.apk" "${{ github.event.repository.name }}.apk"
+          cp "${{ github.workspace }}/frontend/src-tauri/gen/android/app/build/outputs/apk/universal/release/*.apk" "${{ github.event.repository.name }}.apk"
         working-directory: ${{ runner.temp }}
       - id: bundle-windows
         name: Bundle Windows artifact
@@ -120,7 +120,7 @@ jobs:
         run: |
           New-Item binaries-windows -ItemType Directory
           Set-Location binaries-windows
-          Copy-Item "$GITHUB_WORKSPACE/frontend/src-tauri/target/release/bundle/**/*.exe" "${{ github.event.repository.name }}.exe"
+          Copy-Item "${{ github.workspace }}/frontend/src-tauri/target/release/bundle/**/*.exe" "${{ github.event.repository.name }}.exe"
         working-directory: ${{ runner.temp }}
       - id: bundle-macos
         name: Bundle macOS artifact
@@ -128,7 +128,7 @@ jobs:
         run: |
           mkdir binaries-macos
           cd binaries-macos
-          cp "$GITHUB_WORKSPACE/frontend/src-tauri/target/universal-apple-darwin/release/bundle/**/*.dmg" "${{ github.event.repository.name }}.dmg"
+          cp "${{ github.workspace }}/frontend/src-tauri/target/universal-apple-darwin/release/bundle/**/*.dmg" "${{ github.event.repository.name }}.dmg"
         working-directory: ${{ runner.temp }}
       - id: upload-linux
         name: Upload Linux artifact
