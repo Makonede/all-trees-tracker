@@ -65,7 +65,7 @@ jobs:
         if: matrix.platform == 'ubuntu-latest'
         run: rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
       - id: android-signing
-        name: Setup Android signing (Ubuntu only)
+        name: Set up Android signing (Ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
         run: |
           echo "password=${{ secrets.ANDROID_KEY_PASSWORD }}" > keystore.properties
