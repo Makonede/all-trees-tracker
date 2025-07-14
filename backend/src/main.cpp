@@ -32,9 +32,9 @@ struct hook_inline_(cut_tree) {
         const auto id = tree->getId();
         const auto& mubin = tree->getMapObjIter();
         u32 hash = 0;
-        if (mubin.tryGetParamUIntByKey(&hash, sead::SafeString("HashId"))) [[
-            likely
-        ]] server.send(hash);
+        if (mubin.tryGetParamUIntByKey(
+            &hash, sead::SafeString("HashId")
+        )) [[likely]] server.send(hash);
     }
 };
 
