@@ -62,25 +62,29 @@ namespace tcp {
     void Server::run() noexcept {
         nn::os::WaitConditionVariable(&cv, mutex.GetBase());
 
-        if (nn::nifm::Initialize().IsFailure()) [[unlikely]] return;
+        if (nn::nifm::Initialize().IsFailure()) [[unlikely]]
+            return mutex.Unlock();
 
         constexpr auto POOL_SIZE = 0x100000uz;
         constexpr auto ALIGNMENT = 0x1000uz;
         auto* pool = std::aligned_alloc(ALIGNMENT, POOL_SIZE);
-        if (!pool) [[unlikely]] return;
+        if (!pool) [[unlikely]] return mutex.Unlock();
 
         constexpr auto BUFFER_SIZE = UINT64_C(0x20000);
         constexpr auto CONCURRENCY_LIMIT = INT32_C(4);
         if (nn::socket::Initialize(
             pool, POOL_SIZE, BUFFER_SIZE, CONCURRENCY_LIMIT
-        ).IsFailure()) [[unlikely]] return std::free(pool);
+        ).IsFailure()) [[unlikely]] {
+            std::free(pool);
+            return mutex.Unlock();
+        }
 
         nn::nifm::SubmitNetworkRequest();
         while (nn::nifm::IsNetworkAvailable()) yield();
         if (!nn::nifm::IsNetworkAvailable()) [[unlikely]] {
             nn::socket::Finalize();
             std::free(pool);
-            return;
+            return mutex.Unlock();
         }
 
         server_socket = nn::socket::Socket(
@@ -89,7 +93,7 @@ namespace tcp {
         if (server_socket < 0) [[unlikely]] {
             nn::socket::Finalize();
             std::free(pool);
-            return;
+            return mutex.Unlock();
         }
 
         sockaddr_in address{
@@ -106,7 +110,7 @@ namespace tcp {
             server_socket = -1;
             nn::socket::Finalize();
             std::free(pool);
-            return;
+            return mutex.Unlock();
         }
 
         if (nn::socket::Listen(server_socket, 1) < 0) [[unlikely]] {
@@ -114,7 +118,7 @@ namespace tcp {
             server_socket = -1;
             nn::socket::Finalize();
             std::free(pool);
-            return;
+            return mutex.Unlock();
         }
 
         poll(end::SERVER);
@@ -125,7 +129,7 @@ namespace tcp {
             server_socket = -1;
             nn::socket::Finalize();
             std::free(pool);
-            return;
+            return mutex.Unlock();
         }
 
         nn::socket::Fcntl(client_socket, F_SETFL, flags | O_NONBLOCK);
