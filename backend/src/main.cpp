@@ -20,7 +20,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <KingSystem/ActorSystem/actActor.h>
 
 #include "tcp.hpp"
-#include "utility.hpp"
 
 static tcp::Server server;
 
