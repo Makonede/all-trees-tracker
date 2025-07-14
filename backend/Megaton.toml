@@ -3,11 +3,50 @@ name = "all-trees-tracker"
 title-id = 0x01007EF00011E000
 
 [build]
-sources = ["src", "lib/botw-symbols/src"]
-includes = ["lib/botw-symbols/include", "lib/botw/src", "lib/nnheaders/include", "lib/sead/include"]
-ldscripts = ["lib/botw-symbols/ld/ld160.ld"]
+sources = [
+  "src",
+  "lib/botw-symbols/src",
+]
+includes = [
+  "lib/botw-symbols/include",
+  "lib/botw/src",
+  "lib/botw/lib/xlink2/include",
+  "lib/nnheaders/include",
+  "lib/sead/include",
+]
+ldscripts = [
+  "lib/botw-symbols/ld/ld160.ld",
+  "lib/botw-symbols/ld/toolkit160.ld",
+]
 
 [build.flags]
-common = ["-DNNSDK", "-fPIC"]
-c = ["-DBOTW_VERSION=160"]
-cxx = ["-std=gnu++2c"]
+common = [
+  "-D_GNU_SOURCE",
+  "-D_GLIBCXX_HAVE_ALIGNED_ALLOC",
+  "-DNNSDK",
+  "-DNN_SDK_MAJOR=7",
+  "-DNN_SDK_MINOR=3",
+  "-DNN_SDK_PATCH=2",
+  "-fPIC",
+  "-fno-exceptions",
+]
+c = [
+  "-DBOTW_VERSION=160",
+  "-DBOTWTOOLKIT_TCP_SEND",
+]
+cxx = [
+  "-std=gnu++2c",
+]
+
+[check]
+symbols = [
+  "lib/botw-symbols/symbols/160/main.syms",
+  "lib/botw-symbols/symbols/160/rtld.syms",
+  "lib/botw-symbols/symbols/160/sdk.syms",
+  "lib/botw-symbols/symbols/160/subsdk0.syms",
+]
+ignore = [
+  "__megaton_module_entry",
+  "_ZSt20__throw_length_errorPKc",
+  "_ZSt28__throw_bad_array_new_lengthv",
+]
