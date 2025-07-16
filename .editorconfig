@@ -1,0 +1,15 @@
+root = true
+
+[*]
+indent_style = space
+end_of_line = lf
+charset = utf-8
+spelling_language = en-US
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.{cpp,hpp,rs}]
+indent_size = 4
+
+[*.{ts,js,svelte,html,md,json,jsonc,toml}]
+indent_size = 2

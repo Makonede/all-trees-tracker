@@ -12,9 +12,11 @@
   "app": {
     "windows": [
       {
-        "title": "all-trees-tracker",
+        "label": "main",
+        "title": "All Trees Tracker",
         "width": 800,
-        "height": 600
+        "height": 600,
+        "theme": "Dark"
       }
     ],
     "security": {
