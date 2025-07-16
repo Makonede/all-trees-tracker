@@ -17,8 +17,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include <utility>
-#include <vector>
+#include <queue>
 
 #include <netinet/in.h>
 
@@ -26,67 +25,24 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <nn/socket.h>
 
-#include "nn/os.h"
-#include "utility.hpp"
-
 namespace tcp {
-    enum class end : bool {
-        SERVER,
-        CLIENT,
-    };
-
     void server_thread(void* const server) noexcept;
 
     class Server {
     public:
-        Server() noexcept;
         void init() noexcept;
-        void start(const u16 port = 5000) noexcept;
-        void send(const std::vector<u8> data) noexcept;
-        template <typename T>
-        inline auto send(const T data) noexcept {
-            const auto* const iterator = reinterpret_cast<
-                const u8* const
-            >(&data);
-            send(std::vector(iterator, iterator + sizeof(T)));
-        }
+        void start(const u16 port = 5001) noexcept;
+        void send(const u32 hash) noexcept;
 
     private:
-        inline auto poll(const end endpoint) const noexcept {
-            s32 socket = -1;
-            switch (endpoint) {
-            case end::SERVER:
-                socket = server_socket;
-                break;
-
-            case end::CLIENT:
-                socket = client_socket;
-                break;
-
-            default: std::unreachable();
-            }
-
-            pollfd socket_fd{.fd = socket, .events = POLLIN};
-            do yield(); while (!(nn::socket::Poll(
-                &socket_fd, 1, 0
-            ) > 0 && socket_fd.revents & POLLIN));
-        }
-        inline auto reconnect() noexcept {
-            nn::socket::Close(client_socket);
-            client_socket = -1;
-            poll(end::SERVER);
-            client_socket = nn::socket::Accept(server_socket, nullptr, nullptr);
-        }
         void run() noexcept;
-        friend void server_thread(void* server) noexcept;
+        friend void server_thread(void* const server) noexcept;
 
-        nn::os::Mutex mutex;
-        nn::os::ConditionVariableType cv;
         s32 server_socket = -1;
         s32 client_socket = -1;
-        u16 server_port = 5000;
         bool ready = false;
+        u16 server_port = 5001;
         bool connected = false;
-        std::vector<std::vector<u8>> packets;
+        std::queue<u32> trees;
     };
 }

@@ -17,74 +17,65 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include <cstdint>
 
-#include <fcntl.h>
 #include <sys/socket.h>
 
 #include <nn/nifm.h>
 
-#include <prim/seadScopedLock.h>
-
-#include "sdk.hpp"
-
 #include "tcp.hpp"
+#include "utility.hpp"
 
 namespace tcp {
     void server_thread(void* const server) noexcept {
         static_cast<Server*>(server)->run();
     }
 
-    Server::Server() noexcept : mutex(false) {
-        nn::os::InitializeConditionVariable(&cv);
-    }
-
     void Server::init() noexcept { start_thread(server_thread, this); }
 
     void Server::start(const u16 port) noexcept {
         if (connected) [[unlikely]] return;
-        {
-            const auto lock = sead::makeScopedLock(mutex);
-            server_port = port;
-            ready = true;
-        }
-        nn::os::SignalConditionVariable(&cv);
-        nn::os::WaitConditionVariable(&cv, mutex.GetBase());
-        mutex.Unlock();
+        server_port = port;
+        ready = true;
+        yield();
     }
 
-    void Server::send(const std::vector<u8> data) noexcept {
-        {
-            const auto lock = sead::makeScopedLock(mutex);
-            packets.push_back(data);
+    void Server::send(const u32 hash) noexcept {
+        if (!connected || client_socket < 0) [[unlikely]]
+            return trees.push(hash);
+        if (nn::socket::Send(
+            client_socket, &hash, sizeof hash, 0
+        ) <= 0) [[unlikely]] {
+            nn::socket::Close(client_socket);
+            client_socket = -1;
+            trees.push(hash);
+            return yield();
         }
-        nn::os::SignalConditionVariable(&cv);
+        if (!trees.empty()) trees.pop();
+        trees.push(hash);
     }
 
     void Server::run() noexcept {
-        nn::os::WaitConditionVariable(&cv, mutex.GetBase());
+        do yield(); while (!ready);
+        ready = false;
 
-        if (nn::nifm::Initialize().IsFailure()) [[unlikely]]
-            return mutex.Unlock();
+        if (nn::nifm::Initialize().IsFailure()) [[unlikely]] return;
 
         constexpr auto POOL_SIZE = 0x100000uz;
         constexpr auto ALIGNMENT = 0x1000uz;
         auto* pool = std::aligned_alloc(ALIGNMENT, POOL_SIZE);
-        if (!pool) [[unlikely]] return mutex.Unlock();
+        if (!pool) [[unlikely]] return;
 
         constexpr auto BUFFER_SIZE = UINT64_C(0x20000);
         constexpr auto CONCURRENCY_LIMIT = INT32_C(4);
         if (nn::socket::Initialize(
             pool, POOL_SIZE, BUFFER_SIZE, CONCURRENCY_LIMIT
-        ).IsFailure()) [[unlikely]] {
-            std::free(pool);
-            return mutex.Unlock();
-        }
+        ).IsFailure()) [[unlikely]] return std::free(pool);
 
         nn::nifm::SubmitNetworkRequest();
-        while (nn::nifm::IsNetworkAvailable()) yield();
+        while (nn::nifm::IsNetworkRequestOnHold()) yield();
         if (!nn::nifm::IsNetworkAvailable()) [[unlikely]] {
             nn::socket::Finalize();
             std::free(pool);
-            return mutex.Unlock();
+            return;
         }
 
         server_socket = nn::socket::Socket(
@@ -93,7 +84,7 @@ namespace tcp {
         if (server_socket < 0) [[unlikely]] {
             nn::socket::Finalize();
             std::free(pool);
-            return mutex.Unlock();
+            return;
         }
 
         sockaddr_in address{
@@ -110,7 +101,7 @@ namespace tcp {
             server_socket = -1;
             nn::socket::Finalize();
             std::free(pool);
-            return mutex.Unlock();
+            return;
         }
 
         if (nn::socket::Listen(server_socket, 1) < 0) [[unlikely]] {
@@ -118,47 +109,27 @@ namespace tcp {
             server_socket = -1;
             nn::socket::Finalize();
             std::free(pool);
-            return mutex.Unlock();
+            return;
         }
 
-        poll(end::SERVER);
-        client_socket = nn::socket::Accept(server_socket, nullptr, nullptr);
-        const auto flags = nn::socket::Fcntl(client_socket, F_GETFL);
-        if (flags < 0) [[unlikely]] {
-            nn::socket::Close(server_socket);
-            server_socket = -1;
-            nn::socket::Finalize();
-            std::free(pool);
-            return mutex.Unlock();
-        }
-
-        nn::socket::Fcntl(client_socket, F_SETFL, flags | O_NONBLOCK);
         connected = true;
-        mutex.Unlock();
-        nn::os::SignalConditionVariable(&cv);
 
         while (true) [[likely]] {
-            nn::os::WaitConditionVariable(&cv, mutex.GetBase());
-
-            const auto packet_it = packets.begin();
-            const auto packet = *packet_it;
-            packets.erase(packet_it);
-            mutex.Unlock();
-
-            auto result = nn::socket::Send(
-                client_socket, packet.data(), packet.size(), 0
-            );
-            poll(end::CLIENT);
-
-            while (result <= 0) [[unlikely]] {
-                if (!result) [[likely]] reconnect();
-                result = nn::socket::Send(
-                    client_socket, packet.data(), packet.size(), 0
-                );
-                poll(end::CLIENT);
+            if (client_socket < 0 && (client_socket = nn::socket::Accept(
+                server_socket, nullptr, nullptr
+            )) >= 0) [[unlikely]] for (
+                ; !trees.empty(); trees.pop()
+            ) [[unlikely]] {
+                const auto tree = trees.front();
+                if (nn::socket::Send(
+                    client_socket, &tree, sizeof tree, 0
+                ) <= 0) [[unlikely]] {
+                    nn::socket::Close(client_socket);
+                    client_socket = -1;
+                    break;
+                }
             }
-
-            nn::os::SignalConditionVariable(&cv);
+            yield();
         }
     }
 }
