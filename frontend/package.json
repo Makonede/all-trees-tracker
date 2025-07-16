@@ -1,7 +1,7 @@
 {
   "name": "all-trees-tracker",
   "version": "0.1.0",
-  "description": "",
+  "description": "A tracker mod for the Breath of the Wild All Trees challenge run",
   "type": "module",
   "packageManager": "bun@1.2.19",
   "scripts": {
@@ -29,8 +29,8 @@
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.11",
     "@tauri-apps/cli": "^2.6.2",
+    "@types/bun": "^1.2.18",
     "@types/node": "^24.0.14",
-    "bun-types": "^1.2.18",
     "svelte": "^5.36.4",
     "svelte-adapter-bun": "^0.5.2",
     "svelte-check": "^4.2.2",
