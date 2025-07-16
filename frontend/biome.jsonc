@@ -107,10 +107,10 @@
       "bracketSpacing": true
     }
   },
-  "html": { "formatter": { "selfCloseVoidElements": "always" } },
   "overrides": [
     {
       "includes": ["**/*.svelte"],
+      "formatter": { "enabled": false },
       "linter": {
         "rules": {
           "style": {
