@@ -10,3 +10,6 @@
 [submodule "nnheaders"]
 	path = backend/lib/nnheaders
 	url = https://github.com/open-ead/nnheaders.git
+[submodule "prism"]
+	path = icon/lib/prism
+	url = https://github.com/Makonede/prism.git

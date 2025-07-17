@@ -4,6 +4,7 @@ description = "A tracker mod for the Breath of the Wild All Trees challenge run"
 authors = ["Mako"]
 version = "0.1.0"
 edition = "2024"
+repository = "https://github.com/Makonede/all-trees-tracker"
 license = "GPL-3.0-or-later"
 
 [lib]
@@ -18,3 +19,16 @@ tauri = { version = "2", features = ["unstable"] }
 tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+
+[profile.dev]
+incremental = true
+rustflags = ["-Zthreads=8"]
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true
+trim-paths = "all"
+rustflags = ["-Cdebuginfo=0", "-Zthreads=8"]
