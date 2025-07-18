@@ -17,6 +17,4 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-fn main() {
-    all_trees_tracker_lib::run()
-}
+fn main() { all_trees_tracker_lib::run() }
