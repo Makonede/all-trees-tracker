@@ -123,6 +123,10 @@
           }
         }
       }
+    },
+    {
+      "includes": ["**/*.css"],
+      "formatter": { "enabled": false }
     }
   ],
   "assist": {
