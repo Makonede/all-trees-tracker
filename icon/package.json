@@ -1,0 +1,29 @@
+{
+  "name": "all-trees-tracker-icon",
+  "version": "1.0.0",
+  "description": "Icon for All Trees Tracker",
+  "type": "module",
+  "packageManager": "bun@1.2.20",
+  "license": "GPL-3.0-or-later",
+  "repository": "https://github.com/Makonede/all-trees-tracker",
+  "scripts": {
+    "build": "prism tree.ts > tree.svg && prism -p tree.png tree.ts",
+    "lint": "biome check --write"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.1.2",
+    "tslib": "^2.8.1",
+    "turbo": "^2.5.5",
+    "typescript": "^5.8.3"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "bun",
+      "onFail": "error"
+    },
+    "packageManager": {
+      "name": "bun",
+      "onFail": "error"
+    }
+  }
+}

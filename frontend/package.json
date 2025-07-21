@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "description": "A tracker mod for the Breath of the Wild All Trees challenge run",
   "type": "module",
-  "packageManager": "bun@1.2.19",
+  "packageManager": "bun@1.2.20",
+  "license": "GPL-3.0-or-later",
+  "repository": "https://github.com/Makonede/all-trees-tracker",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
@@ -13,9 +15,8 @@
     "tauri": "NO_STRIP=true tauri",
     "lint": "biome check --write"
   },
-  "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@tauri-apps/api": "^2.6.0",
+    "@tauri-apps/api": "^2.7.0",
     "@tauri-apps/plugin-opener": "^2.4.0"
   },
   "devDependencies": {
@@ -33,9 +34,9 @@
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.11",
     "@tauri-apps/cli": "^2.6.2",
-    "@types/bun": "^1.2.18",
-    "@types/node": "^24.0.14",
-    "svelte": "^5.36.8",
+    "@types/bun": "^1.2.19",
+    "@types/node": "^24.0.15",
+    "svelte": "^5.36.12",
     "svelte-adapter-bun": "^0.5.2",
     "svelte-check": "^4.3.0",
     "tailwindcss": "^4.1.11",

@@ -1,3 +1,5 @@
 *.d.ts
 *.svg
 *.png
+node_modules
+/.turbo
