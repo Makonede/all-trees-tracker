@@ -15,7 +15,7 @@
     "attributePosition": "auto",
     "bracketSameLine": false,
     "bracketSpacing": true,
-    "expand": "never",
+    "expand": "auto",
     "useEditorconfig": true
   },
   "linter": {
@@ -104,7 +104,6 @@
       "bracketSameLine": false,
       "quoteStyle": "single",
       "attributePosition": "auto",
-      "expand": "never",
       "bracketSpacing": true
     }
   },

@@ -12,7 +12,7 @@
     "attributePosition": "auto",
     "bracketSameLine": false,
     "bracketSpacing": true,
-    "expand": "never",
+    "expand": "auto",
     "useEditorconfig": true
   },
   "linter": { "enabled": false },
@@ -25,7 +25,6 @@
       "bracketSameLine": false,
       "quoteStyle": "single",
       "attributePosition": "auto",
-      "expand": "never",
       "bracketSpacing": true
     }
   },

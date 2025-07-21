@@ -17,7 +17,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 scale(10)
 size(1, 1, 8).at(0, 0, 0).render('#483000')
-// biome-ignore format: keep size and at calls on same line
+// biome-ignore format: keep `size` and `at` calls on same line
 size(5, 5, 1).at(-2, -2, 5)
   .union(size(3, 5, 1).at(-1, -2, 6))
   .union(size(5, 3, 1).at(-2, -1, 6))
