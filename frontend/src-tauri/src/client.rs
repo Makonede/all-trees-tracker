@@ -33,13 +33,6 @@ enum ErrorKind {
     IoError(String),
 }
 
-#[derive(Default)]
-pub struct AppState { connected: bool }
-
-#[derive(Clone, Serialize)]
-#[serde(rename_all = "camelCase", rename_all_fields = "camelCase", tag = "event", content = "data")]
-pub enum TrackerEvent { Tree(u32) }
-
 impl Serialize for Error {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error> where S: Serializer {
         let error_message = self.to_string();
@@ -49,6 +42,13 @@ impl Serialize for Error {
         error_kind.serialize(serializer)
     }
 }
+
+#[derive(Default)]
+pub struct AppState { connected: bool }
+
+#[derive(Clone, Serialize)]
+#[serde(rename_all = "camelCase", rename_all_fields = "camelCase", tag = "event", content = "data")]
+pub enum TrackerEvent { Tree(u32) }
 
 #[tauri::command]
 pub async fn connect(
