@@ -14,7 +14,7 @@ You should have received a copy of the GNU General Public License along with thi
 see <https://www.gnu.org/licenses/>.
 */
 
-use std::{io, sync::{atomic::{AtomicBool, Ordering}}};
+use std::{io, sync::atomic::{AtomicBool, Ordering}};
 
 use serde::{ser::Serializer, Serialize};
 use stubborn_io::StubbornTcpStream;
