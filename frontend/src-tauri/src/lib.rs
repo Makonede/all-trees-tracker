@@ -16,7 +16,7 @@ see <https://www.gnu.org/licenses/>.
 
 mod client;
 
-use std::sync::Mutex;
+use std::sync::atomic::AtomicBool;
 
 use tauri::{Builder, Manager};
 
@@ -26,7 +26,7 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![client::connect, client::disconnect])
         .setup(|app| {
-            app.manage(Mutex::new(client::AppState::default()));
+            app.manage(AtomicBool::default());
             let window = app.get_window("main").unwrap();
             window.set_theme(Some(tauri::Theme::Dark))?;
             Ok(())

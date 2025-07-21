@@ -14,7 +14,7 @@ You should have received a copy of the GNU General Public License along with thi
 see <https://www.gnu.org/licenses/>.
 */
 
-use std::{io, sync::Mutex};
+use std::{io, sync::{atomic::{AtomicBool, Ordering}}};
 
 use serde::{ser::Serializer, Serialize};
 use stubborn_io::StubbornTcpStream;
@@ -43,43 +43,30 @@ impl Serialize for Error {
     }
 }
 
-#[derive(Default)]
-pub struct AppState { connected: bool }
-
-#[derive(Clone, Serialize)]
-#[serde(rename_all = "camelCase", rename_all_fields = "camelCase", tag = "event", content = "data")]
-pub enum TrackerEvent { Tree(u32) }
-
 #[tauri::command]
 pub async fn connect(
-    address: String, port: u16, state: State<'_, Mutex<AppState>>, channel: Channel<TrackerEvent>
+    address: String, port: u16, connected: State<'_, AtomicBool>, channel: Channel<u32>
 ) -> Result<(), Error> {
     let stream = StubbornTcpStream::connect((address, port)).await?;
-    let mut hash = vec![0u8; 4];
-    {
-        let mut state = state.lock().unwrap();
-        state.connected = true;
-    }
+    let mut hash = [0u8; 4];
+    connected.store(true, Ordering::Relaxed);
 
     loop {
         stream.readable().await?;
 
         match stream.try_read(&mut hash) {
-            Ok(_) => { channel.send(TrackerEvent::Tree(u32::from_le_bytes(
-                hash.clone().try_into().unwrap()
-            ))).unwrap(); }
+            Ok(_) => { channel.send(u32::from_le_bytes(hash)).unwrap(); }
             Err(e) if e.kind() != io::ErrorKind::WouldBlock => { return Err(e.into()); }
             _ => {}
         }
 
-        if !state.lock().unwrap().connected { break; }
+        if !connected.load(Ordering::Relaxed) { break; }
     }
 
     Ok(())
 }
 
 #[tauri::command]
-pub fn disconnect(state: State<'_, Mutex<AppState>>) {
-    let mut state = state.lock().unwrap();
-    state.connected = false;
+pub fn disconnect(connected: State<'_, AtomicBool>) {
+    connected.store(false, Ordering::Relaxed);
 }
