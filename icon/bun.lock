@@ -3,10 +3,10 @@
   "workspaces": {
     "": {
       "devDependencies": {
-        "@biomejs/biome": "^2.1.2",
-        "tslib": "^2.8.1",
-        "turbo": "^2.5.5",
-        "typescript": "^5.8.3",
+        "@biomejs/biome": "latest",
+        "tslib": "latest",
+        "turbo": "latest",
+        "typescript": "latest",
       },
     },
   },
