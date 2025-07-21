@@ -19,9 +19,7 @@
         "theme": "Dark"
       }
     ],
-    "security": {
-      "csp": null
-    }
+    "security": { "csp": null }
   },
   "bundle": {
     "active": true,

@@ -46,14 +46,8 @@
     "vite": "^7.0.5"
   },
   "devEngines": {
-    "runtime": {
-      "name": "bun",
-      "onFail": "error"
-    },
-    "packageManager": {
-      "name": "bun",
-      "onFail": "error"
-    }
+    "runtime": { "name": "bun", "onFail": "error" },
+    "packageManager": { "name": "bun", "onFail": "error" }
   },
   "trustedDependencies": ["@tailwindcss/oxide"]
 }

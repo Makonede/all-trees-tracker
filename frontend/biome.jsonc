@@ -2,7 +2,7 @@
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
   "files": {
-    "includes": ["**", "!./src-tauri"],
+    "includes": ["**", "!**/src-tauri", "!**/trees_*.json"],
     "ignoreUnknown": true
   },
   "formatter": {
@@ -15,7 +15,7 @@
     "attributePosition": "auto",
     "bracketSameLine": false,
     "bracketSpacing": true,
-    "expand": "auto",
+    "expand": "never",
     "useEditorconfig": true
   },
   "linter": {
@@ -104,6 +104,7 @@
       "bracketSameLine": false,
       "quoteStyle": "single",
       "attributePosition": "auto",
+      "expand": "never",
       "bracketSpacing": true
     }
   },
@@ -113,10 +114,7 @@
       "formatter": { "enabled": false },
       "linter": {
         "rules": {
-          "style": {
-            "useConst": "off",
-            "useImportType": "off"
-          },
+          "style": { "useConst": "off", "useImportType": "off" },
           "correctness": {
             "noUnusedVariables": "off",
             "noUnusedImports": "off"
@@ -124,10 +122,7 @@
         }
       }
     },
-    {
-      "includes": ["**/*.css"],
-      "formatter": { "enabled": false }
-    }
+    { "includes": ["**/*.css"], "formatter": { "enabled": false } }
   ],
   "assist": {
     "enabled": true,

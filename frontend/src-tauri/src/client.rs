@@ -45,7 +45,7 @@ impl Serialize for Error {
 
 #[tauri::command]
 pub async fn connect(
-    address: String, port: u16, connected: State<'_, AtomicBool>, channel: Channel<u32>
+    address: String, port: u16, channel: Channel<u32>, connected: State<'_, AtomicBool>
 ) -> Result<(), Error> {
     let stream = StubbornTcpStream::connect((address, port)).await?;
     let mut hash = [0u8; 4];
