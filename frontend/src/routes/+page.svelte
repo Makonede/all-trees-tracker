@@ -15,6 +15,18 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 -->
 
-<script lang='ts'></script>
+<script lang='ts'>
+  import TreeMap from '$lib/TreeMap.svelte'
+</script>
 
-<main></main>
+<main class='grid grid-flow-row lg:grid-flow-col grid-cols-2 grid-rows-3 lg:grid-cols-3 lg:grid-rows-3 gap-4 p-8 h-screen'>
+  <div class='col-span-2 row-span-2 lg:col-span-2 lg:row-span-3 p-4 card preset-filled-surface-100-900'>
+    <TreeMap />
+  </div>
+  <div class='lg:row-span-2 p-4 card preset-filled-surface-100-900'>
+    <span>test 1</span>
+  </div>
+  <div class='p-4 card preset-filled-surface-100-900'>
+    <span>test 2</span>
+  </div>
+</main>

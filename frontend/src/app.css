@@ -26,6 +26,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 @source '../node_modules/@skeletonlabs/skeleton-svelte/dist';
 
 [data-theme='cerberus'] {
+  --radius-container: var(--radius-lg);
   --heading-font-family: 'Roboto Variable', sans-serif;
   --base-font-family: 'Roboto Variable', sans-serif;
   --anchor-font-family: 'inherit';
