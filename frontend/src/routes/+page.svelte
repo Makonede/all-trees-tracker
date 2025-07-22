@@ -19,8 +19,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   import TreeMap from '$lib/TreeMap.svelte'
 </script>
 
-<main class='grid grid-flow-row lg:grid-flow-col grid-cols-2 grid-rows-3 lg:grid-cols-3 lg:grid-rows-3 gap-4 p-8 h-screen'>
-  <div class='col-span-2 row-span-2 lg:col-span-2 lg:row-span-3 p-4 card preset-filled-surface-100-900'>
+<main
+  class='grid grid-flow-row lg:grid-flow-col grid-cols-2 grid-rows-3 lg:grid-cols-3 lg:grid-rows-3 gap-4 p-8 h-screen'
+>
+  <div
+    class='col-span-2 row-span-2 lg:col-span-2 lg:row-span-3 p-4 card preset-filled-surface-100-900'
+  >
     <TreeMap />
   </div>
   <div class='lg:row-span-2 p-4 card preset-filled-surface-100-900'>
