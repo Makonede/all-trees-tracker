@@ -28,11 +28,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   )
   const CENTER = L.latLng(HEIGHT / 2, WIDTH / 2)
 
-  const crs = L.extend({}, L.CRS.Simple)
-  // @ts-ignore false positive
-  crs.transformation = L.transformation(
+  const crs = { ...L.CRS.Simple, transformation: L.transformation(
     4 / 0x100, WIDTH / 0x100, 4 / 0x100, HEIGHT / 0x100
-  )
+  ) }
 
   let map: L.Map
 
