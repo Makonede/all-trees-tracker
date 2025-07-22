@@ -35,7 +35,7 @@
     "@tailwindcss/vite": "^4.1.11",
     "@tauri-apps/cli": "^2.7.1",
     "@types/bun": "^1.2.19",
-    "@types/node": "^24.0.15",
+    "@types/node": "^24.1.0",
     "sveaflet": "^0.1.4",
     "svelte": "^5.36.13",
     "svelte-adapter-bun": "^0.5.2",
