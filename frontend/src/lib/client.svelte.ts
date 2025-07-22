@@ -22,10 +22,9 @@ import type { Tree } from './trees.svelte'
 export const trees = $state(new Map<number, Tree>())
 
 export const loadTrees = (actors: Tree[]) => {
-  // biome-ignore format: statement should not be expanded
-  if (!trees.size) actors.forEach((actor) => {
-    trees.set(actor.hash, { ...actor, cut: false })
-  })
+  trees.clear()
+  // biome-ignore format: block should remain collapsed
+  actors.forEach((actor) => { trees.set(actor.hash, { ...actor, cut: false }) })
 }
 
 export const connect = async (address: string, port: number) => {
