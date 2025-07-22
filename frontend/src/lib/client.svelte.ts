@@ -16,17 +16,21 @@ see <https://www.gnu.org/licenses/>.
 
 import { Channel, invoke } from '@tauri-apps/api/core'
 
-export const trees = $state(new Map<number, boolean>())
+import type { Tree } from './trees.svelte'
 
-export const loadTrees = (hashes: number[]) => {
+export const trees = $state(new Map<number, Tree>())
+
+export const loadTrees = (actors: Tree[]) => {
   // biome-ignore format: block expansion
-  hashes.forEach((hash) => { trees.set(hash, false) })
+  actors.forEach((actor) => { trees.set(actor.hash, { ...actor, cut: false }) })
 }
 
 export const connect = async (address: string, port: number) => {
   const tracker = new Channel<number>()
-  // biome-ignore format: block expansion
-  tracker.onmessage = (hash) => { if (trees.has(hash)) trees.set(hash, true) }
+  tracker.onmessage = (hash) => {
+    const tree = trees.get(hash)
+    if (tree) tree.cut = true
+  }
 
   await invoke('connect', { address, port, channel: tracker })
 }

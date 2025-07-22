@@ -19,8 +19,15 @@ import { loadTrees } from './client.svelte'
 import hyrule from './trees_hyrule.json'
 import tots from './trees_tots.json'
 
-const base = hyrule.map((actor) => actor.hash)
-const extended = base.concat(tots.map((actor) => actor.hash))
+export interface Tree {
+  hash: number
+  name: string
+  pos: [number, number, number]
+  cut?: boolean
+}
+
+const base = <Tree[]>hyrule
+const extended = base.concat(<Tree[]>tots)
 
 export const loadBase = () => loadTrees(base)
 export const loadExtended = () => loadTrees(extended)
