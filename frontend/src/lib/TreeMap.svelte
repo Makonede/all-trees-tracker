@@ -38,7 +38,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   onMount(() => {
     map.getContainer().classList.add('bg-black!', 'rounded-lg!')
     map.setView([0, 0], 3, { animate: false })
-    map.attributionControl.addAttribution('Map data by ZeldaMods')
   })
 </script>
 
@@ -55,7 +54,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   }} bind:instance={map}>
     <TileLayer
       url={'https://objmap.zeldamods.org/game_files/maptex/{z}/{x}/{y}.webp'}
-      options={{ maxNativeZoom: 7 }}
+      options={{
+        maxNativeZoom: 7,
+        attribution: '&copy; ZeldaMods',
+      }}
     />
   </SveafletMap>
 </div>
