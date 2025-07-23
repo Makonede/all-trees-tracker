@@ -16,5 +16,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <script lang='ts'>
+  import ChartColumn from '@lucide/svelte/icons/chart-column'
+  import ChartLine from '@lucide/svelte/icons/chart-line'
+  import ChartNoAxesCombined from '@lucide/svelte/icons/chart-no-axes-combined'
+  import ChartPie from '@lucide/svelte/icons/chart-pie'
+
   import { setProgressIcon } from './icons.svelte'
 </script>

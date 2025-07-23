@@ -30,7 +30,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     icon: Component
   }
 
-  const tabs: Tab[] = [
+  let tabs: Tab[] = $derived([
     {
       name: 'Progress',
       content: Progress,
@@ -41,7 +41,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
       content: Settings,
       icon: SettingsIcon,
     },
-  ]
+  ])
 </script>
 
 <Tabs tabStyle='underline'>

@@ -15,10 +15,7 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import ChartColumn from '@lucide/svelte/icons/chart-column'
-import ChartLine from '@lucide/svelte/icons/chart-line'
 import ChartNoAxesCombined from '@lucide/svelte/icons/chart-no-axes-combined'
-import ChartPie from '@lucide/svelte/icons/chart-pie'
 import type { Component } from 'svelte'
 
 let progressIcon = $state(ChartNoAxesCombined)
