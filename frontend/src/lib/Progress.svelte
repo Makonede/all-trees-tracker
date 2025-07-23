@@ -21,5 +21,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   import ChartNoAxesCombined from '@lucide/svelte/icons/chart-no-axes-combined'
   import ChartPie from '@lucide/svelte/icons/chart-pie'
 
-  import { setProgressIcon } from './icons.svelte'
+  import type { IconType } from './types.svelte'
+
+  let { icon }: { icon: IconType } = $props()
 </script>
+
+<div class='p-4 w-full card preset-filled-surface-200-800'>
+  <span>Progress placeholder</span>
+</div>

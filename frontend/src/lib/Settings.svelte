@@ -14,3 +14,13 @@ PARTICULAR PURPOSE. See the GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 -->
+
+<script lang='ts'>
+  import type { IconType } from './types.svelte'
+
+  let _: { icon: IconType } = $props()
+</script>
+
+<div class='p-4 w-full card preset-filled-surface-200-800'>
+  <span>Settings placeholder</span>
+</div>

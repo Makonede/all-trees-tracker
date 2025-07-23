@@ -16,46 +16,55 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <script lang='ts'>
+  import ChartNoAxesCombined from '@lucide/svelte/icons/chart-no-axes-combined'
   import SettingsIcon from '@lucide/svelte/icons/settings'
   import { TabItem, Tabs } from 'flowbite-svelte'
   import type { Component } from 'svelte'
 
-  import { getProgressIcon } from './icons.svelte'
   import Progress from './Progress.svelte'
   import Settings from './Settings.svelte'
+  import type { IconType } from './types.svelte'
+
+  let progressIcon = $state({ icon: ChartNoAxesCombined })
+
+  let icons: IconType[] = $derived([
+    progressIcon,
+    { icon: SettingsIcon },
+  ])
 
   interface Tab {
     name: string
-    content: Component
-    icon: Component
+    content: Component<{ icon: IconType }>
   }
 
-  let tabs: Tab[] = $derived([
+  const tabs: Tab[] = [
     {
       name: 'Progress',
       content: Progress,
-      icon: getProgressIcon(),
     },
     {
       name: 'Settings',
       content: Settings,
-      icon: SettingsIcon,
     },
-  ])
+  ]
 </script>
 
-<Tabs tabStyle='underline'>
-  {#each tabs as { name, content, icon }, i}
+<Tabs tabStyle='full' ulClass='gap-4'>
+  {#each tabs as { name, content }, i}
     {@const Content = content}
-    {@const Icon = icon}
-    <TabItem open={!i}>
+    {@const Icon = icons[i].icon}
+    {@const CLASS = 'flex p-2 w-full border-b-4 rounded-sm transition-colors duration-300'}
+    <TabItem
+      open={!i} activeClass='{CLASS} text-primary-500'
+      inactiveClass='{CLASS} text-surface-500' class='w-full'
+    >
       {#snippet titleSlot()}
         <div class='flex items-center gap-2'>
           <Icon />
           <span>{name}</span>
         </div>
       {/snippet}
-      <Content />
+      <Content bind:icon={icons[i]} />
     </TabItem>
   {/each}
 </Tabs>

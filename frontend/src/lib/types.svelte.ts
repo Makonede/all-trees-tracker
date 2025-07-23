@@ -15,12 +15,6 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import ChartNoAxesCombined from '@lucide/svelte/icons/chart-no-axes-combined'
 import type { Component } from 'svelte'
 
-let progressIcon = $state(ChartNoAxesCombined)
-
-export const getProgressIcon = () => progressIcon
-export const setProgressIcon = (icon: Component) => {
-  progressIcon = <typeof progressIcon>icon
-}
+export type IconType = { icon: Component }
