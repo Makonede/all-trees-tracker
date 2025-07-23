@@ -1,4 +1,4 @@
-/*
+<!--
 This file is part of all-trees-tracker.
 Copyright (C) 2025 Mako
 
@@ -13,23 +13,4 @@ PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
-*/
-
-@charset "UTF-8";
-
-@import 'tailwindcss';
-@import '@skeletonlabs/skeleton';
-@import '@skeletonlabs/skeleton/optional/presets';
-@import '@skeletonlabs/skeleton/themes/cerberus';
-@import '@layerstack/tailwind/themes/skeleton.css';
-@import '@fontsource-variable/roboto';
-
-@source '../node_modules/@skeletonlabs/skeleton-svelte/dist';
-@source '../node_modules/layerchart/dist';
-
-[data-theme='cerberus'] {
-  --radius-container: var(--radius-lg);
-  --heading-font-family: 'Roboto Variable', sans-serif;
-  --base-font-family: 'Roboto Variable', sans-serif;
-  --anchor-font-family: 'inherit';
-}
+-->

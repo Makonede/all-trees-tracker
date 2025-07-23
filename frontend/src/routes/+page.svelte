@@ -16,6 +16,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <script lang='ts'>
+  import TabbedPanel from '$lib/TabbedPanel.svelte'
   import TreeMap from '$lib/TreeMap.svelte'
 </script>
 
@@ -28,9 +29,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     <TreeMap />
   </div>
   <div class='lg:row-span-2 p-4 card preset-filled-surface-100-900'>
-    <span>test 1</span>
+    <TabbedPanel />
   </div>
   <div class='p-4 card preset-filled-surface-100-900'>
-    <span>test 2</span>
+    <TabbedPanel />
   </div>
 </main>

@@ -19,7 +19,7 @@ import { Channel, invoke } from '@tauri-apps/api/core'
 
 import type { Tree } from './trees.svelte'
 
-export const trees = $state(new Map<number, Tree>())
+export let trees = $state(new Map<number, Tree>())
 
 export const loadTrees = (actors: Tree[]) => {
   trees.clear()

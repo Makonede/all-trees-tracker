@@ -15,21 +15,15 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-@charset "UTF-8";
+import ChartColumn from '@lucide/svelte/icons/chart-column'
+import ChartLine from '@lucide/svelte/icons/chart-line'
+import ChartNoAxesCombined from '@lucide/svelte/icons/chart-no-axes-combined'
+import ChartPie from '@lucide/svelte/icons/chart-pie'
+import type { Component } from 'svelte'
 
-@import 'tailwindcss';
-@import '@skeletonlabs/skeleton';
-@import '@skeletonlabs/skeleton/optional/presets';
-@import '@skeletonlabs/skeleton/themes/cerberus';
-@import '@layerstack/tailwind/themes/skeleton.css';
-@import '@fontsource-variable/roboto';
+let progressIcon = $state(ChartNoAxesCombined)
 
-@source '../node_modules/@skeletonlabs/skeleton-svelte/dist';
-@source '../node_modules/layerchart/dist';
-
-[data-theme='cerberus'] {
-  --radius-container: var(--radius-lg);
-  --heading-font-family: 'Roboto Variable', sans-serif;
-  --base-font-family: 'Roboto Variable', sans-serif;
-  --anchor-font-family: 'inherit';
+export const getProgressIcon = () => progressIcon
+export const setProgressIcon = (icon: Component) => {
+  progressIcon = <typeof progressIcon>icon
 }

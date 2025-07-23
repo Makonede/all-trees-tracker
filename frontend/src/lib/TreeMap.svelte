@@ -17,9 +17,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 <script lang='ts'>
   import L from 'leaflet'
-  import 'leaflet/dist/leaflet.css'
   import { Map as SveafletMap, TileLayer } from 'sveaflet'
   import { onMount } from 'svelte'
+
+  import 'leaflet/dist/leaflet.css'
 
   const WIDTH = 24000
   const HEIGHT = 20000
