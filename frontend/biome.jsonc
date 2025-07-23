@@ -113,7 +113,7 @@
       "formatter": { "enabled": false },
       "linter": {
         "rules": {
-          "style": { "useConst": "off", "useImportType": "off" },
+          "style": { "useConst": "off" },
           "correctness": {
             "noUnusedVariables": "off",
             "noUnusedImports": "off"
