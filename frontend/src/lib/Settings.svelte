@@ -18,7 +18,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 <script lang='ts'>
   import type { IconType } from './types.svelte'
 
-  let { _ = $bindable() }: { icon: IconType } = $props()
+  let { icon = $bindable() }: { icon: IconType } = $props()
 </script>
 
 <div class='p-4 w-full card preset-filled-surface-200-800'>
