@@ -80,6 +80,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     else if (lastTree != null) // TODO: make pan configurable
       map?.panTo(L.latLng(lastTree.pos[2], lastTree.pos[0]))
   })
+
+  $effect(() => { for (const [hash, tree] of trees) tree.setStyle({
+    color: settings.colors.get(baseTrees.get(hash)!.name)!
+  }) })
 </script>
 
 <div class='h-full bg-black rounded-lg' onclickcapture={
