@@ -82,8 +82,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 <div class='h-full bg-black rounded-lg'>
   <SveafletMap options={{
-    zoomSnap: 0.5,
-    zoomDelta: 0.5,
     crs,
     center: CENTER,
     zoom: 3,
