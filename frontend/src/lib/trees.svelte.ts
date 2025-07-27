@@ -20,15 +20,40 @@ import { loadTrees } from './client.svelte'
 import hyrule from './trees_hyrule.json'
 import tots from './trees_tots.json'
 
-export interface Tree {
-  hash: number
+interface Tree {
   name: string
   pos: [number, number, number]
-  cut?: boolean
 }
 
-const base = <Tree[]>hyrule
-const extended = base.concat(<Tree[]>tots)
+// biome-ignore-start format: blocks should remain collapsed
+interface JsonTree extends Tree { hash: number }
+export interface MapTree extends Tree { tots: boolean }
 
-export const loadBase = () => loadTrees(base)
-export const loadExtended = () => loadTrees(extended)
+export const baseTrees = new Map<number, MapTree>((<JsonTree[]>hyrule).map(
+  (tree) => [tree.hash, {
+    name: tree.name,
+    pos: tree.pos,
+    tots: false,
+  }]
+))
+export const extendedTrees = new Map<number, MapTree>([
+  ...baseTrees.entries(), ...(<JsonTree[]>tots).map(
+    (tree): [number, MapTree] => [tree.hash, {
+      name: tree.name,
+      pos: tree.pos,
+      tots: true,
+    }]
+  )
+])
+// biome-ignore-end format: blocks should remain collapsed
+
+export let trees = new Map<number, MapTree>()
+
+export const loadBase = () => {
+  loadTrees(baseTrees.keys())
+  trees = baseTrees
+}
+export const loadExtended = () => {
+  loadTrees(extendedTrees.keys())
+  trees = extendedTrees
+}

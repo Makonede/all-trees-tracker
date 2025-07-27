@@ -22,6 +22,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
   import 'leaflet/dist/leaflet.css'
 
+  import { cutTrees } from './client.svelte'
+  import { settings } from './settings.svelte'
+  import { baseTrees, type MapTree } from './trees.svelte'
+
   const WIDTH = 24000
   const HEIGHT = 20000
   const BOUNDS = L.latLngBounds(
@@ -33,11 +37,46 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     4 / 0x100, WIDTH / 0x100, 4 / 0x100, HEIGHT / 0x100
   ) }
 
-  let map: L.Map
+  const trees = new Map<number, L.Circle>()
+  for (const [hash, tree] of baseTrees) {
+    let treeColor = settings.colors.get(tree.name)
+    if (!treeColor) {
+      treeColor = `hsl(${Math.floor(Math.random() * 360)}, 100%, 60%)`
+      settings.colors.set(tree.name, treeColor)
+    }
+    trees.set(hash, L.circle(L.latLng(tree.pos[2], tree.pos[0]), {
+      radius: 1,
+      color: treeColor,
+    }))
+  }
+
+  let treeGroup: L.LayerGroup = L.layerGroup([...trees.entries().filter(
+    (tree) => !cutTrees.get(tree[0])!
+  ).map((tree) => tree[1])])
+  let map = $state<L.Map>()
 
   onMount(() => {
+    map = map!
     map.getContainer().classList.add('bg-black!', 'rounded-lg!')
-    map.setView([0, 0], 3, { animate: false })
+    map.setView(L.latLng(0, 0), 3, { animate: false })
+    treeGroup.addTo(map)
+  })
+
+  $effect(() => {
+    let lastTree: MapTree | undefined
+    let reset = true
+
+    for (const [hash, cut] of cutTrees) if (cut) {
+      trees.get(hash)?.remove()
+      lastTree = baseTrees.get(hash)
+      reset = false
+    }
+
+    if (reset) treeGroup = L.layerGroup([...trees.entries().filter(
+      (tree) => !cutTrees.get(tree[0])!
+    ).map((tree) => tree[1])])
+    else if (lastTree != null) // TODO: make pan configurable
+      map?.panTo(L.latLng(lastTree.pos[2], lastTree.pos[0]))
   })
 </script>
 

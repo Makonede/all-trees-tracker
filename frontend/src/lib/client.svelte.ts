@@ -16,22 +16,19 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { Channel, invoke } from '@tauri-apps/api/core'
+import { SvelteMap } from 'svelte/reactivity'
 
-import type { Tree } from './trees.svelte'
+export let cutTrees = $state(new SvelteMap<number, boolean>())
 
-export let trees = $state(new Map<number, Tree>())
-
-export const loadTrees = (actors: Tree[]) => {
-  trees.clear()
-  // biome-ignore format: block should remain collapsed
-  actors.forEach((actor) => { trees.set(actor.hash, { ...actor, cut: false }) })
+export const loadTrees = (hashes: Iterable<number>) => {
+  cutTrees.clear()
+  for (const hash of hashes) cutTrees.set(hash, false)
 }
 
 export const connect = async (address: string, port: number) => {
   const tracker = new Channel<number>()
   tracker.onmessage = (hash) => {
-    const tree = trees.get(hash)
-    if (tree) tree.cut = true
+    if (cutTrees.has(hash)) cutTrees.set(hash, true)
   }
 
   await invoke('connect', { address, port, channel: tracker })

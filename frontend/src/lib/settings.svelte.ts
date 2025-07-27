@@ -1,4 +1,4 @@
-<!--
+/*
 This file is part of all-trees-tracker.
 Copyright (C) 2025 Mako
 
@@ -13,19 +13,8 @@ PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
--->
+*/
 
-<script lang='ts'>
-  import ChartColumn from '@lucide/svelte/icons/chart-column'
-  import ChartLine from '@lucide/svelte/icons/chart-line'
-  import ChartNoAxesCombined from '@lucide/svelte/icons/chart-no-axes-combined'
-  import ChartPie from '@lucide/svelte/icons/chart-pie'
-
-  import type { IconType } from './types.svelte'
-
-  let { icon = $bindable() }: { icon: IconType } = $props()
-</script>
-
-<div class='p-4 w-full card preset-filled-surface-200-800'>
-  <span>Progress placeholder</span>
-</div>
+export let settings = $state({
+  colors: new Map<string, string>(),
+})

@@ -49,7 +49,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   ]
 </script>
 
-<Tabs tabStyle='full' ulClass='gap-4'>
+<Tabs tabStyle='full' class='gap-4'>
   {#each tabs as { name, content }, i}
     {@const Content = content}
     {@const Icon = icons[i].icon}
