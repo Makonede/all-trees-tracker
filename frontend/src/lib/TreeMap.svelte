@@ -70,7 +70,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
     for (const [hash, cut] of cutTrees) if (cut) {
       trees.get(hash)?.remove()
-      lastTree = baseTrees.get(hash)
+      const tree = baseTrees.get(hash)
+      if (tree != null) lastTree = tree
       reset = false
     }
 
