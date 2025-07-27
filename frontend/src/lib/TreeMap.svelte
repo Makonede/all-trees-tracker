@@ -88,7 +88,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 <div class='h-full bg-black rounded-lg' onclickcapture={
   async (event: MouseEvent) => {
-    const target = event.target as HTMLElement
+    const target = event.target! as HTMLElement
     if (target.tagName === 'A') {
       event.preventDefault()
       event.stopPropagation()
