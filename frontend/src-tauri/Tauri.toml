@@ -1,0 +1,27 @@
+product-name = "All Trees Tracker"
+version = "0.1.0"
+identifier = "sr.zelda.all-trees-tracker"
+
+[build]
+before-dev-command = "bun dev"
+dev-url = "http://localhost:1420"
+before-build-command = "bun run build"
+frontend-dist = "../build"
+
+[[app.windows]]
+label = "main"
+title = "All Trees Tracker"
+width = 800
+height = 600
+theme = "Dark"
+
+[bundle]
+active = true
+targets = "all"
+icon = [
+  "icons/32x32.png",
+  "icons/128x128.png",
+  "icons/128x128@2x.png",
+  "icons/icon.icns",
+  "icons/icon.ico",
+]
