@@ -16,6 +16,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <script lang='ts'>
+  import { openUrl } from '@tauri-apps/plugin-opener'
+
   import * as L from 'leaflet'
   import { Map as SveafletMap, TileLayer } from 'sveaflet'
   import { onMount } from 'svelte'
@@ -80,7 +82,16 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   })
 </script>
 
-<div class='h-full bg-black rounded-lg'>
+<div class='h-full bg-black rounded-lg' onclickcapture={
+  async (event: MouseEvent) => {
+    const target = event.target as HTMLElement
+    if (target.tagName === 'A') {
+      event.preventDefault()
+      event.stopPropagation()
+      await openUrl((target as HTMLAnchorElement).href)
+    }
+  }
+}>
   <SveafletMap options={{
     crs,
     center: CENTER,
