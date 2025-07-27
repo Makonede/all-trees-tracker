@@ -27,8 +27,10 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![client::connect, client::disconnect])
         .setup(|app| {
             app.manage(AtomicBool::default());
-            let window = app.get_window("main").unwrap();
-            window.set_theme(Some(tauri::Theme::Dark))?;
+            #[cfg(any(target_os = "linux", target_os = "macos"))] {
+                let window = app.get_window("main").unwrap();
+                window.set_theme(Some(tauri::Theme::Dark))?;
+            }
             Ok(())
         })
         .run(tauri::generate_context!())
