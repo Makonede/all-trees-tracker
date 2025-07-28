@@ -17,4 +17,4 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 import type { Component } from 'svelte'
 
-export type IconType = { icon: Component }
+export interface IconType { icon: Component }
