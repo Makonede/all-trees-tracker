@@ -15,6 +15,8 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
+import { SvelteMap } from 'svelte/reactivity'
+
 export let settings = $state({
-  colors: new Map<string, string>(),
+  colors: new SvelteMap<string, string>(),
 })
