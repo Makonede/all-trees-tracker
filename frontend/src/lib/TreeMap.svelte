@@ -70,10 +70,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   })
 
   $effect(() => {
-    if (lastTree.hash !== -1) {
-      trees.get(lastTree.hash)!.remove()
+    const { hash } = lastTree
+    if (hash !== -1) {
+      trees.get(hash)!.remove()
       // TODO: make fly configurable
-      const tree = baseTrees.get(lastTree.hash)!
+      const tree = baseTrees.get(hash)!
       map?.flyTo(L.latLng(tree.pos[2], tree.pos[0]), TREE_ZOOM)
     }
     else treeGroup = L.layerGroup([...trees.entries().filter(

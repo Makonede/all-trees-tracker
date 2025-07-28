@@ -16,6 +16,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <script lang='ts'>
+  import { t } from './translations/translations.svelte'
   import type { IconType } from './types.svelte'
 
   let { icon = $bindable() }: { icon: IconType } = $props()

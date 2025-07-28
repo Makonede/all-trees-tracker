@@ -15,13 +15,31 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import type { Load } from '@sveltejs/kit'
+import i18n, { type Config } from 'sveltekit-i18n'
 
-import { loadTranslations } from '$lib/translations/translations.svelte'
+const config: Config = { loaders: [
+  {
+    locale: 'en-US',
+    key: 'common',
+    loader: async () => (await import('./en-US/common.json')).default,
+  },
+  {
+    locale: 'en-US',
+    key: 'tab',
+    loader: async () => (await import('./en-US/tab.json')).default,
+  },
+  {
+    locale: 'en-US',
+    key: 'progress',
+    loader: async () => (await import('./en-US/progress.json')).default,
+  },
+  {
+    locale: 'en-US',
+    key: 'region',
+    loader: async () => (await import('./en-US/region.json')).default,
+  },
+] }
 
-export const prerender = true
-export const ssr = false
-
-export const load = async ({ url }) => {
-  await loadTranslations('en-US', url.pathname) // TODO: store locale
-}
+export const {
+  t, locale, locales, loading, loadTranslations
+} = new i18n(config)

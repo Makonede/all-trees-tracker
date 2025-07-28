@@ -23,6 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
   import Progress from './Progress.svelte'
   import Settings from './Settings.svelte'
+  import { t } from './translations/translations.svelte'
   import type { IconType } from './types.svelte'
 
   let progressIcon = $state({ icon: ChartNoAxesCombined })
@@ -39,11 +40,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
   const tabs: Tab[] = [
     {
-      name: 'Progress',
+      name: $t('tab.progress'),
       content: Progress,
     },
     {
-      name: 'Settings',
+      name: $t('tab.settings'),
       content: Settings,
     },
   ]
@@ -56,7 +57,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     {@const CLASS = 'flex p-2 w-full border-b-4 rounded-sm transition-colors duration-300'}
     <TabItem
       open={!i} activeClass='{CLASS} text-primary-500'
-      inactiveClass='{CLASS} text-surface-500' class='w-full'
+      inactiveClass='{CLASS} text-surface-500 hover:text-surface-400' class='w-full'
     >
       {#snippet titleSlot()}
         <div class='flex items-center gap-2'>

@@ -43,6 +43,7 @@
     "svelte": "^5.37.0",
     "svelte-adapter-bun": "^0.5.2",
     "svelte-check": "^4.3.0",
+    "sveltekit-i18n": "^2.4.2",
     "tailwindcss": "^4.1.11",
     "tslib": "^2.8.1",
     "turbo": "^2.5.5",

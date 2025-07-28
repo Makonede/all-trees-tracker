@@ -1,4 +1,4 @@
-/*
+<!--
 This file is part of all-trees-tracker.
 Copyright (C) 2025 Mako
 
@@ -13,15 +13,6 @@ PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
-*/
+-->
 
-import type { Load } from '@sveltejs/kit'
-
-import { loadTranslations } from '$lib/translations/translations.svelte'
-
-export const prerender = true
-export const ssr = false
-
-export const load = async ({ url }) => {
-  await loadTranslations('en-US', url.pathname) // TODO: store locale
-}
+<script lang='ts'></script>
