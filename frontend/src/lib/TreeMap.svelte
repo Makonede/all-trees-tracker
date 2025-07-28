@@ -24,9 +24,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
   import 'leaflet/dist/leaflet.css'
 
-  import { cutTrees } from './client.svelte'
+  import { cutTrees, lastTree } from './client.svelte'
   import { settings } from './settings.svelte'
-  import { baseTrees, type MapTree } from './trees.svelte'
+  import { baseTrees } from './trees.svelte'
 
   const WIDTH = 24000
   const HEIGHT = 20000
@@ -70,21 +70,15 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   })
 
   $effect(() => {
-    let lastTree: MapTree | undefined
-    let reset = true
-
-    for (const [hash, cut] of cutTrees) if (cut) {
-      trees.get(hash)?.remove()
-      const tree = baseTrees.get(hash)
-      if (tree != null) lastTree = tree
-      reset = false
+    if (lastTree.hash !== -1) {
+      trees.get(lastTree.hash)!.remove()
+      // TODO: make fly configurable
+      const tree = baseTrees.get(lastTree.hash)!
+      map?.flyTo(L.latLng(tree.pos[2], tree.pos[0]), TREE_ZOOM)
     }
-
-    if (reset) treeGroup = L.layerGroup([...trees.entries().filter(
+    else treeGroup = L.layerGroup([...trees.entries().filter(
       (tree) => !cutTrees.get(tree[0])!
     ).map((tree) => tree[1])])
-    else if (lastTree != null) // TODO: make fly configurable
-      map?.flyTo(L.latLng(lastTree.pos[2], lastTree.pos[0]), TREE_ZOOM)
   })
 
   $effect(() => { for (const [hash, tree] of trees) tree.setStyle({
