@@ -54,10 +54,13 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   {#each tabs as { name, content }, i}
     {@const Content = content}
     {@const Icon = icons[i].icon}
-    {@const CLASS = 'flex p-2 w-full border-b-4 rounded-sm transition-colors duration-300'}
+    {@const CLASS =
+      'flex p-2 w-full border-b-4 rounded-sm transition-colors duration-300'
+    }
     <TabItem
       open={!i} activeClass='{CLASS} text-primary-500'
-      inactiveClass='{CLASS} text-surface-500 hover:text-surface-400' class='w-full'
+      inactiveClass='{CLASS} text-surface-500 hover:text-surface-400'
+      class='w-full'
     >
       {#snippet titleSlot()}
         <div class='flex items-center gap-2'>
