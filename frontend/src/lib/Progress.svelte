@@ -65,9 +65,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
       case ChartType.LineChart:
         icon.icon = ChartLine
         break
-      case ChartType.PieChart:
-        icon.icon = ChartPie
-        break
+      case ChartType.PieChart: icon.icon = ChartPie
     }
   })
 </script>
