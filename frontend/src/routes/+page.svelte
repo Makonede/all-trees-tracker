@@ -20,7 +20,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   import TreeMap from '$lib/TreeMap.svelte'
   import { loadBase, loadExtended } from '$lib/trees.svelte'
 
-  loadExtended()
+  loadBase()
 </script>
 
 <main

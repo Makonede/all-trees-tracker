@@ -35,6 +35,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   )
   const CENTER = L.latLng(HEIGHT / 2, WIDTH / 2)
 
+  const MIN_ZOOM = 2
+  const MAX_ZOOM = 10
+  const DEFAULT_ZOOM = 3
+  const TREE_ZOOM = 8
+
   const crs = { ...L.CRS.Simple, transformation: L.transformation(
     4 / 0x100, WIDTH / 0x100, 4 / 0x100, HEIGHT / 0x100
   ) }
@@ -60,7 +65,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   onMount(() => {
     map = map!
     map.getContainer().classList.add('bg-black!', 'rounded-lg!')
-    map.setView(L.latLng(0, 0), 3, { animate: false })
+    map.setView(L.latLng(0, 0), DEFAULT_ZOOM, { animate: false })
     treeGroup.addTo(map)
   })
 
@@ -78,8 +83,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     if (reset) treeGroup = L.layerGroup([...trees.entries().filter(
       (tree) => !cutTrees.get(tree[0])!
     ).map((tree) => tree[1])])
-    else if (lastTree != null) // TODO: make pan configurable
-      map?.panTo(L.latLng(lastTree.pos[2], lastTree.pos[0]))
+    else if (lastTree != null) // TODO: make fly configurable
+      map?.flyTo(L.latLng(lastTree.pos[2], lastTree.pos[0]), TREE_ZOOM)
   })
 
   $effect(() => { for (const [hash, tree] of trees) tree.setStyle({
@@ -90,7 +95,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 <div class='h-full bg-black rounded-lg' onclickcapture={
   async (event: MouseEvent) => {
     const target = event.target! as HTMLElement
-    if (target.tagName === 'A') {
+    if (target.tagName === 'A' && target.parentElement!.classList.contains(
+      'leaflet-control-attribution'
+    )) {
       event.preventDefault()
       event.stopPropagation()
       await openUrl((target as HTMLAnchorElement).href)
@@ -100,9 +107,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   <SveafletMap options={{
     crs,
     center: CENTER,
-    zoom: 3,
-    minZoom: 2,
-    maxZoom: 10,
+    zoom: DEFAULT_ZOOM,
+    minZoom: MIN_ZOOM,
+    maxZoom: MAX_ZOOM,
     maxBounds: BOUNDS,
   }} bind:instance={map}>
     <TileLayer
