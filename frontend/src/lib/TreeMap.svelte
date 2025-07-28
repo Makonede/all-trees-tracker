@@ -65,7 +65,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   onMount(() => {
     map = map!
     map.getContainer().classList.add('bg-black!', 'rounded-lg!')
-    map.setView(L.latLng(0, 0), DEFAULT_ZOOM, { animate: false })
+    map.setView(L.latLng(0, 0), undefined, { animate: false })
     treeGroup.addTo(map)
   })
 
