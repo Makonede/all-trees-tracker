@@ -44,7 +44,7 @@ type Region =
   | 'wasteland'
   | 'woodland'
 
-export type MapTree = Tree & ({
+type MapTree = Tree & ({
   region: Region
   tots: false
 } | { tots: true })
