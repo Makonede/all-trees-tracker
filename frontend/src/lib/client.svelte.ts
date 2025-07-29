@@ -31,7 +31,6 @@ export const loadTrees = (hashes: Iterable<number>) => {
 
 export const connect = async (address: string, port: number) => {
   const tracker = new Channel<number>()
-  // biome-ignore format: block should remain collapsed
   tracker.onmessage = (hash) => { if (cutTrees.has(hash)) {
     cutTrees.set(hash, true)
     if (baseTrees.has(hash)) lastTree.hash = hash
@@ -40,5 +39,4 @@ export const connect = async (address: string, port: number) => {
   await invoke('connect', { address, port, channel: tracker })
 }
 
-// biome-ignore format: block should remain collapsed
 export const disconnect = () => { invoke('disconnect') }

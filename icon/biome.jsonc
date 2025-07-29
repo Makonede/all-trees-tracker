@@ -28,6 +28,7 @@
       "bracketSpacing": true
     }
   },
+  "overrides": [{ "includes": ["**/*.ts"], "formatter": { "enabled": false } }],
   "assist": {
     "enabled": true,
     "actions": { "source": { "organizeImports": "on" } }

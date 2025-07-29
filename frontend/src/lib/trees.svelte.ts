@@ -20,22 +20,49 @@ import { loadTrees } from './client.svelte'
 import hyrule from './trees_hyrule.json'
 import tots from './trees_tots.json'
 
-interface Tree {
+type Tree = {
   name: string
   pos: [number, number, number]
 }
 
-// biome-ignore-start format: blocks should remain collapsed
-interface JsonTree extends Tree { hash: number }
-export interface MapTree extends Tree { tots: boolean }
+type JsonTree = Tree & { hash: number }
 
-export const baseTrees = new Map<number, MapTree>((<JsonTree[]>hyrule).map(
-  (tree) => [tree.hash, {
-    name: tree.name,
-    pos: tree.pos,
-    tots: false,
-  }]
-))
+type Region =
+  'akkala'
+  | 'central'
+  | 'duelingPeaks'
+  | 'eldin'
+  | 'faron'
+  | 'gerudo'
+  | 'greatPlateau'
+  | 'hateno'
+  | 'hebra'
+  | 'lake'
+  | 'lanayru'
+  | 'ridgeland'
+  | 'tabantha'
+  | 'wasteland'
+  | 'woodland'
+
+export type MapTree = Tree & ({ tots: true } | {
+  region: Region
+  tots: false
+})
+
+type HyruleTrees = Record<Region, JsonTree[]>
+type Entries<T> = { [K in keyof T]: [K, T[K]] }[keyof T][]
+
+export const baseTrees = new Map<number, MapTree>(
+  (<Entries<HyruleTrees>>Object.entries(<HyruleTrees>hyrule)).flatMap(
+    ([region, trees]) => trees.map((tree) => [tree.hash, {
+      name: tree.name,
+      pos: tree.pos,
+      region,
+      tots: false,
+    }])
+  )
+)
+
 export const extendedTrees = new Map<number, MapTree>([
   ...baseTrees.entries(), ...(<JsonTree[]>tots).map(
     (tree): [number, MapTree] => [tree.hash, {
@@ -45,7 +72,6 @@ export const extendedTrees = new Map<number, MapTree>([
     }]
   )
 ])
-// biome-ignore-end format: blocks should remain collapsed
 
 export let trees = new Map<number, MapTree>()
 
