@@ -28,7 +28,7 @@ type Tree = {
 type JsonTree = Tree & { hash: number }
 
 type Region =
-  'akkala'
+  | 'akkala'
   | 'central'
   | 'duelingPeaks'
   | 'eldin'
