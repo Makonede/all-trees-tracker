@@ -116,9 +116,19 @@
         "rules": {
           "style": { "useConst": "off" },
           "correctness": {
+            "noUndeclaredVariables": "off",
             "noUnusedVariables": "off",
             "noUnusedImports": "off"
           }
+        }
+      }
+    },
+    {
+      "includes": ["**/*.svelte.ts"],
+      "linter": {
+        "rules": {
+          "style": { "useConst": "off" },
+          "correctness": { "noUndeclaredVariables": "off" }
         }
       }
     },
