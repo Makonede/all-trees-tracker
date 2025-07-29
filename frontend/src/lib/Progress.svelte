@@ -21,6 +21,13 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   import ChartNoAxesCombined from '@lucide/svelte/icons/chart-no-axes-combined'
   import ChartPie from '@lucide/svelte/icons/chart-pie'
 
+  import type { Component } from 'svelte'
+
+  import BarChart from './progress/BarChart.svelte'
+  import LineChart from './progress/LineChart.svelte'
+  import PieChart from './progress/PieChart.svelte'
+  import ProgressBar from './progress/ProgressBar.svelte'
+
   import { t } from './translations/translations.svelte'
   import type { IconType } from './types.svelte'
 
@@ -53,19 +60,25 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   ]
 
   let chartType = $state(ChartType.ProgressBar)
+  let chart = $state<Component>(ProgressBar)
 
   $effect(() => {
     switch (chartType) {
       case ChartType.ProgressBar:
         icon.icon = ChartNoAxesCombined
+        chart = ProgressBar
         break
       case ChartType.BarChart:
         icon.icon = ChartColumn
+        chart = BarChart
         break
       case ChartType.LineChart:
         icon.icon = ChartLine
+        chart = LineChart
         break
-      case ChartType.PieChart: icon.icon = ChartPie
+      case ChartType.PieChart:
+        icon.icon = ChartPie
+        chart = PieChart
     }
   })
 </script>
@@ -84,7 +97,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
       </label>
     {/each}
   </form>
-  <div>
-    <!-- TODO -->
-  </div>
+  <svelte:boundary>
+    {@const Chart = chart}
+    <Chart />
+  </svelte:boundary>
 </div>
