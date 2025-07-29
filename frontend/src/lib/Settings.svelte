@@ -19,7 +19,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   import { t } from './translations/translations.svelte'
   import type { IconType } from './types.svelte'
 
-  let { icon = $bindable() }: { icon: IconType } = $props()
+  let { icon = $bindable(), tabState = $bindable() }: {
+    icon: IconType, tabState: Record<string, unknown>
+  } = $props()
 </script>
 
 <div class='p-4 w-full card preset-filled-surface-200-800'>

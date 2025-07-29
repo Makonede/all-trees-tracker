@@ -31,14 +31,16 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   import { t } from './translations/translations.svelte'
   import type { IconType } from './types.svelte'
 
-  let { icon = $bindable() }: { icon: IconType } = $props()
-
   enum ChartType {
     ProgressBar,
     BarChart,
     LineChart,
     PieChart,
   }
+
+  let { icon = $bindable(), tabState = $bindable() }: {
+    icon: IconType, tabState: { chartType?: ChartType }
+  } = $props()
 
   const chartTypes: { name: string, type: ChartType }[] = [
     {
@@ -59,10 +61,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     },
   ]
 
-  let chartType = $state(ChartType.ProgressBar)
+  tabState.chartType ??= ChartType.ProgressBar
   let chart = $state<Component>(ProgressBar)
 
-  $effect(() => { switch (chartType) {
+  $effect(() => { switch (tabState.chartType) {
     case ChartType.ProgressBar:
       icon.icon = ChartNoAxesCombined
       chart = ProgressBar
@@ -89,7 +91,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
       <label class='flex items-center space-x-2'>
         <input
           class='radio' type='radio' checked={!i} name='chart' value={type}
-          bind:group={chartType}
+          bind:group={tabState.chartType}
         />
         <p>{name}</p>
       </label>

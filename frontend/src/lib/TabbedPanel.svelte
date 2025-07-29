@@ -33,9 +33,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     { icon: SettingsIcon },
   ])
 
+  let tabState = $state<Record<string, unknown>[]>([{}, {}])
+
   interface Tab {
     name: string
-    content: Component<{ icon: IconType }>
+    content: Component<{ icon: IconType, tabState: Record<string, unknown> }>
   }
 
   const tabs: Tab[] = [
@@ -69,7 +71,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
         </div>
       {/snippet}
       <!-- svelte-ignore binding_property_non_reactive  -->
-      <Content bind:icon={icons[i]} />
+      <Content bind:icon={icons[i]} bind:tabState={tabState[i]} />
     </TabItem>
   {/each}
 </Tabs>
