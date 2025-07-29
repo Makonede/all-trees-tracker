@@ -25,7 +25,7 @@ type Tree = {
   pos: [number, number, number]
 }
 
-type JsonTree = Tree & { hash: number }
+type JsonTree = { hash: number } & Tree
 
 type Region =
   | 'akkala'
@@ -54,23 +54,16 @@ type Entries<T> = { [K in keyof T]: [K, T[K]] }[keyof T][]
 
 export const baseTrees = new Map<number, MapTree>(
   (<Entries<HyruleTrees>>Object.entries(<HyruleTrees>hyrule)).flatMap(
-    ([region, trees]) => trees.map((tree) => [tree.hash, {
-      name: tree.name,
-      pos: tree.pos,
-      region,
-      tots: false,
-    }])
+    ([region, trees]) => trees.map(({ hash, name, pos }) => [
+      hash, { name, pos, region, tots: false }
+    ])
   )
 )
 
 export const extendedTrees = new Map<number, MapTree>([
-  ...baseTrees.entries(), ...(<JsonTree[]>tots).map(
-    (tree): [number, MapTree] => [tree.hash, {
-      name: tree.name,
-      pos: tree.pos,
-      tots: true,
-    }]
-  )
+  ...baseTrees.entries(), ...(<JsonTree[]>tots).map((
+    { hash, name, pos }
+  ): [number, MapTree] => [hash, { name, pos, tots: true }])
 ])
 
 export let trees = new Map<number, MapTree>()
