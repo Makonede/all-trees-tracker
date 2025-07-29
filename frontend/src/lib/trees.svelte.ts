@@ -72,6 +72,7 @@ export const loadBase = () => {
   loadTrees(baseTrees.keys())
   trees = baseTrees
 }
+
 export const loadExtended = () => {
   loadTrees(extendedTrees.keys())
   trees = extendedTrees
