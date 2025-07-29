@@ -44,10 +44,10 @@ type Region =
   | 'wasteland'
   | 'woodland'
 
-export type MapTree = Tree & ({ tots: true } | {
+export type MapTree = Tree & ({
   region: Region
   tots: false
-})
+} | { tots: true })
 
 type HyruleTrees = Record<Region, JsonTree[]>
 type Entries<T> = { [K in keyof T]: [K, T[K]] }[keyof T][]
