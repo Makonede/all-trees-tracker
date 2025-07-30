@@ -23,7 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
   import Progress from './Progress.svelte'
   import Settings from './Settings.svelte'
-  import { t } from './translations/translations.svelte'
+  import { t } from './translations.svelte'
   import type { IconType } from './types.svelte'
 
   let progressIcon = $state({ icon: ChartNoAxesCombined })

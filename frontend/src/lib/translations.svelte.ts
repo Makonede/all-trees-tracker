@@ -17,29 +17,22 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 import i18n, { type Config } from 'sveltekit-i18n'
 
-const config: Config = { loaders: [
-  {
-    locale: 'en-US',
-    key: 'common',
-    loader: async () => (await import('./en-US/common.json')).default,
-  },
-  {
-    locale: 'en-US',
-    key: 'tab',
-    loader: async () => (await import('./en-US/tab.json')).default,
-  },
-  {
-    locale: 'en-US',
-    key: 'progress',
-    loader: async () => (await import('./en-US/progress.json')).default,
-  },
-  {
-    locale: 'en-US',
-    key: 'region',
-    loader: async () => (await import('./en-US/region.json')).default,
-  },
-] }
+const LOCALES = [
+  'en-US',
+]
+const KEYS = [
+  'common',
+  'tab',
+  'progress',
+  'region',
+]
+
+const CONFIG: Config = { loaders: LOCALES.flatMap((locale) => KEYS.map(
+  (key) => ({ locale, key, loader: ((locale, key) => async () => (await import(
+    `./translations/${locale}/${key}.json`
+  )).default)(locale, key) })
+)) }
 
 export const {
   t, locale, locales, loading, loadTranslations
-} = new i18n(config)
+} = new i18n(CONFIG)

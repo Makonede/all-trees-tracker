@@ -17,7 +17,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 import type { Load } from '@sveltejs/kit'
 
-import { loadTranslations } from '$lib/translations/translations.svelte'
+import { loadTranslations } from '$lib/translations.svelte'
 
 export const prerender = true
 export const ssr = false

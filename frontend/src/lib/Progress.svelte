@@ -28,7 +28,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   import PieChart from './progress/PieChart.svelte'
   import ProgressBar from './progress/ProgressBar.svelte'
 
-  import { t } from './translations/translations.svelte'
+  import { t } from './translations.svelte'
   import type { IconType } from './types.svelte'
 
   enum ChartType {
