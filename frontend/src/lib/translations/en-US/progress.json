@@ -4,5 +4,7 @@
   "lineChart": "Line chart",
   "pieChart": "Pie chart",
   "overall": "Overall",
-  "cutTrees": "{cut,number}/{total,number} cut trees"
+  "cutTrees": "{cut,number}/{total,number} cut trees",
+  "byRegion": "By region",
+  "byType": "By type"
 }

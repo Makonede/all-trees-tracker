@@ -56,12 +56,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   }} multiple>
     <Accordion.Item value='region'>
       {#snippet lead()}<LandPlot />{/snippet}
-      {#snippet control()}By region{/snippet}
+      {#snippet control()}{$t('progress.byRegion')}{/snippet}
       {#snippet panel()}Regions placeholder{/snippet}
     </Accordion.Item>
     <Accordion.Item value='type'>
       {#snippet lead()}<Trees />{/snippet}
-      {#snippet control()}By type{/snippet}
+      {#snippet control()}{$t('progress.byType')}{/snippet}
       {#snippet panel()}Types placeholder{/snippet}
     </Accordion.Item>
   </Accordion>
