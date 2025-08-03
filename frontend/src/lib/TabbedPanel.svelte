@@ -18,7 +18,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 <script lang='ts'>
   import ChartNoAxesCombined from '@lucide/svelte/icons/chart-no-axes-combined'
   import SettingsIcon from '@lucide/svelte/icons/settings'
-  import { TabItem, Tabs } from 'flowbite-svelte'
+  import { TabItem, Tabs } from 'flowbite-svelte' // TODO: replace with Skeleton
   import type { Component } from 'svelte'
 
   import Progress from './Progress.svelte'
@@ -65,7 +65,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
       class='w-full'
     >
       {#snippet titleSlot()}
-        <div class='flex items-center gap-2'>
+        <div class='flex gap-2 items-center'>
           <Icon />
           <span>{name}</span>
         </div>

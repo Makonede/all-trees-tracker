@@ -32,7 +32,6 @@ common = [
 ]
 c = [
   "-DBOTW_VERSION=160",
-  "-DBOTWTOOLKIT_TCP_SEND",
 ]
 cxx = [
   "-std=gnu++2c",

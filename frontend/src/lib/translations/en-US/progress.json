@@ -2,5 +2,7 @@
   "progressBar": "Progress bar",
   "barChart": "Bar chart",
   "lineChart": "Line chart",
-  "pieChart": "Pie chart"
+  "pieChart": "Pie chart",
+  "overall": "Overall",
+  "cutTrees": "{cut,number}/{total,number} cut trees"
 }

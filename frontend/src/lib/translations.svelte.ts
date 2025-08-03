@@ -15,7 +15,8 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import i18n, { type Config } from 'sveltekit-i18n'
+import i18n from '@sveltekit-i18n/base'
+import parser, { type Config } from '@sveltekit-i18n/parser-icu'
 
 const LOCALES = [
   'en-US',
@@ -27,11 +28,14 @@ const KEYS = [
   'region',
 ]
 
-const CONFIG: Config = { loaders: LOCALES.flatMap((locale) => KEYS.map(
-  (key) => ({ locale, key, loader: ((locale, key) => async () => (await import(
-    `./translations/${locale}/${key}.json`
-  )).default)(locale, key) })
-)) }
+const CONFIG: Config = {
+  parser: parser(),
+  loaders: LOCALES.flatMap((locale) => KEYS.map(
+    (key) => ({ locale, key, loader: ((locale, key) => async () => (
+      await import(`./translations/${locale}/${key}.json`)
+    ).default)(locale, key) })
+  )),
+}
 
 export const {
   t, locale, locales, loading, loadTranslations
