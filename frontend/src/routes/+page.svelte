@@ -28,8 +28,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 >
   <div
     class='col-span-2 row-span-2 lg:col-span-2 lg:row-span-1 p-4 card preset-filled-surface-100-900'
-  >
-    <TreeMap />
-  </div>
+  ><TreeMap /></div>
   <div class='p-4 card preset-filled-surface-100-900'><TabbedPanel /></div>
 </main>

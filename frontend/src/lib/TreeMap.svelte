@@ -24,7 +24,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
   import 'leaflet/dist/leaflet.css'
 
-  import { cutTrees, lastTree } from './client.svelte'
+  import { cutTrees, getLastTree } from './client.svelte'
   import { settings } from './settings.svelte'
   import { baseTrees } from './trees.svelte'
 
@@ -70,7 +70,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   })
 
   $effect(() => {
-    const { hash } = lastTree
+    const hash = getLastTree()
     if (hash !== -1) {
       trees.get(hash)!.remove()
       // TODO: make fly configurable
@@ -106,13 +106,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     minZoom: MIN_ZOOM,
     maxZoom: MAX_ZOOM,
     maxBounds: BOUNDS,
-  }} bind:instance={map}>
-    <TileLayer
-      url={'https://objmap.zeldamods.org/game_files/maptex/{z}/{x}/{y}.webp'}
-      options={{
-        maxNativeZoom: 7,
-        attribution: '&copy; ZeldaMods',
-      }}
-    />
-  </SveafletMap>
+  }} bind:instance={map}><TileLayer
+    url={'https://objmap.zeldamods.org/game_files/maptex/{z}/{x}/{y}.webp'}
+    options={{
+      maxNativeZoom: 7,
+      attribution: '&copy; ZeldaMods',
+    }}
+  /></SveafletMap>
 </div>

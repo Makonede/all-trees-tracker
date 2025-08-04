@@ -27,29 +27,40 @@ type Tree = {
 
 type JsonTree = { hash: number } & Tree
 
-type Region =
-  | 'akkala'
-  | 'central'
-  | 'duelingPeaks'
-  | 'eldin'
-  | 'faron'
-  | 'gerudo'
-  | 'greatPlateau'
-  | 'hateno'
-  | 'hebra'
-  | 'lake'
-  | 'lanayru'
-  | 'ridgeland'
-  | 'tabantha'
-  | 'wasteland'
-  | 'woodland'
+const REGIONS_BASE = [
+  'akkala',
+  'central',
+  'duelingPeaks',
+  'eldin',
+  'faron',
+  'gerudo',
+  'greatPlateau',
+  'hateno',
+  'hebra',
+  'lake',
+  'lanayru',
+  'ridgeland',
+  'tabantha',
+  'wasteland',
+  'woodland',
+] as const
+const REGIONS_EXTENDED = [...REGIONS_BASE, 'tots'] as const
+let dlc = $state(false)
+let regions = $derived(dlc ? REGIONS_EXTENDED : REGIONS_BASE)
+export const getRegions = () => regions
 
-type MapTree = Tree & ({
-  region: Region
+export type Region = typeof REGIONS_EXTENDED[number]
+type HyruleRegion = typeof REGIONS_BASE[number]
+
+export type MapTree = Tree & ({
+  region: HyruleRegion
   tots: false
-} | { tots: true })
+} | {
+  region: 'tots'
+  tots: true
+})
 
-type HyruleTrees = Record<Region, JsonTree[]>
+type HyruleTrees = Record<HyruleRegion, JsonTree[]>
 type Entries<T> = { [K in keyof T]: [K, T[K]] }[keyof T][]
 
 export const baseTrees = new Map<number, MapTree>(
@@ -63,17 +74,20 @@ export const baseTrees = new Map<number, MapTree>(
 export const extendedTrees = new Map<number, MapTree>([
   ...baseTrees.entries(), ...(<JsonTree[]>tots).map((
     { hash, name, pos }
-  ): [number, MapTree] => [hash, { name, pos, tots: true }])
+  ): [number, MapTree] => [hash, { name, pos, region: 'tots', tots: true }])
 ])
 
-export let trees = new Map<number, MapTree>()
+let trees = $state(new Map<number, MapTree>())
+export const getTrees = () => trees
 
 export const loadBase = () => {
   loadTrees(baseTrees.keys())
   trees = baseTrees
+  dlc = false
 }
 
 export const loadExtended = () => {
   loadTrees(extendedTrees.keys())
   trees = extendedTrees
+  dlc= true
 }

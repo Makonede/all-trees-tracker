@@ -21,19 +21,20 @@ import { SvelteMap } from 'svelte/reactivity'
 import { baseTrees } from './trees.svelte'
 
 export let cutTrees = $state(new SvelteMap<number, boolean>())
-export let lastTree = $state({ hash: -1 })
+let lastTree = $state(-1)
+export const getLastTree = () => lastTree
 
 export const loadTrees = (hashes: Iterable<number>) => {
   cutTrees.clear()
   for (const hash of hashes) cutTrees.set(hash, false)
-  lastTree.hash = -1
+  lastTree = -1
 }
 
 export const connect = async (address: string, port: number) => {
   const tracker = new Channel<number>()
   tracker.onmessage = (hash) => { if (cutTrees.has(hash)) {
     cutTrees.set(hash, true)
-    if (baseTrees.has(hash)) lastTree.hash = hash
+    if (baseTrees.has(hash)) lastTree = hash
   } }
 
   await invoke('connect', { address, port, channel: tracker })
