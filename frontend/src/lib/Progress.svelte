@@ -42,7 +42,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     icon: IconType, tabState: { chartType?: ChartType }
   } = $props()
 
-  const chartTypes: { name: string, type: ChartType }[] = [
+  type Chart = {
+    name: string
+    type: ChartType
+  }
+
+  const chartTypes: Chart[] = [
     {
       name: $t('progress.progressBar'),
       type: ChartType.ProgressBar,
