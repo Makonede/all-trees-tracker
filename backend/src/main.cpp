@@ -29,7 +29,6 @@ struct hook_inline_(cut_tree) {
         const auto* const tree = reinterpret_cast<
             const ksys::act::Actor* const
         >(ctx->x<28>());
-        const auto id = tree->getId();
         const auto& mubin = tree->getMapObjIter();
         u32 hash = 0;
         if (mubin.tryGetParamUIntByKey(
