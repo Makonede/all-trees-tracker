@@ -5,6 +5,7 @@
   "pieChart": "Pie chart",
   "overall": "Overall",
   "cutTrees": "{cut,number}/{total,number} cut trees",
+  "cutTreesShort": "{cut,number}/{total,number}",
   "byRegion": "By region",
   "byType": "By type"
 }

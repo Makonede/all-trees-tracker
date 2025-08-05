@@ -55,12 +55,30 @@ this program. If not, see <https://www.gnu.org/licenses/>.
       {#snippet lead()}<LandPlot />{/snippet}
       {#snippet control()}{$t('progress.byRegion')}{/snippet}
       {#snippet panel()}
-        {#each getRegionTrees() as [region, [value, max, percentage]] (region)}
-          <p>{region}: {$t('progress.cutTrees', {
-            cut: value.toString(),
-            total: max.toString(),
-          })} ({percentage}%)</p>
-        {/each}
+        <div class='flex flex-col gap-4'>
+          {#each getRegionTrees() as [region, [
+            value, max, percentage
+          ]], i (region)}
+            {@const HUE = Math.floor(360 / getRegionTrees().length * i)}
+            <div
+              class='grid grid-cols-9'
+              style='--meter-bg: hsl({HUE}deg, 100%, 75%);'
+            >
+              <p class='col-span-2'>{region}</p>
+              <p class='col-span-2'>
+                {percentage}% ({$t('progress.cutTreesShort', {
+                  cut: value.toString(),
+                  total: max.toString(),
+                })})
+              </p>
+              <Progress
+                value={value} max={max} height='h-4' classes='col-span-5'
+                trackBg='bg-surface-900' trackRounded='rounded-full'
+                meterBg='bg-[var(--meter-bg)]' meterRounded='rounded-full'
+              />
+            </div>
+          {/each}
+        </div>
       {/snippet}
     </Accordion.Item>
     <Accordion.Item value='type'>

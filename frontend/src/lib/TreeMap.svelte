@@ -48,7 +48,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   for (const [hash, tree] of baseTrees) {
     let treeColor = settings.colors.get(tree.name)
     if (!treeColor) {
-      treeColor = `hsl(${Math.floor(Math.random() * 360)}, 100%, 60%)`
+      treeColor = `hsl(${Math.random() * 360}deg, 100%, 60%)`
       settings.colors.set(tree.name, treeColor)
     }
     trees.set(hash, L.circle(L.latLng(tree.pos[2], tree.pos[0]), {
