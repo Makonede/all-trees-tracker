@@ -59,11 +59,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
           {#each getRegionTrees() as [region, [
             value, max, percentage
           ]], i (region)}
-            {@const HUE = Math.floor(360 / getRegionTrees().length * i)}
-            <div
-              class='grid grid-cols-9'
-              style='--meter-bg: hsl({HUE}deg, 100%, 75%);'
-            >
+            <div class='grid grid-cols-9' style='--meter-bg: hsl({Math.floor(
+              360 / getRegionTrees().length * i
+            )}deg, 100%, 75%);'>
               <p class='col-span-2'>{region}</p>
               <p class='col-span-2'>
                 {percentage}% ({$t('progress.cutTreesShort', {
