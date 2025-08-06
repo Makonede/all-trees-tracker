@@ -59,20 +59,27 @@ this program. If not, see <https://www.gnu.org/licenses/>.
           {#each getRegionTrees() as [region, [
             value, max, percentage
           ]], i (region)}
-            <div class='grid grid-cols-9' style='--meter-bg: hsl({Math.floor(
-              360 / getRegionTrees().length * i
-            )}deg, 100%, 75%);'>
-              <p class='col-span-2'>{region}</p>
-              <p class='col-span-2'>
+            <div
+              class='grid grid-cols-4'
+              style='--region-color: oklch(from hsl(0deg, 100%, 80%) l c calc(h + {
+                Math.floor(360 / getRegionTrees().length * i)
+              }));'
+            >
+              <p>
+                <b
+                  class='underline decoration-[var(--region-color)] decoration-2 underline-offset-4'
+                >{region}</b>
+              </p>
+              <p>
                 {percentage}% ({$t('progress.cutTreesShort', {
                   cut: value.toString(),
                   total: max.toString(),
                 })})
               </p>
               <Progress
-                value={value} max={max} height='h-4' classes='col-span-5'
+                value={max / 2} max={max} height='h-4' classes='col-span-2'
                 trackBg='bg-surface-900' trackRounded='rounded-full'
-                meterBg='bg-[var(--meter-bg)]' meterRounded='rounded-full'
+                meterBg='bg-[var(--region-color)]' meterRounded='rounded-full'
               />
             </div>
           {/each}
