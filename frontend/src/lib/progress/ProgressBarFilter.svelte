@@ -31,12 +31,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
         360 / trees.length * i
       }));'
     >
-      <p>
+      <p class='text-ellipsis'>
         <b
           class='underline decoration-[var(--filter-color)] decoration-2 underline-offset-4'
         >{label}</b>
       </p>
-      <p>
+      <p class='text-ellipsis'>
         <span class='{
           complete ? 'font-bold text-amber-400' : ''
         } transition-colors duration-300'>{percentage}%</span> ({$t(
