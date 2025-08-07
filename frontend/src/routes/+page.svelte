@@ -24,10 +24,14 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 </script>
 
 <main
-  class='grid grid-flow-row lg:grid-flow-col grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-3 gap-4 p-8 h-screen'
+  class='grid grid-flow-row lg:grid-flow-col grid-rows-3 lg:grid-rows-1 lg:grid-cols-3 gap-4 p-8 h-screen'
 >
   <div
-    class='col-span-2 row-span-2 lg:col-span-2 lg:row-span-1 p-4 card preset-filled-surface-100-900'
-  ><TreeMap /></div>
-  <div class='p-4 card preset-filled-surface-100-900'><TabbedPanel /></div>
+    class='row-span-2 lg:row-span-1 lg:col-span-2 p-4 card preset-filled-surface-100-900'
+  >
+    <TreeMap />
+  </div>
+  <div class='overflow-auto p-4 card preset-filled-surface-100-900'>
+    <TabbedPanel />
+  </div>
 </main>

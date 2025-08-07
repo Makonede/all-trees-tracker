@@ -77,7 +77,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
                 })})
               </p>
               <Progress
-                value={max / 2} max={max} height='h-4' classes='col-span-2'
+                {value} {max} height='h-4' classes='col-span-2'
                 trackBg='bg-surface-900' trackRounded='rounded-full'
                 meterBg='bg-[var(--region-color)]' meterRounded='rounded-full'
               />

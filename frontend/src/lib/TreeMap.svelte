@@ -108,11 +108,13 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     minZoom: MIN_ZOOM,
     maxZoom: MAX_ZOOM,
     maxBounds: BOUNDS,
-  }} bind:instance={map}><TileLayer
-    url={'https://objmap.zeldamods.org/game_files/maptex/{z}/{x}/{y}.webp'}
-    options={{
-      maxNativeZoom: 7,
-      attribution: '&copy; ZeldaMods',
-    }}
-  /></SveafletMap>
+  }} bind:instance={map}>
+    <TileLayer
+      url={'https://objmap.zeldamods.org/game_files/maptex/{z}/{x}/{y}.webp'}
+      options={{
+        maxNativeZoom: 7,
+        attribution: '&copy; ZeldaMods',
+      }}
+    />
+  </SveafletMap>
 </div>
