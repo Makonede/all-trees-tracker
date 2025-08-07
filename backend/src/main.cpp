@@ -24,7 +24,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 static tcp::Server server;
 
 struct hook_inline_(cut_tree) {
-    target_offset_(0x7dd64c) // aiAiLumberjackTreeStuff
+    target_offset_(0x7dd64c)  // BL aiAiLumberjackTreeStuff
     static void call(const megaton::hook::InlineCtx* const ctx) noexcept {
         const auto* const tree = reinterpret_cast<
             const ksys::act::Actor* const
