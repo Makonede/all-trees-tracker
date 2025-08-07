@@ -21,8 +21,8 @@ Build the backend with
 [Megaton](https://megaton.pistonite.dev/create_project.html#build):
 
 ```sh
-megaton build -L # initial
-megaton build    # subsequent
+megaton build -L  # initial
+megaton build     # subsequent
 ```
 
 The NSO can be found in `target/megaton/none/`.

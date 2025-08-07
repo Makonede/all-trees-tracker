@@ -14,9 +14,9 @@ This directory contains the frontend, a Tauri SvelteKit app.
 ## Build
 
 ```sh
-bun i                        # install dependencies
-turbo tauri -- build         # build for desktop
-turbo tauri -- android build # build for Android
+bun i                         # install dependencies
+turbo tauri -- build          # build for desktop
+turbo tauri -- android build  # build for Android
 ```
 
 The AppImage, `.deb`, and `.rpm` bundles can be found in
@@ -26,6 +26,6 @@ The AppImage, `.deb`, and `.rpm` bundles can be found in
 ## Develop
 
 ```sh
-turbo tauri -- dev # run development server
-turbo check lint   # lint Svelte and TypeScript code
+turbo tauri -- dev  # run development server
+turbo check lint    # lint Svelte and TypeScript code
 ```
