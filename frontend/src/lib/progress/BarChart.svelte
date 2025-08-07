@@ -15,4 +15,13 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 -->
 
-<script lang='ts'></script>
+<script lang='ts'>
+  import { ChartType, type Filter } from '../types.svelte'
+
+  let { tabState = $bindable() }: { tabState: {
+    chartType?: ChartType,
+    filters?: Filter[],
+  } } = $props()
+</script>
+
+<p>Bar chart placeholder</p>

@@ -17,4 +17,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 import type { Component } from 'svelte'
 
+export enum ChartType {
+  ProgressBar,
+  BarChart,
+  LineChart,
+  PieChart,
+}
+
+export type Filter = 'region' | 'type'
 export type IconType = { icon: Component }

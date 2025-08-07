@@ -43,10 +43,6 @@ export const getTotalValue = () => totalValue
 export const getTotalMax = () => totalMax
 export const getTotalPercentage = () => totalPercentage
 
-export type Filter = 'region' | 'type'
-type Filters = { filters: Filter[] }
-export let filters = $state<Filters>({ filters: ['region'] })
-
 let regionCounts: [Region, number][] = $derived(getRegions().map(
   (region) => [region, 0]
 ))

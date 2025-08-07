@@ -21,25 +21,20 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   import ChartNoAxesCombined from '@lucide/svelte/icons/chart-no-axes-combined'
   import ChartPie from '@lucide/svelte/icons/chart-pie'
 
-  import type { Component } from 'svelte'
-
   import BarChart from './progress/BarChart.svelte'
   import LineChart from './progress/LineChart.svelte'
   import PieChart from './progress/PieChart.svelte'
   import ProgressBar from './progress/ProgressBar.svelte'
 
   import { t } from './translations.svelte'
-  import type { IconType } from './types.svelte'
-
-  enum ChartType {
-    ProgressBar,
-    BarChart,
-    LineChart,
-    PieChart,
-  }
+  import { ChartType, type Filter, type IconType } from './types.svelte'
 
   let { icon = $bindable(), tabState = $bindable() }: {
-    icon: IconType, tabState: { chartType?: ChartType }
+    icon: IconType,
+    tabState: {
+      chartType?: ChartType,
+      filters?: Filter[],
+    },
   } = $props()
 
   type Chart = {
@@ -67,7 +62,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   ]
 
   tabState.chartType ??= ChartType.ProgressBar
-  let chart = $state<Component>(ProgressBar)
+  tabState.filters ??= ['region']
+  let chart = $state(ProgressBar)
 
   $effect(() => { switch (tabState.chartType) {
     case ChartType.ProgressBar:
@@ -104,6 +100,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   </form>
   <svelte:boundary>
     {@const Chart = chart}
-    <Chart />
+    <Chart bind:tabState={tabState} />
   </svelte:boundary>
 </div>

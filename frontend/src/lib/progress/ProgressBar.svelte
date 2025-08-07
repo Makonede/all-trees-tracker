@@ -23,16 +23,20 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   } from '@skeletonlabs/skeleton-svelte'
 
   import { t } from '../translations.svelte'
+  import { ChartType, type Filter } from '../types.svelte'
 
   import {
-    type Filter,
-    filters,
     getRegionTrees,
     getTotalMax,
     getTotalPercentage,
     getTotalValue,
     regionNamesEffect,
   } from './progress.svelte'
+
+  let { tabState = $bindable() }: { tabState: {
+    chartType?: ChartType,
+    filters?: Filter[],
+  } } = $props()
 
   $effect(regionNamesEffect)
 </script>
@@ -48,8 +52,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     total: getTotalMax().toString(),
   })}</p>
   <br>
-  <Accordion value={filters.filters} onValueChange={({ value }) => {
-    filters.filters = value as Filter[]
+  <Accordion value={tabState.filters} onValueChange={({ value }) => {
+    tabState.filters = value as Filter[]
   }} multiple>
     <Accordion.Item value='region'>
       {#snippet lead()}<LandPlot />{/snippet}
