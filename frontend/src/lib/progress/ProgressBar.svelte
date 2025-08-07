@@ -62,7 +62,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
             <div
               class='grid grid-cols-4'
               style='--region-color: oklch(from hsl(0deg, 100%, 80%) l c calc(h + {
-                Math.floor(360 / getRegionTrees().length * i)
+                360 / getRegionTrees().length * i
               }));'
             >
               <p>
