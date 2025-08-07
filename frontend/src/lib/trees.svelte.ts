@@ -20,13 +20,6 @@ import { loadTrees } from './client.svelte'
 import hyrule from './trees_hyrule.json'
 import tots from './trees_tots.json'
 
-type Tree = {
-  name: string
-  pos: [number, number, number]
-}
-
-type JsonTree = { hash: number } & Tree
-
 const REGIONS_BASE = [
   'akkala',
   'central',
@@ -44,13 +37,131 @@ const REGIONS_BASE = [
   'wasteland',
   'woodland',
 ] as const
-const REGIONS_EXTENDED = [...REGIONS_BASE, 'tots'] as const
+export const REGIONS_EXTENDED = [...REGIONS_BASE, 'tots'] as const
 let dlc = $state(false)
 let regions = $derived(dlc ? REGIONS_EXTENDED : REGIONS_BASE)
 export const getRegions = () => regions
 
-export type Region = typeof REGIONS_EXTENDED[number]
-type HyruleRegion = typeof REGIONS_BASE[number]
+export type Region = (typeof REGIONS_EXTENDED)[number]
+type HyruleRegion = (typeof REGIONS_BASE)[number]
+
+const ACTORS = [
+  'Obj_TreeApple_A_L_01',
+  'Obj_TreeApple_A_M_01',
+  'Obj_TreeBanana_A_01',
+  'Obj_TreeBroadleafDead_B_L_01',
+  'Obj_TreeBroadleaf_A_L',
+  'Obj_TreeBroadleaf_BossArea_A_L',
+  'Obj_TreeBurned_A_01',
+  'Obj_TreeBurned_B_01',
+  'Obj_TreeBurned_B_02',
+  'Obj_TreeConiferousDead_A_01',
+  'Obj_TreeConiferousDead_A_02',
+  'Obj_TreeConiferousDead_A_Snow_01',
+  'Obj_TreeConiferous_A_01',
+  'Obj_TreeConiferous_A_02',
+  'Obj_TreeConiferous_A_03',
+  'Obj_TreeConiferous_A_04',
+  'Obj_TreeConiferous_A_Snow_01',
+  'Obj_TreeConiferous_A_Snow_02',
+  'Obj_TreeConiferous_A_Snow_03',
+  'Obj_TreeConiferous_C_01',
+  'Obj_TreeConiferous_C_02',
+  'Obj_TreeConiferous_C_03',
+  'Obj_TreeDeadLeaf_A_01',
+  'Obj_TreeDead_A_01',
+  'Obj_TreeDead_A_Snow_01',
+  'Obj_TreeDorian_A_01',
+  'Obj_TreeDragonblood_A_03',
+  'Obj_TreeGhost_A_03',
+  'Obj_TreeMaple_A_01',
+  'Obj_TreeMaple_A_02',
+  'Obj_TreeMaple_B_01',
+  'Obj_TreeMaple_B_02',
+  'Obj_TreeMaple_C_01',
+  'Obj_TreeMaple_C_02',
+  'Obj_TreePalmBeach_A_01',
+  'Obj_TreePalmBeach_A_02',
+  'Obj_TreePalm_A_01',
+  'Obj_TreePalm_A_02',
+  'Obj_TreePine_A_01',
+  'Obj_TreeWhiteBirch_A_01',
+  'Obj_TreeWhiteBirch_A_02',
+  'Obj_TreeWhiteBirch_A_03',
+  'Obj_TreeWhiteBirch_A_04',
+  'Obj_TreeWillow_A_01',
+] as const
+type TreeActor = (typeof ACTORS)[number]
+
+export const TREE_TYPES = [
+  'apple',
+  'banana',
+  'birch',
+  'broadleaf',
+  'conifer',
+  'dead',
+  'durian',
+  'dragonblood',
+  'ghost',
+  'maple',
+  'palm',
+  'willow',
+] as const
+export type TreeType = (typeof TREE_TYPES)[number]
+
+export const ACTOR_TYPES: Record<TreeActor, TreeType> = {
+  Obj_TreeApple_A_L_01: 'apple',
+  Obj_TreeApple_A_M_01: 'apple',
+  Obj_TreeBanana_A_01: 'banana',
+  Obj_TreeBroadleafDead_B_L_01: 'broadleaf',
+  Obj_TreeBroadleaf_A_L: 'broadleaf',
+  Obj_TreeBroadleaf_BossArea_A_L: 'broadleaf',
+  Obj_TreeBurned_A_01: 'dead',
+  Obj_TreeBurned_B_01: 'dead',
+  Obj_TreeBurned_B_02: 'dead',
+  Obj_TreeConiferousDead_A_01: 'conifer',
+  Obj_TreeConiferousDead_A_02: 'conifer',
+  Obj_TreeConiferousDead_A_Snow_01: 'conifer',
+  Obj_TreeConiferous_A_01: 'conifer',
+  Obj_TreeConiferous_A_02: 'conifer',
+  Obj_TreeConiferous_A_03: 'conifer',
+  Obj_TreeConiferous_A_04: 'conifer',
+  Obj_TreeConiferous_A_Snow_01: 'conifer',
+  Obj_TreeConiferous_A_Snow_02: 'conifer',
+  Obj_TreeConiferous_A_Snow_03: 'conifer',
+  Obj_TreeConiferous_C_01: 'conifer',
+  Obj_TreeConiferous_C_02: 'conifer',
+  Obj_TreeConiferous_C_03: 'conifer',
+  Obj_TreeDead_A_01: 'dead',
+  Obj_TreeDead_A_Snow_01: 'dead',
+  Obj_TreeDeadLeaf_A_01: 'dead',
+  Obj_TreeDorian_A_01: 'durian',
+  Obj_TreeDragonblood_A_03: 'dragonblood',
+  Obj_TreeGhost_A_03: 'ghost',
+  Obj_TreeMaple_A_01: 'maple',
+  Obj_TreeMaple_A_02: 'maple',
+  Obj_TreeMaple_B_01: 'maple',
+  Obj_TreeMaple_B_02: 'maple',
+  Obj_TreeMaple_C_01: 'maple',
+  Obj_TreeMaple_C_02: 'maple',
+  Obj_TreePalm_A_01: 'palm',
+  Obj_TreePalm_A_02: 'palm',
+  Obj_TreePalmBeach_A_01: 'palm',
+  Obj_TreePalmBeach_A_02: 'palm',
+  Obj_TreePine_A_01: 'conifer',
+  Obj_TreeWhiteBirch_A_01: 'birch',
+  Obj_TreeWhiteBirch_A_02: 'birch',
+  Obj_TreeWhiteBirch_A_03: 'birch',
+  Obj_TreeWhiteBirch_A_04: 'birch',
+  Obj_TreeWillow_A_01: 'willow',
+}
+
+type Tree = {
+  name: TreeActor
+  pos: [number, number, number]
+}
+
+type JsonTree = { hash: number } & Tree
 
 export type MapTree = Tree & ({
   region: HyruleRegion

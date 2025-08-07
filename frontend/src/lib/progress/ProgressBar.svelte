@@ -18,19 +18,19 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 <script lang='ts'>
   import LandPlot from '@lucide/svelte/icons/land-plot'
   import Trees from '@lucide/svelte/icons/trees'
-  import {
-    Accordion, Progress, ProgressRing
-  } from '@skeletonlabs/skeleton-svelte'
+  import { Accordion, ProgressRing } from '@skeletonlabs/skeleton-svelte'
 
   import { t } from '../translations.svelte'
   import { ChartType, type Filter } from '../types.svelte'
+
+  import ProgressBarFilter from './ProgressBarFilter.svelte'
 
   import {
     getRegionTrees,
     getTotalMax,
     getTotalPercentage,
     getTotalValue,
-    regionNamesEffect,
+    getTreeTypeTrees,
   } from './progress.svelte'
 
   let { tabState = $bindable() }: { tabState: {
@@ -38,14 +38,22 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     filters?: Filter[],
   } } = $props()
 
-  $effect(regionNamesEffect)
+  let complete = $derived(getTotalValue() === getTotalMax())
 </script>
 
 <div class='grid grid-cols-1 justify-items-center gap-4 p-4'>
   <h1 class='h1'>{$t('progress.overall')}</h1>
   <ProgressRing
-    label={getTotalPercentage()} showLabel size='size-48'
-    trackStroke='stroke-surface-900' value={getTotalValue()} max={getTotalMax()}
+    label={getTotalPercentage()} showLabel size='size-48' svgClasses='{
+      complete
+        ? 'shadow-[0px_0px_24px_var(--color-amber-400),_inset_0px_0px_44px_var(--color-amber-400)]'
+        : ''
+    } transition-shadow duration-300' trackStroke='stroke-surface-900'
+    meterStroke={complete ? 'stroke-amber-400' : ''}
+    meterTransition='transition-colors duration-300'
+    labelFill={complete ? 'fill-amber-400' : 'fill-current'} labelFontSize={20}
+    labelClasses='transition-colors duration-300' value={getTotalValue()}
+    max={getTotalMax()}
   />
   <p>{$t('progress.cutTrees', {
     cut: getTotalValue().toString(),
@@ -58,42 +66,14 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     <Accordion.Item value='region'>
       {#snippet lead()}<LandPlot />{/snippet}
       {#snippet control()}{$t('progress.byRegion')}{/snippet}
-      {#snippet panel()}
-        <div class='flex flex-col gap-4'>
-          {#each getRegionTrees() as [region, [
-            value, max, percentage
-          ]], i (region)}
-            <div
-              class='grid grid-cols-4'
-              style='--region-color: oklch(from hsl(0deg, 100%, 80%) l c calc(h + {
-                360 / getRegionTrees().length * i
-              }));'
-            >
-              <p>
-                <b
-                  class='underline decoration-[var(--region-color)] decoration-2 underline-offset-4'
-                >{region}</b>
-              </p>
-              <p>
-                {percentage}% ({$t('progress.cutTreesShort', {
-                  cut: value.toString(),
-                  total: max.toString(),
-                })})
-              </p>
-              <Progress
-                {value} {max} height='h-4' classes='col-span-2'
-                trackBg='bg-surface-900' trackRounded='rounded-full'
-                meterBg='bg-[var(--region-color)]' meterRounded='rounded-full'
-              />
-            </div>
-          {/each}
-        </div>
-      {/snippet}
+      {#snippet panel()}<ProgressBarFilter trees={getRegionTrees()} />{/snippet}
     </Accordion.Item>
     <Accordion.Item value='type'>
       {#snippet lead()}<Trees />{/snippet}
       {#snippet control()}{$t('progress.byType')}{/snippet}
-      {#snippet panel()}Types placeholder{/snippet}
+      {#snippet panel()}<ProgressBarFilter trees={
+        getTreeTypeTrees()
+      } />{/snippet}
     </Accordion.Item>
   </Accordion>
 </div>

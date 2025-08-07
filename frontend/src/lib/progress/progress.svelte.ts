@@ -20,7 +20,14 @@ import { SvelteMap } from 'svelte/reactivity'
 import { cutTrees } from '../client.svelte'
 import { locale, t } from '../translations.svelte'
 import {
-  getRegions, getTrees, type MapTree, type Region
+  ACTOR_TYPES,
+  getRegions,
+  getTrees,
+  type MapTree,
+  REGIONS_EXTENDED,
+  type Region,
+  TREE_TYPES,
+  type TreeType,
 } from '../trees.svelte'
 
 let cut = $derived(Array.from(cutTrees.entries().filter(
@@ -32,6 +39,16 @@ const PERCENTAGE: Intl.NumberFormatOptions = {
   minimumFractionDigits: 1,
   maximumFractionDigits: 1,
 }
+
+const regionNames = new SvelteMap<Region, string>()
+const treeTypeNames = new SvelteMap<TreeType, string>()
+
+t.subscribe((run) => {
+  for (const region of REGIONS_EXTENDED)
+    regionNames.set(region, run(`region.${region}`))
+  for (const treeType of TREE_TYPES)
+    treeTypeNames.set(treeType, run(`tree.${treeType}`))
+})()
 
 let totalValue = $derived(cut.length)
 let totalMax = $derived(cutTrees.size)
@@ -54,8 +71,8 @@ let regionValues = $derived(getTrees().entries().reduce((
 ) => cut.includes(hash) ? countRegion(regions, tree) : regions, new SvelteMap(
   regionCounts
 )))
-let regionMaxes = $derived(getTrees().entries().reduce((
-  regions, [, tree]
+let regionMaxes = $derived(getTrees().values().reduce((
+  regions, tree
 ) => countRegion(regions, tree), new SvelteMap(regionCounts)))
 let regionPercentages = $derived(new SvelteMap(
   regionValues.entries().map(([region, count]) => [region, (
@@ -63,16 +80,39 @@ let regionPercentages = $derived(new SvelteMap(
   ).toLocaleString(locale.get(), PERCENTAGE)])
 ))
 
-let regionNames = $state(new SvelteMap<Region, string>())
-export const regionNamesEffect = () => { t.subscribe((run) => {
-  for (const region of getRegions())
-    regionNames.set(region, run(`region.${region}`))
-})() }
-regionNamesEffect()
-
 let regionTrees = $derived(getRegions().map((region): [
   string, [number, number, string]
 ] => [regionNames.get(region)!, [
   regionValues, regionMaxes, regionPercentages
 ].map((map) => map.get(region)!) as [number, number, string]]).toSorted())
 export const getRegionTrees = () => regionTrees
+
+const treeTypeCounts: [TreeType, number][] = TREE_TYPES.map(
+  (treeType) => [treeType, 0]
+)
+const countTreeType = (treeTypes: SvelteMap<TreeType, number>, tree: MapTree) =>
+  treeTypes.set(ACTOR_TYPES[tree.name], treeTypes.get(
+    ACTOR_TYPES[tree.name]
+  )! + 1)
+
+let treeTypeValues = $derived(getTrees().entries().reduce(
+  (treeTypes, [hash, tree]) => cut.includes(hash) ? countTreeType(
+    treeTypes, tree
+  ) : treeTypes,
+  new SvelteMap(treeTypeCounts),
+))
+let treeTypeMaxes = $derived(getTrees().values().reduce((
+  treeTypes, tree
+) => countTreeType(treeTypes, tree), new SvelteMap(treeTypeCounts)))
+let treeTypePercentages = $derived(new SvelteMap(treeTypeValues.entries().map(
+  ([treeType, count]) => [treeType, (
+    count / treeTypeMaxes.get(treeType)! * 100
+  ).toLocaleString(locale.get(), PERCENTAGE)]
+)))
+
+let treeTypeTrees = $derived(TREE_TYPES.map((treeType): [
+  string, [number, number, string]
+] => [treeTypeNames.get(treeType)!, [
+  treeTypeValues, treeTypeMaxes, treeTypePercentages
+].map((map) => map.get(treeType)!) as [number, number, string]]).toSorted())
+export const getTreeTypeTrees = () => treeTypeTrees
