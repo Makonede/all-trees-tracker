@@ -33,7 +33,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     >
       <p class='text-ellipsis'>
         <b
-          class='underline decoration-[var(--filter-color)] decoration-2 underline-offset-4'
+          class='underline decoration-(--filter-color) decoration-2 underline-offset-4'
         >{label}</b>
       </p>
       <p class='text-ellipsis'>
@@ -51,7 +51,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
         trackRounded='rounded-full' meterBg={
           complete
             ? 'bg-gradient-to-r from-amber-400 via-amber-200 to-amber-400'
-            : 'bg-[var(--filter-color)]'
+            : 'bg-(--filter-color)'
         } meterRounded='rounded-full'
         meterTransition='transition-colors duration-300'
       />

@@ -16,14 +16,132 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <script lang='ts'>
+  import CircleQuestionMark from '@lucide/svelte/icons/circle-question-mark'
+
+  import type { MouseEventHandler } from 'svelte/elements'
+
+  import { settings } from './settings.svelte'
   import { t } from './translations.svelte'
-  import type { IconType } from './types.svelte'
+  import { type IconType, SettingType } from './types.svelte'
 
   let { icon = $bindable(), tabState = $bindable() }: {
     icon: IconType, tabState: Record<string, unknown>
   } = $props()
+
+  type Setting = ({
+    kind: SettingType.Toggle | SettingType.Text
+    options: undefined
+  } | {
+    kind: SettingType.Integer
+    options: {
+      min: number
+      max: number
+    }
+  }) & {
+    name: keyof typeof settings
+    help?: CircleQuestionMark
+    tooltip?: HTMLDivElement
+  }
+
+  type Button = {
+    name: string
+    color: string
+    disabled?: boolean
+    callback: MouseEventHandler<HTMLButtonElement>
+  }
+
+  const CATEGORIES = [
+    'connection',
+  ] as const
+  type Category = (typeof CATEGORIES)[number]
+
+  let categories: Record<Category, {
+    settings: Setting[]
+    buttons: Button[]
+  }> = $state({
+    connection: {
+      settings: [
+        {
+          name: 'address',
+          kind: SettingType.Text,
+        },
+        {
+          name: 'port',
+          kind: SettingType.Integer,
+          options: { min: 1, max: 65535 },
+        },
+      ],
+      buttons: [
+        {
+          name: 'connect',
+          color: 'bg-success-900/37.5 ring-success-500/75',
+          callback: () => {},
+        },
+        {
+          name: 'disconnect',
+          color: 'bg-error-900/37.5 ring-error-500/75',
+          disabled: true,
+          callback: () => {},
+        },
+      ],
+    },
+  })
 </script>
 
-<div class='p-4 w-full card preset-filled-surface-200-800'>
-  <span>Settings placeholder</span>
+<div class='p-8 space-y-4 w-full text-lg card preset-filled-surface-200-800'>
+  {#each Object.entries(categories) as [categoryName, {
+    settings: categorySettings, buttons: categoryButtons
+  }] (categoryName)}
+    <h2 class='h2'>{$t(`setting.category.${categoryName}`)}</h2>
+    <hr class='border-surface-500 hr'>
+    {#each categorySettings as { name, kind, options, tooltip }, i (name)}
+      {@const enter = () => tooltip?.showPopover()}
+      {@const leave = () => tooltip?.hidePopover()}
+      <div
+        class='flex gap-4 justify-between items-center'
+        style='--anchor: {name};'
+      >
+        <div class='flex gap-2 items-center'>
+          <p>{$t(`setting.${name}.name`)}</p>
+          <div>
+            <CircleQuestionMark
+              class='cursor-help anchor/(--anchor)'
+              bind:this={categorySettings[i].help} onmouseenter={enter}
+              onmouseleave={leave} onfocus={enter} onblur={leave}
+            />
+            {/* @ts-ignore */ null}
+            <div
+              popover='hint'
+              class='p-4 mt-2 max-w-1/6 opacity-0 open:opacity-100 starting:open:opacity-0 transition-[display,opacity,overlay] transition-discrete duration-300 anchored/(--anchor) card preset-filled-surface-100-900 preset-outlined-primary-500'
+              bind:this={categorySettings[i].tooltip}
+            >{@html $t(`setting.${name}.description`)}</div>
+          </div>
+        </div>
+        {#if kind === SettingType.Text}
+          <input
+            type='text' placeholder={$t(`setting.${name}.placeholder`)}
+            class='w-1/2 font-mono placeholder:text-surface-500 input preset-filled-surface-100-900'
+            bind:value={settings[name]}
+          >
+        {:else if kind === SettingType.Integer}
+          <input
+            type='number' min={options!.min} max={options!.max}
+            placeholder={$t(`setting.${name}.placeholder`)}
+            class='w-1/2 font-mono placeholder:text-surface-500 input preset-filled-surface-100-900'
+            bind:value={settings[name]}
+          >
+        {/if}
+      </div>
+    {/each}
+    {#if categoryButtons}
+      <br>
+      <div class='flex gap-4 justify-around items-center'>
+        {#each categoryButtons as { name, color, disabled, callback } (name)}
+          <button
+            {disabled} class='ring-4 {color} btn btn-lg' onclick={callback}
+          >{$t(`setting.button.${name}`)}</button>
+        {/each}
+      </div>
+    {/if}
+  {/each}
 </div>

@@ -70,8 +70,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
           <span>{name}</span>
         </div>
       {/snippet}
-      <!-- svelte-ignore binding_property_non_reactive  -->
-      <Content bind:icon={icons[i]} bind:tabState={tabState[i]} />
+      <section>
+        <!-- svelte-ignore binding_property_non_reactive  -->
+        <Content bind:icon={icons[i]} bind:tabState={tabState[i]} />
+      </section>
     </TabItem>
   {/each}
 </Tabs>

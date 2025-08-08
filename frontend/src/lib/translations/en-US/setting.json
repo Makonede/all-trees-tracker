@@ -1,0 +1,19 @@
+{
+  "category": {
+    "connection": "Connection"
+  },
+  "button": {
+    "connect": "Connect",
+    "disconnect": "Disconnect"
+  },
+  "address": {
+    "name": "Server address",
+    "description": "The IP address of the machine running the game. On console, this can be found in '<code class=\"code\">'System Settings > Internet'</code>'.",
+    "placeholder": "192.168.x.x"
+  },
+  "port": {
+    "name": "Server port",
+    "description": "The port the server is running on. Leave as '<code class=\"code\">'5001'</code>' if unsure.",
+    "placeholder": "5001"
+  }
+}

@@ -18,5 +18,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 import { SvelteMap } from 'svelte/reactivity'
 
 export let settings = $state({
+  address: '',
+  port: 5001,
   colors: new SvelteMap<string, string>(),
 })

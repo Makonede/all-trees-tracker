@@ -23,6 +23,11 @@ export enum ChartType {
   LineChart,
   PieChart,
 }
+export enum SettingType {
+  Toggle,
+  Text,
+  Integer,
+}
 
 export type Filter = 'region' | 'type'
 export type IconType = { icon: Component }

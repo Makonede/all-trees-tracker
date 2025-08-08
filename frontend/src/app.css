@@ -18,10 +18,15 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 @charset "UTF-8";
 
 @import 'tailwindcss';
+
+@import '@toolwind/anchors';
+
 @import '@skeletonlabs/skeleton';
 @import '@skeletonlabs/skeleton/optional/presets';
 @import '@skeletonlabs/skeleton/themes/cerberus';
+
 @import '@layerstack/tailwind/themes/skeleton.css';
+
 @import '@fontsource-variable/roboto';
 
 @source '../node_modules/@skeletonlabs/skeleton-svelte/dist';
@@ -32,4 +37,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   --heading-font-family: 'Roboto Variable', sans-serif;
   --base-font-family: 'Roboto Variable', sans-serif;
   --anchor-font-family: 'inherit';
+}
+
+@layer utilities {
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button { @apply appearance-none; }
 }

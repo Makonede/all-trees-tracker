@@ -27,6 +27,7 @@ const KEYS = [
   'progress',
   'region',
   'tree',
+  'setting',
 ]
 
 const CONFIG: Config = {
