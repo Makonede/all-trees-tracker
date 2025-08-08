@@ -20,9 +20,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
   import type { MouseEventHandler } from 'svelte/elements'
 
+  import { connect, disconnect } from './client.svelte'
   import { settings } from './settings.svelte'
   import { t } from './translations.svelte'
-  import { type IconType, SettingType } from './types.svelte'
+  import { type ErrorReason, type IconType, SettingType } from './types.svelte'
 
   let { icon = $bindable(), tabState = $bindable() }: {
     icon: IconType, tabState: Record<string, unknown>
@@ -30,7 +31,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
   type Setting = ({
     kind: SettingType.Toggle | SettingType.Text
-    options: undefined
+    options?: undefined
   } | {
     kind: SettingType.Integer
     options: {
@@ -55,10 +56,17 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   ] as const
   type Category = (typeof CATEGORIES)[number]
 
+  let errors: Record<Category, string> = $state(Object.fromEntries(
+    CATEGORIES.map((category) => [category, ''])
+  ) as Record<Category, string>)
+
+  let connected = $state(false)
+  const IPV4_REGEX = /^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/
+
   let categories: Record<Category, {
     settings: Setting[]
     buttons: Button[]
-  }> = $state({
+  }> = $derived({
     connection: {
       settings: [
         {
@@ -75,13 +83,40 @@ this program. If not, see <https://www.gnu.org/licenses/>.
         {
           name: 'connect',
           color: 'bg-success-900/37.5 ring-success-500/75',
-          callback: () => {},
+          disabled: connected,
+          callback: async () => {
+            errors.connection = ''
+
+            if (!settings.address.match(IPV4_REGEX)) {
+              errors.connection = $t('error.invalidAddress')
+              return
+            }
+            if (!(
+              Number.isInteger(settings.port)
+              && settings.port
+              && settings.port === (Math.abs(settings.port) & 0xffff)
+            )) {
+              errors.connection = $t('error.invalidPort')
+              return
+            }
+
+            connected = true
+            await connect(settings.address, settings.port).then(() => {
+              connected = false
+            }).catch((reason: ErrorReason) => {
+              errors.connection = reason.message
+              connected = false
+            })
+          },
         },
         {
           name: 'disconnect',
           color: 'bg-error-900/37.5 ring-error-500/75',
-          disabled: true,
-          callback: () => {},
+          disabled: !connected,
+          callback: () => {
+            disconnect()
+            connected = false
+          },
         },
       ],
     },
@@ -104,12 +139,14 @@ this program. If not, see <https://www.gnu.org/licenses/>.
         <div class='flex gap-2 items-center'>
           <p>{$t(`setting.${name}.name`)}</p>
           <div>
+            <!-- svelte-ignore binding_property_non_reactive  -->
             <CircleQuestionMark
               class='cursor-help anchor/(--anchor)'
               bind:this={categorySettings[i].help} onmouseenter={enter}
               onmouseleave={leave} onfocus={enter} onblur={leave}
             />
             {/* @ts-ignore */ null}
+            <!-- svelte-ignore binding_property_non_reactive  -->
             <div
               popover='hint'
               class='p-4 mt-2 max-w-1/6 opacity-0 open:opacity-100 starting:open:opacity-0 transition-[display,opacity,overlay] transition-discrete duration-300 anchored/(--anchor) card preset-filled-surface-100-900 preset-outlined-primary-500'
@@ -142,6 +179,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
           >{$t(`setting.button.${name}`)}</button>
         {/each}
       </div>
+      <svelte:boundary>
+        {@const error = errors[categoryName as Category]}
+        <p class='{error ? '' : 'hidden'} flex justify-center text-error-500'>
+          {error}
+        </p>
+      </svelte:boundary>
     {/if}
   {/each}
 </div>

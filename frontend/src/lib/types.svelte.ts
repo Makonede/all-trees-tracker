@@ -31,3 +31,9 @@ export enum SettingType {
 
 export type Filter = 'region' | 'type'
 export type IconType = { icon: Component }
+
+export type ErrorReason = {
+  kind:
+    | 'ioError'
+  message: string
+}

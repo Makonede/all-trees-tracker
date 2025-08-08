@@ -28,6 +28,7 @@ const KEYS = [
   'region',
   'tree',
   'setting',
+  'error',
 ]
 
 const CONFIG: Config = {
