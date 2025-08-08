@@ -20,5 +20,6 @@ import { SvelteMap } from 'svelte/reactivity'
 export let settings = $state({
   address: '',
   port: 5001,
+  connected: false,
   colors: new SvelteMap<string, string>(),
 })

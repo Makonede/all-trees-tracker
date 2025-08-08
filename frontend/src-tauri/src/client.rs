@@ -17,8 +17,8 @@ see <https://www.gnu.org/licenses/>.
 use std::{io, sync::atomic::{AtomicBool, Ordering}};
 
 use serde::{ser::Serializer, Serialize};
-use stubborn_io::StubbornTcpStream;
 use tauri::{State, ipc::Channel};
+use tokio::net::TcpStream;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
@@ -47,20 +47,19 @@ impl Serialize for Error {
 pub async fn connect(
     address: String, port: u16, channel: Channel<u32>, connected: State<'_, AtomicBool>
 ) -> Result<(), Error> {
-    let stream = StubbornTcpStream::connect((address, port)).await?;
+    let stream = TcpStream::connect((address, port)).await?;
     let mut hash = [0u8; 4];
     connected.store(true, Ordering::Relaxed);
 
     loop {
         stream.readable().await?;
+        if !connected.load(Ordering::Relaxed) { break; }
 
         match stream.try_read(&mut hash) {
             Ok(_) => { channel.send(u32::from_le_bytes(hash)).unwrap(); }
             Err(e) if e.kind() != io::ErrorKind::WouldBlock => { return Err(e.into()); }
             _ => {}
         }
-
-        if !connected.load(Ordering::Relaxed) { break; }
     }
 
     Ok(())

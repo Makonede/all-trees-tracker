@@ -23,7 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 </script>
 
 <div class='flex flex-col gap-4'>
-  {#each trees as [label, [value, max, percentage]], i (label)}
+  {#each trees as [label, [value, max, percentage]], i}
     {@const complete = value === max}
     <div
       class='grid grid-cols-4'

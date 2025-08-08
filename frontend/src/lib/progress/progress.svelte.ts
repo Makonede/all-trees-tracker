@@ -43,12 +43,12 @@ const PERCENTAGE: Intl.NumberFormatOptions = {
 const regionNames = new SvelteMap<Region, string>()
 const treeTypeNames = new SvelteMap<TreeType, string>()
 
-t.subscribe((run) => {
+export const namesEffect = () => {
   for (const region of REGIONS_EXTENDED)
-    regionNames.set(region, run(`region.${region}`))
+    regionNames.set(region, t.get(`region.${region}`))
   for (const treeType of TREE_TYPES)
-    treeTypeNames.set(treeType, run(`tree.${treeType}`))
-})()
+    treeTypeNames.set(treeType, t.get(`tree.${treeType}`))
+}
 
 let totalValue = $derived(cut.length)
 let totalMax = $derived(cutTrees.size)

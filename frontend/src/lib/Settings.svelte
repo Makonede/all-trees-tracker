@@ -60,7 +60,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     CATEGORIES.map((category) => [category, ''])
   ) as Record<Category, string>)
 
-  let connected = $state(false)
   const IPV4_REGEX = /^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/
 
   let categories: Record<Category, {
@@ -83,7 +82,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
         {
           name: 'connect',
           color: 'bg-success-900/37.5 ring-success-500/75',
-          disabled: connected,
+          disabled: settings.connected,
           callback: async () => {
             errors.connection = ''
 
@@ -100,22 +99,22 @@ this program. If not, see <https://www.gnu.org/licenses/>.
               return
             }
 
-            connected = true
+            settings.connected = true
             await connect(settings.address, settings.port).then(() => {
-              connected = false
+              settings.connected = false
             }).catch((reason: ErrorReason) => {
               errors.connection = reason.message
-              connected = false
+              settings.connected = false
             })
           },
         },
         {
           name: 'disconnect',
           color: 'bg-error-900/37.5 ring-error-500/75',
-          disabled: !connected,
+          disabled: !settings.connected,
           callback: () => {
             disconnect()
-            connected = false
+            settings.connected = false
           },
         },
       ],

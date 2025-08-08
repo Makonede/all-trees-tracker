@@ -31,6 +31,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     getTotalPercentage,
     getTotalValue,
     getTreeTypeTrees,
+    namesEffect,
   } from './progress.svelte'
 
   let { tabState = $bindable() }: { tabState: {
@@ -39,6 +40,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   } } = $props()
 
   let complete = $derived(getTotalValue() === getTotalMax())
+
+  $effect(namesEffect)
 </script>
 
 <div class='grid grid-cols-1 justify-items-center gap-4 p-4'>
