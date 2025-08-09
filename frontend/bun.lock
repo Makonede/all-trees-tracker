@@ -9,6 +9,7 @@
       },
       "devDependencies": {
         "@biomejs/biome": "2.1.4",
+        "@fontsource-variable/fira-code": "^5.2.6",
         "@fontsource-variable/roboto": "^5.2.6",
         "@lucide/svelte": "^0.537.0",
         "@skeletonlabs/skeleton": "^3.1.7",
@@ -169,6 +170,8 @@
     "@floating-ui/dom": ["@floating-ui/dom@1.7.3", "", { "dependencies": { "@floating-ui/core": "^1.7.3", "@floating-ui/utils": "^0.2.10" } }, "sha512-uZA413QEpNuhtb3/iIKoYMSK07keHPYeXF02Zhd6e213j+d1NamLix/mCLxBUDW/Gx52sPH2m+chlUsyaBs/Ag=="],
 
     "@floating-ui/utils": ["@floating-ui/utils@0.2.10", "", {}, "sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ=="],
+
+    "@fontsource-variable/fira-code": ["@fontsource-variable/fira-code@5.2.6", "", {}, "sha512-TZe+3xOB0JofZOTNeITYVsD1y/OiFucwTmcmhC19mj+GOgCnNkbp7bb1Jobfg+HjlAHr11HdptENKu0B+VkWLg=="],
 
     "@fontsource-variable/roboto": ["@fontsource-variable/roboto@5.2.6", "", {}, "sha512-bKgCwHdRcUcHPmypU5oih+OnTQUnZ7XBoztJ0W2X+m7WRYITTWnnnQBDPAKbOwiemU/yJHGg+lD03M60BGuuGg=="],
 
