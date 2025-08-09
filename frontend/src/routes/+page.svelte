@@ -28,9 +28,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 >
   <section
     class='row-span-2 lg:row-span-1 lg:col-span-2 p-4 card preset-filled-surface-100-900'
-  >
-    <TreeMap />
-  </section>
+  ><TreeMap /></section>
   <section class='overflow-auto p-4 card preset-filled-surface-100-900'>
     <TabbedPanel />
   </section>
