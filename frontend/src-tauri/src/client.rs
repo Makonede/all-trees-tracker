@@ -14,7 +14,7 @@ You should have received a copy of the GNU General Public License along with thi
 see <https://www.gnu.org/licenses/>.
 */
 
-use std::{io, sync::atomic::{AtomicBool, Ordering}};
+use std::{future::poll_fn, io, sync::atomic::{AtomicBool, Ordering}, task::Poll};
 
 use serde::{ser::Serializer, Serialize};
 use tauri::{State, ipc::Channel};
@@ -52,8 +52,10 @@ pub async fn connect(
     connected.store(true, Ordering::Relaxed);
 
     loop {
-        stream.readable().await?;
-        if !connected.load(Ordering::Relaxed) { break; }
+        if !poll_fn(|cx|
+            if connected.load(Ordering::Relaxed) { stream.poll_read_ready(cx).map_ok(|()| true) }
+            else { Poll::Ready(Ok(false)) }
+        ).await? { break; }
 
         match stream.try_read(&mut hash) {
             Ok(_) => { channel.send(u32::from_le_bytes(hash)).unwrap(); }
