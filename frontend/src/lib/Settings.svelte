@@ -145,7 +145,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
             <!-- svelte-ignore binding_property_non_reactive  -->
             <div
               popover='hint'
-              class='p-4 mt-2 max-w-1/6 opacity-0 open:opacity-100 starting:open:opacity-0 transition-[display,opacity,overlay] transition-discrete duration-300 anchored/(--anchor) card preset-filled-surface-100-900 preset-outlined-primary-500'
+              class='p-4 mt-2 max-w-150 opacity-0 open:opacity-100 starting:open:opacity-0 transition-[display,opacity,overlay] transition-discrete duration-300 anchored/(--anchor) card preset-filled-surface-100-900 preset-outlined-primary-500'
               bind:this={categorySettings[i].tooltip}
             >{@html $t(`setting.${name}.description`)}</div>
           </div>
