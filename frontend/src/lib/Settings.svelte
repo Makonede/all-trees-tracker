@@ -44,7 +44,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     tooltip?: HTMLDivElement
   }
 
-  type Button = {
+  interface Button {
     name: string
     color: string
     disabled?: boolean

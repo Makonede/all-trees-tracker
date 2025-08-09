@@ -156,12 +156,12 @@ export const ACTOR_TYPES: Record<TreeActor, TreeType> = {
   Obj_TreeWillow_A_01: 'willow',
 }
 
-type Tree = {
+interface Tree {
   name: TreeActor
   pos: [number, number, number]
 }
 
-type JsonTree = { hash: number } & Tree
+interface JsonTree extends Tree { hash: number }
 
 export type MapTree = Tree & ({
   region: HyruleRegion
