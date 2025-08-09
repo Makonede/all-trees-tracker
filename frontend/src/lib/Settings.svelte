@@ -112,10 +112,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
           name: 'disconnect',
           color: 'bg-error-900/37.5 ring-error-500/75',
           disabled: !settings.connected,
-          callback: () => {
-            disconnect()
-            settings.connected = false
-          },
+          callback: disconnect,
         },
       ],
     },

@@ -14,8 +14,9 @@ You should have received a copy of the GNU General Public License along with thi
 see <https://www.gnu.org/licenses/>.
 */
 
-use std::{future::poll_fn, io, sync::atomic::{AtomicBool, Ordering}, task::Poll};
+use std::{io, ops::Not};
 
+use async_atomic::{AsyncAtomic, AsyncAtomicRef};
 use serde::{ser::Serializer, Serialize};
 use tauri::{State, ipc::Channel};
 use tokio::net::TcpStream;
@@ -45,17 +46,17 @@ impl Serialize for Error {
 
 #[tauri::command]
 pub async fn connect(
-    address: String, port: u16, channel: Channel<u32>, connected: State<'_, AtomicBool>
+    address: String, port: u16, channel: Channel<u32>, connected: State<'_, AsyncAtomic<bool>>
 ) -> Result<(), Error> {
     let stream = TcpStream::connect((address, port)).await?;
     let mut hash = [0u8; 4];
-    connected.store(true, Ordering::Relaxed);
+    connected.store(true);
 
     loop {
-        if !poll_fn(|cx|
-            if connected.load(Ordering::Relaxed) { stream.poll_read_ready(cx).map_ok(|()| true) }
-            else { Poll::Ready(Ok(false)) }
-        ).await? { break; }
+        tokio::select! {
+            _ = stream.readable() => {}
+            _ = connected.wait(bool::not) => { break; }
+        }
 
         match stream.try_read(&mut hash) {
             Ok(_) => { channel.send(u32::from_le_bytes(hash)).unwrap(); }
@@ -68,6 +69,6 @@ pub async fn connect(
 }
 
 #[tauri::command]
-pub fn disconnect(connected: State<'_, AtomicBool>) {
-    connected.store(false, Ordering::Relaxed);
+pub fn disconnect(connected: State<'_, AsyncAtomic<bool>>) {
+    connected.store(false);
 }

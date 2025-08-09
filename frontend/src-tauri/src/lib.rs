@@ -16,8 +16,7 @@ see <https://www.gnu.org/licenses/>.
 
 mod client;
 
-use std::sync::atomic::AtomicBool;
-
+use async_atomic::AsyncAtomic;
 use tauri::{Builder, Manager};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -26,7 +25,7 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![client::connect, client::disconnect])
         .setup(|app| {
-            app.manage(AtomicBool::default());
+            app.manage(AsyncAtomic::new(bool::default()));
             #[cfg(any(target_os = "linux", target_os = "macos"))] {
                 let window = app.get_window("main").unwrap();
                 window.set_theme(Some(tauri::Theme::Dark))?;

@@ -2,6 +2,12 @@
 
 A tracker mod for the *Breath of the Wild* All Trees challenge run.
 
+## Troubleshooting
+
+### White screen on Linux
+
+Launch the app with `WEBKIT_DISABLE_COMPOSITING_MODE=1`.
+
 ## FAQ
 
 > What is All Trees?
