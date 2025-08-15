@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <!--
 This file is part of All Trees Tracker.
 Copyright (C) 2025 Mako
