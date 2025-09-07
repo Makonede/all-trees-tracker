@@ -61,7 +61,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     CATEGORIES.map((category) => [category, ''])
   ) as Record<Category, string>)
 
-  const IPV4_REGEX = /^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/
+  const IPV4_REGEX =
+    /^(?!0)(?!.*\.$)(?:(?:1?\d?\d|2[0-4]\d|25[0-5])(?:\.|$)){4}$/
 
   let categories: Record<Category, {
     settings: Setting[]

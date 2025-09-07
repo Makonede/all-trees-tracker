@@ -86,7 +86,9 @@ let regionTrees = $derived(getRegions().map((region): [
 ] => [regionNames.get(region)!, [
   regionValues, regionMaxes, regionPercentages
 ].map((map) => map.get(region)!) as [number, number, string]]).toSorted(
-  ([nameA], [nameB]) => new Intl.Collator(locale.get()).compare(nameA, nameB)
+  ((collator) => ([nameA], [nameB]) => collator.compare(
+    nameA, nameB
+  ))(new Intl.Collator(locale.get()))
 ))
 export const getRegionTrees = () => regionTrees
 
@@ -118,6 +120,8 @@ let treeTypeTrees = $derived(TREE_TYPES.map((treeType): [
 ] => [treeTypeNames.get(treeType)!, [
   treeTypeValues, treeTypeMaxes, treeTypePercentages
 ].map((map) => map.get(treeType)!) as [number, number, string]]).toSorted(
-  ([nameA], [nameB]) => new Intl.Collator(locale.get()).compare(nameA, nameB)
+  ((collator) => ([nameA], [nameB]) => collator.compare(
+    nameA, nameB
+  ))(new Intl.Collator(locale.get()))
 ))
 export const getTreeTypeTrees = () => treeTypeTrees
