@@ -22,7 +22,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   import type { MouseEventHandler } from 'svelte/elements'
 
   import { connect, disconnect } from './client.svelte'
-  import { settings } from './settings.svelte'
+  import { settings } from './config.svelte'
   import { t } from './translations.svelte'
   import { type ErrorReason, type IconType, SettingType } from './types.svelte'
 

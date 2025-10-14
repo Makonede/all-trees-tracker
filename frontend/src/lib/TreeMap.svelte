@@ -26,7 +26,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   import 'leaflet/dist/leaflet.css'
 
   import { cutTrees, getLastTree } from './client.svelte'
-  import { settings } from './settings.svelte'
+  import { settings } from './config.svelte'
   import { baseTrees } from './trees.svelte'
 
   const WIDTH = 24000
