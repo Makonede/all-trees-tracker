@@ -105,8 +105,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     tabState.filters = value as Filter[]
   }} multiple>
     {#each filters as { filter, name, icon, trees }, i}
+    {@const Icon = icon}
       {#if i}<hr class='hr border-surface-300-700'>{/if}
-      {@const Icon = icon}
       <Accordion.Item value={filter}>
         <h3 class='text-lg'>
           <Accordion.ItemTrigger class='flex justify-between items-center'>
