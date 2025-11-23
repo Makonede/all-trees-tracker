@@ -83,7 +83,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
       buttons: [
         {
           name: 'connect',
-          color: 'bg-success-900/37.5 ring-success-500/75',
+          color: 'bg-success-900/75',
           disabled: settings.connected,
           callback: async () => {
             errors.connection = ''
@@ -102,17 +102,19 @@ this program. If not, see <https://www.gnu.org/licenses/>.
             }
 
             settings.connected = true
-            await connect(settings.address, settings.port).then(() => {
+            try {
+              await connect(settings.address, settings.port)
               settings.connected = false
-            }).catch((reason: ErrorReason) => {
-              errors.connection = reason.message
+            }
+            catch (reason) {
+              errors.connection = (reason as ErrorReason).message
               settings.connected = false
-            })
+            }
           },
         },
         {
           name: 'disconnect',
-          color: 'bg-error-900/37.5 ring-error-500/75',
+          color: 'bg-error-900/75',
           disabled: !settings.connected,
           callback: disconnect,
         },
@@ -143,7 +145,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
               bind:this={categorySettings[i].help} onmouseenter={enter}
               onmouseleave={leave} onfocus={enter} onblur={leave}
             />
-            {/* @ts-ignore */ null}
             <!-- svelte-ignore binding_property_non_reactive  -->
             <div
               popover='hint'
@@ -173,7 +174,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
       <div class='flex gap-4 justify-around items-center'>
         {#each categoryButtons as { name, color, disabled, callback } (name)}
           <button
-            {disabled} class='ring-4 {color} btn btn-lg' onclick={callback}
+            {disabled} class='{color} btn btn-lg' onclick={callback}
           >{$t(`setting.button.${name}`)}</button>
         {/each}
       </div>
