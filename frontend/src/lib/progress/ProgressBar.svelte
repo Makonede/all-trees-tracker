@@ -21,6 +21,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   import LandPlot from '@lucide/svelte/icons/land-plot'
   import Trees from '@lucide/svelte/icons/trees'
   import { Accordion, Progress } from '@skeletonlabs/skeleton-svelte'
+
   import type { Component } from 'svelte'
   import { slide } from 'svelte/transition'
 

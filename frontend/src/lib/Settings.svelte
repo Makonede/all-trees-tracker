@@ -61,9 +61,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     CATEGORIES.map((category) => [category, ''])
   ) as Record<Category, string>)
 
-  const IPV4_REGEX =
-    /^(?!0)(?!.*\.$)(?:(?:1?\d?\d|2[0-4]\d|25[0-5])(?:\.|$)){4}$/
-
   let categories: Record<Category, {
     settings: Setting[]
     buttons: Button[]
@@ -84,14 +81,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
         {
           name: 'connect',
           color: 'bg-success-900/75',
-          disabled: settings.connected,
+          disabled: settings.connected ?? true,
           callback: async () => {
             errors.connection = ''
 
-            if (!settings.address.match(IPV4_REGEX)) {
-              errors.connection = $t('error.invalidAddress')
-              return
-            }
             if (!(
               Number.isInteger(settings.port)
               && settings.port
@@ -101,13 +94,16 @@ this program. If not, see <https://www.gnu.org/licenses/>.
               return
             }
 
-            settings.connected = true
+            settings.connected = undefined
             try {
-              await connect(settings.address, settings.port)
+              await connect(settings.address, settings.port, () => {
+                settings.connected = true
+              })
               settings.connected = false
             }
-            catch (reason) {
-              errors.connection = (reason as ErrorReason).message
+            catch (error) {
+              const reason = error as ErrorReason
+              errors.connection = `${reason.kind}: ${reason.message}`
               settings.connected = false
             }
           },

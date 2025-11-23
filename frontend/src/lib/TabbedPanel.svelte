@@ -20,6 +20,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   import ChartNoAxesCombined from '@lucide/svelte/icons/chart-no-axes-combined'
   import SettingsIcon from '@lucide/svelte/icons/settings'
   import { TabItem, Tabs } from 'flowbite-svelte'
+
   import type { Component } from 'svelte'
 
   import Progress from './Progress.svelte'

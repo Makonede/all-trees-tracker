@@ -17,6 +17,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
 import { Channel, invoke } from '@tauri-apps/api/core'
+import { listen } from '@tauri-apps/api/event'
 import { SvelteMap } from 'svelte/reactivity'
 
 import { baseTrees } from './trees.svelte'
@@ -31,14 +32,17 @@ export const loadTrees = (hashes: Iterable<number>) => {
   lastTree = -1
 }
 
-export const connect = async (address: string, port: number) => {
+export const connect = async (
+  address: string, port: number, callback: () => void
+) => {
   const tracker = new Channel<number>()
   tracker.onmessage = (hash) => { if (cutTrees.has(hash)) {
     cutTrees.set(hash, true)
     if (baseTrees.has(hash)) lastTree = hash
   } }
+  listen<undefined>('connected', (event) => callback())
 
-  await invoke('connect', { address, port, channel: tracker })
+  await invoke('connect', { address, port, tracker })
 }
 
 export const disconnect = () => { invoke('disconnect') }
