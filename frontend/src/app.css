@@ -23,7 +23,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 @import '@toolwind/anchors';
 
 @import '@skeletonlabs/skeleton';
-@import '@skeletonlabs/skeleton/optional/presets';
 @import '@skeletonlabs/skeleton/themes/cerberus';
 
 @import '@layerstack/tailwind/themes/skeleton.css';
@@ -31,7 +30,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 @import '@fontsource-variable/fira-code';
 @import '@fontsource-variable/roboto';
 
-@source '../node_modules/@skeletonlabs/skeleton-svelte/dist';
+@import '@skeletonlabs/skeleton-svelte';
 @source '../node_modules/layerchart/dist';
 
 @theme {

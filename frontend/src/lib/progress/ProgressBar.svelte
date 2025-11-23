@@ -17,9 +17,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <script lang='ts'>
+  import ChevronDown from '@lucide/svelte/icons/chevron-down'
   import LandPlot from '@lucide/svelte/icons/land-plot'
   import Trees from '@lucide/svelte/icons/trees'
-  import { Accordion, ProgressRing } from '@skeletonlabs/skeleton-svelte'
+  import { Accordion, Progress } from '@skeletonlabs/skeleton-svelte'
+  import type { Component } from 'svelte'
+  import { slide } from 'svelte/transition'
 
   import { t } from '../translations.svelte'
   import { ChartType, type Filter } from '../types.svelte'
@@ -29,7 +32,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   import {
     getRegionTrees,
     getTotalMax,
-    getTotalPercentage,
     getTotalValue,
     getTreeTypeTrees,
     namesEffect,
@@ -40,6 +42,28 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     filters?: Filter[],
   } } = $props()
 
+  type FilterItem = {
+    filter: Filter
+    name: string
+    icon: Component
+    trees: () => [string, [number, number, string]][]
+  }
+
+  const filters: FilterItem[] = [
+    {
+      filter: 'region',
+      name: 'progress.byRegion',
+      icon: LandPlot,
+      trees: getRegionTrees,
+    },
+    {
+      filter: 'type',
+      name: 'progress.byType',
+      icon: Trees,
+      trees: getTreeTypeTrees,
+    },
+  ]
+
   let complete = $derived(getTotalValue() === getTotalMax())
 
   $effect(namesEffect)
@@ -47,18 +71,31 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 <div class='grid grid-cols-1 justify-items-center gap-4 p-4'>
   <h1 class='h1'>{$t('progress.overall')}</h1>
-  <ProgressRing
-    label={getTotalPercentage()} showLabel size='size-48' svgClasses='{
-      complete
-        ? 'shadow-[0px_0px_24px_var(--color-amber-400),_inset_0px_0px_44px_var(--color-amber-400)]'
-        : ''
-    } transition-shadow duration-300' trackStroke='stroke-surface-900'
-    meterStroke={complete ? 'stroke-amber-400' : ''}
-    meterTransition='transition-colors duration-300'
-    labelFill={complete ? 'fill-amber-400' : 'fill-current'} labelFontSize={20}
-    labelClasses='transition-colors duration-300' value={getTotalValue()}
-    max={getTotalMax()}
-  />
+  <Progress
+    class='w-fit relative' value={getTotalValue()} max={getTotalMax()}
+    formatOptions={{
+      style: 'percent',
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
+    }}
+  >
+    <div class='absolute inset-0 flex items-center justify-center'>
+      <Progress.ValueText class='text-4xl font-bold {
+        complete ? 'text-amber-400' : 'fill-current'
+      } transition-color duration-300' />
+    </div>
+    <Progress.Circle
+      class='{
+        complete ? 'drop-shadow-[0px_0px_24px_var(--color-amber-400)]' : ''
+      } transition duration-300 will-change-[filter]'
+      style='--size: 12rem; --thickness: 1rem;'
+    >
+      <Progress.CircleTrack class='stroke-surface-100-900' />
+      <Progress.CircleRange class='{
+        complete ? 'stroke-amber-400' : ''
+      } transition duration-300' />
+    </Progress.Circle>
+  </Progress>
   <p>{$t('progress.cutTrees', {
     cut: getTotalValue().toString(),
     total: getTotalMax().toString(),
@@ -67,17 +104,33 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   <Accordion value={tabState.filters} onValueChange={({ value }) => {
     tabState.filters = value as Filter[]
   }} multiple>
-    <Accordion.Item value='region'>
-      {#snippet lead()}<LandPlot />{/snippet}
-      {#snippet control()}{$t('progress.byRegion')}{/snippet}
-      {#snippet panel()}<ProgressBarFilter trees={getRegionTrees()} />{/snippet}
-    </Accordion.Item>
-    <Accordion.Item value='type'>
-      {#snippet lead()}<Trees />{/snippet}
-      {#snippet control()}{$t('progress.byType')}{/snippet}
-      {#snippet panel()}<ProgressBarFilter trees={
-        getTreeTypeTrees()
-      } />{/snippet}
-    </Accordion.Item>
+    {#each filters as { filter, name, icon, trees }, i}
+      {#if i}<hr class='hr border-surface-300-700'>{/if}
+      {@const Icon = icon}
+      <Accordion.Item value={filter}>
+        <h3 class='text-lg'>
+          <Accordion.ItemTrigger class='flex justify-between items-center'>
+            <div class='flex gap-4'>
+              <Icon />
+              {$t(name)}
+            </div>
+            <Accordion.ItemIndicator class='group'>
+              <ChevronDown
+                class='size-4 transition duration-300 group-data-[state=open]:rotate-180'
+              />
+            </Accordion.ItemIndicator>
+          </Accordion.ItemTrigger>
+        </h3>
+        <Accordion.ItemContent>
+          {#snippet element(attributes)}
+            {#if !attributes.hidden}
+              <div {...attributes} transition:slide={{ duration: 300 }}>
+                <ProgressBarFilter trees={trees()} />
+              </div>
+            {/if}
+          {/snippet}
+        </Accordion.ItemContent>
+      </Accordion.Item>
+    {/each}
   </Accordion>
 </div>

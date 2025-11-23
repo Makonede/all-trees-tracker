@@ -47,15 +47,15 @@ this program. If not, see <https://www.gnu.org/licenses/>.
           }
         )})
       </p>
-      <Progress
-        {value} {max} height='h-4' classes='col-span-2' trackBg='bg-surface-900'
-        trackRounded='rounded-full' meterBg={
-          complete
-            ? 'bg-gradient-to-r from-amber-400 via-amber-200 to-amber-400'
-            : 'bg-(--filter-color)'
-        } meterRounded='rounded-full'
-        meterTransition='transition-colors duration-300'
-      />
+      <Progress class='col-span-2' {value} {max}>
+        <Progress.Track class='h-4 bg-surface-100-900 rounded-full'>
+          <Progress.Range class='{
+            complete
+              ? 'bg-linear-to-r from-amber-400 via-amber-200 to-amber-400'
+              : 'bg-(--filter-color)'
+          } rounded-full transition-colors duration-300' />
+        </Progress.Track>
+      </Progress>
     </div>
   {/each}
 </div>

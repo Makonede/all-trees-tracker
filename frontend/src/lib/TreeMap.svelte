@@ -64,13 +64,14 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     (tree) => !cutTrees.get(tree[0])!
   ).map((tree) => tree[1])])
   let map = $state<L.Map>()
+  let mapReady = false
 
-  onMount(() => {
-    map = map!
+  $effect(() => { if (!mapReady && map != null) {
+    mapReady = true
     map.getContainer().classList.add('bg-black!', 'rounded-lg!')
     map.setView(L.latLng(0, 0), undefined, { animate: false })
     treeGroup.addTo(map)
-  })
+  } })
 
   $effect(() => {
     const hash = getLastTree()

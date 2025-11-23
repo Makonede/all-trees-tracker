@@ -53,13 +53,9 @@ export const namesEffect = () => {
 
 let totalValue = $derived(cut.length)
 let totalMax = $derived(cutTrees.size)
-let totalPercentage = $derived((totalValue / totalMax * 100).toLocaleString(
-  locale.get(), PERCENTAGE
-))
 
 export const getTotalValue = () => totalValue
 export const getTotalMax = () => totalMax
-export const getTotalPercentage = () => totalPercentage
 
 let regionCounts: [Region, number][] = $derived(getRegions().map(
   (region) => [region, 0]
