@@ -63,9 +63,5 @@
       "onFail": "error"
     }
   },
-  "trustedDependencies": [
-    "@tailwindcss/oxide",
-    "@toolwind/anchors",
-    "esbuild"
-  ]
+  "trustedDependencies": ["@tailwindcss/oxide", "@toolwind/anchors", "esbuild"]
 }

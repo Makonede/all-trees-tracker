@@ -22,8 +22,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   import * as L from 'leaflet'
   import { Map as SveafletMap, TileLayer } from 'sveaflet'
 
-  import { onMount } from 'svelte'
-
   import 'leaflet/dist/leaflet.css'
 
   import { cutTrees, getLastTree } from './client.svelte'
