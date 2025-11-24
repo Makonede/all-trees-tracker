@@ -21,7 +21,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
   import type { MouseEventHandler } from 'svelte/elements'
 
-  import { connect, disconnect } from './client.svelte'
+  import { connect, disconnect, errorsEffect } from './client.svelte'
   import { settings } from './config.svelte'
   import { t } from './translations.svelte'
   import { type ErrorReason, type IconType, SettingType } from './types.svelte'
@@ -61,6 +61,14 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     CATEGORIES.map((category) => [category, ''])
   ) as Record<Category, string>)
 
+  const IPV4_REGEX =
+    /^(?!0)(?!.*\.$)(?:(?:1?\d?\d|2[0-4]\d|25[0-5])(?:\.|$)){4}$/
+
+  const translateError = (key: string) => $t('error.reason', {
+    kind: 'Error',
+    message: $t(`error.${key}`),
+  })
+
   let categories: Record<Category, {
     settings: Setting[]
     buttons: Button[]
@@ -85,12 +93,16 @@ this program. If not, see <https://www.gnu.org/licenses/>.
           callback: async () => {
             errors.connection = ''
 
+            if (!settings.address.match(IPV4_REGEX)) {
+              errors.connection = translateError('invalidAddress')
+              return
+            }
             if (!(
               Number.isInteger(settings.port)
               && settings.port
               && settings.port === (Math.abs(settings.port) & 0xffff)
             )) {
-              errors.connection = $t('error.invalidPort')
+              errors.connection = translateError('invalidPort')
               return
             }
 
@@ -103,7 +115,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
             }
             catch (error) {
               const reason = error as ErrorReason
-              errors.connection = `${reason.kind}: ${reason.message}`
+              errors.connection = $t('error.reason', {
+                kind: reason.kind ?? 'Error',
+                message: reason.message
+              })
               settings.connected = false
             }
           },
@@ -117,6 +132,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
       ],
     },
   })
+
+  $effect(errorsEffect)
 </script>
 
 <div class='p-8 space-y-4 w-full text-lg card preset-filled-surface-200-800'>
@@ -129,10 +146,12 @@ this program. If not, see <https://www.gnu.org/licenses/>.
       {@const enter = () => tooltip?.showPopover()}
       {@const leave = () => tooltip?.hidePopover()}
       <div
-        class='flex gap-4 justify-between items-center'
+        class='flex flex-col 2xl:flex-row gap-4 justify-between 2xl:items-center'
         style='--anchor: {name};'
       >
-        <div class='flex gap-2 items-center'>
+        <div
+          class='flex 2xl:gap-2 justify-between 2xl:justify-normal items-center'
+        >
           <p>{$t(`setting.${name}.name`)}</p>
           <div>
             <!-- svelte-ignore binding_property_non_reactive  -->
@@ -152,14 +171,14 @@ this program. If not, see <https://www.gnu.org/licenses/>.
         {#if kind === SettingType.Text}
           <input
             type='text' placeholder={$t(`setting.${name}.placeholder`)}
-            class='w-1/2 font-mono placeholder:text-surface-500 input preset-filled-surface-100-900'
+            class='2xl:w-1/2 font-mono placeholder:text-surface-500 input preset-filled-surface-100-900'
             bind:value={settings[name]}
           >
         {:else if kind === SettingType.Integer}
           <input
             type='number' min={options!.min} max={options!.max}
             placeholder={$t(`setting.${name}.placeholder`)}
-            class='w-1/2 font-mono placeholder:text-surface-500 input preset-filled-surface-100-900'
+            class='2xl:w-1/2 font-mono placeholder:text-surface-500 input preset-filled-surface-100-900'
             bind:value={settings[name]}
           >
         {/if}
@@ -167,7 +186,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     {/each}
     {#if categoryButtons}
       <br>
-      <div class='flex gap-4 justify-around items-center'>
+      <div
+        class='flex flex-col 2xl:flex-row gap-4 2xl:justify-around items-center'
+      >
         {#each categoryButtons as { name, color, disabled, callback } (name)}
           <button
             {disabled} class='{color} btn btn-lg' onclick={callback}

@@ -1,1 +1,6 @@
-{ "invalidPort": "Invalid port" }
+{
+  "reason": "{kind}: {message}",
+  "invalidAddress": "invalid IP address",
+  "invalidPort": "invalid port",
+  "noRemote": "cannot connect to remote from browser"
+}

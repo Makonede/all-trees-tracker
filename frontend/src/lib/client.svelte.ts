@@ -16,11 +16,23 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import { Channel, invoke } from '@tauri-apps/api/core'
+import { Channel, invoke, isTauri } from '@tauri-apps/api/core'
 import { listen } from '@tauri-apps/api/event'
 import { SvelteMap } from 'svelte/reactivity'
 
+import { t } from './translations.svelte'
 import { baseTrees } from './trees.svelte'
+
+const ERROR_MESSAGES = [
+  'noRemote',
+] as const
+type ErrorMessage = (typeof ERROR_MESSAGES)[number]
+
+const errors = new SvelteMap<ErrorMessage, string>()
+
+export const errorsEffect = () => {
+  for (const key of ERROR_MESSAGES) errors.set(key, t.get(`error.${key}`))
+}
 
 export let cutTrees = $state(new SvelteMap<number, boolean>())
 let lastTree = $state(-1)
@@ -35,12 +47,14 @@ export const loadTrees = (hashes: Iterable<number>) => {
 export const connect = async (
   address: string, port: number, callback: () => void
 ) => {
+  if (!isTauri()) throw { message: errors.get('noRemote')! }
+
   const tracker = new Channel<number>()
   tracker.onmessage = (hash) => { if (cutTrees.has(hash)) {
     cutTrees.set(hash, true)
     if (baseTrees.has(hash)) lastTree = hash
   } }
-  listen<undefined>('connected', (event) => callback())
+  listen<undefined>('connected', () => callback())
 
   await invoke('connect', { address, port, tracker })
 }

@@ -8,6 +8,7 @@ export default defineConfig(async () => ({
   plugins: [sveltekit(), tailwindcss()],
   clearScreen: false,
   server: {
+    allowedHosts: true,
     port: 1420,
     strictPort: true,
     host: host || false,

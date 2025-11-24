@@ -35,6 +35,7 @@ export type IconType = { icon: Component }
 
 export type ErrorReason = {
   kind:
+    | 'Error'
     | 'AddrParseError'
     | 'IoError'
   message: string

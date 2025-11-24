@@ -27,7 +27,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   {#each trees as [label, [value, max, percentage]], i}
     {@const complete = value === max}
     <div
-      class='grid grid-cols-4'
+      class='grid grid-cols-2 gap-4 min-[120rem]:grid-cols-4'
       style='--filter-color: oklch(from hsl(0deg, 100%, 80%) l c calc(h + {
         360 / trees.length * i
       }));'
@@ -37,7 +37,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
           class='underline decoration-(--filter-color) decoration-2 underline-offset-4'
         >{label}</b>
       </p>
-      <p class='text-ellipsis'>
+      <p class='text-right min-[120rem]:text-left text-ellipsis'>
         <span class='{
           complete ? 'font-bold text-amber-400' : ''
         } transition-colors duration-300'>{percentage}%</span> ({$t(

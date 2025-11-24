@@ -86,9 +86,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 </script>
 
 <div
-  class='flex flex-col space-y-4 p-4 w-full card preset-filled-surface-200-800'
+  class='flex flex-col gap-4 p-4 w-full card preset-filled-surface-200-800'
 >
-  <form class='flex justify-evenly'>
+  <form
+    class='flex flex-col xl:flex-row gap-4 xl:gap-0 items-center justify-evenly'
+  >
     {#each chartTypes as { name, type }, i}
       <label class='flex items-center space-x-2'>
         <input
