@@ -16,8 +16,6 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
-import type { Load } from '@sveltejs/kit'
-
 import { loadTranslations } from '$lib/translations.svelte'
 
 export const prerender = true
