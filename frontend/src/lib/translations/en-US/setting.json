@@ -1,4 +1,5 @@
 {
+  "advanced": "Advanced",
   "category": {
     "connection": "Connection"
   },
@@ -15,5 +16,10 @@
     "name": "Server port",
     "description": "The port the server is running on. Leave as '<code class=\"code\">'5001'</code>' if unsure.",
     "placeholder": "5001"
+  },
+  "proxy": {
+    "name": "Proxy URL",
+    "description": "The URL of the WebSocket proxy server. Leave as '<code class=\"code\">'ws://localhost:5002'</code>' if unsure.",
+    "placeholder": "ws://localhost:5002"
   }
 }

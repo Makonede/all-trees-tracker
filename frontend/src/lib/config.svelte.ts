@@ -16,11 +16,14 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
+import { isTauri } from '@tauri-apps/api/core'
+
 import { SvelteMap } from 'svelte/reactivity'
 
 type Settings = {
   address: string
   port: number
+  proxy: string
   connected?: boolean
   colors: SvelteMap<string, string>
 }
@@ -28,6 +31,7 @@ type Settings = {
 export let settings: Settings = $state({
   address: '',
   port: 5001,
+  proxy: !isTauri() ? 'ws://localhost:5002' : '',
   connected: false,
   colors: new SvelteMap<string, string>(),
 })

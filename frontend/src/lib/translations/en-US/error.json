@@ -1,6 +1,7 @@
 {
+  "error": "Error",
   "reason": "{kind}: {message}",
   "invalidAddress": "invalid IP address",
   "invalidPort": "invalid port",
-  "noRemote": "cannot connect to remote from browser"
+  "proxyFailed": "proxy connection failed"
 }

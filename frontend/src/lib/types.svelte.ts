@@ -16,7 +16,11 @@ You should have received a copy of the GNU General Public License along with
 this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
+import CircleQuestionMark from '@lucide/svelte/icons/circle-question-mark'
+
 import type { Component } from 'svelte'
+
+import { settings } from './config.svelte'
 
 export enum ChartType {
   ProgressBar,
@@ -24,19 +28,32 @@ export enum ChartType {
   LineChart,
   PieChart,
 }
+
 export enum SettingType {
   Toggle,
   Text,
   Integer,
 }
 
+export type Setting = ({
+  kind: SettingType.Toggle | SettingType.Text
+  options?: undefined
+} | {
+  kind: SettingType.Integer
+  options: {
+    min: number
+    max: number
+  }
+}) & {
+  name: keyof typeof settings
+  help?: CircleQuestionMark
+  tooltip?: HTMLDivElement
+}
+
 export type Filter = 'region' | 'type'
 export type IconType = { icon: Component }
 
 export type ErrorReason = {
-  kind:
-    | 'Error'
-    | 'AddrParseError'
-    | 'IoError'
+  kind: string
   message: string
 }

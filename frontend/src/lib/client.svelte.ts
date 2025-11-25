@@ -24,7 +24,7 @@ import { t } from './translations.svelte'
 import { baseTrees } from './trees.svelte'
 
 const ERROR_MESSAGES = [
-  'noRemote',
+  'proxyFailed',
 ] as const
 type ErrorMessage = (typeof ERROR_MESSAGES)[number]
 
@@ -45,16 +45,53 @@ export const loadTrees = (hashes: Iterable<number>) => {
 }
 
 export const connect = async (
-  address: string, port: number, callback: () => void
+  address: string, port: number, proxy: string, callback: () => void
 ) => {
-  if (!isTauri()) throw { message: errors.get('noRemote')! }
-
-  const tracker = new Channel<number>()
-  tracker.onmessage = (hash) => { if (cutTrees.has(hash)) {
+  const cut = (hash: number) => { if (cutTrees.has(hash)) {
     cutTrees.set(hash, true)
     if (baseTrees.has(hash)) lastTree = hash
   } }
-  listen<undefined>('connected', () => callback())
+
+  if (!isTauri()) {
+    let socket: WebSocket
+    try { socket = new WebSocket(proxy) }
+    catch (e) {
+      const exception = e as DOMException
+      throw {
+        kind: exception.name,
+        message: exception.message,
+      }
+    }
+
+    socket.binaryType = 'arraybuffer'
+
+    socket.addEventListener('message', (event) => {
+      if (event.data instanceof ArrayBuffer) {
+        const view = new DataView(event.data)
+        cut(view.getUint32(0))
+      }
+    })
+
+    socket.addEventListener('open', () => {
+      socket.send(address)
+      socket.send(port.toString())
+      callback()
+    })
+
+    try {
+      await new Promise((resolve, reject) => {
+        socket.addEventListener('error', reject)
+        socket.addEventListener('close', resolve)
+      })
+    }
+    catch { throw { message: errors.get('proxyFailed')! } }
+
+    return
+  }
+
+  const tracker = new Channel<number>()
+  tracker.onmessage = cut
+  listen<undefined>('connected', callback)
 
   await invoke('connect', { address, port, tracker })
 }

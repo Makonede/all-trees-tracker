@@ -201,5 +201,5 @@ export const loadBase = () => {
 export const loadExtended = () => {
   loadTrees(extendedTrees.keys())
   trees = extendedTrees
-  dlc= true
+  dlc = true
 }
