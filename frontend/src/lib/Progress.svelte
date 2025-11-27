@@ -88,7 +88,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 <div
   class='flex flex-col gap-4 p-4 w-full card preset-filled-surface-200-800'
 >
-  <form
+  <!-- TODO: implement charts -->
+  <!-- <form
     class='flex flex-col xl:flex-row gap-4 xl:gap-0 items-center justify-evenly'
   >
     {#each chartTypes as { name, type }, i}
@@ -100,7 +101,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
         <p>{name}</p>
       </label>
     {/each}
-  </form>
+  </form> -->
   <svelte:boundary>
     {@const Chart = chart}
     <Chart bind:tabState={tabState} />

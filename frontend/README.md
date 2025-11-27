@@ -8,7 +8,8 @@ This directory contains the frontend, a Tauri SvelteKit app.
 
 ## Prerequisites
 
-- [Bun](https://bun.sh/) 1.2.20
+- [Bun](https://bun.sh/) 1.3.4
+- [Node.js](https://nodejs.org/en) v24.11.1+
 - [Rust](https://www.rust-lang.org/tools/install) 1.90.0+
 
 ## Build
