@@ -17,6 +17,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <script lang='ts'>
+  import { isTauri } from '@tauri-apps/api/core'
   import { openUrl } from '@tauri-apps/plugin-opener'
 
   import * as L from 'leaflet'
@@ -91,7 +92,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 </script>
 
 <div class='h-full bg-black rounded-lg' onclickcapture={
-  async (event: MouseEvent) => {
+  isTauri() ? async (event: MouseEvent) => {
     const target = event.target! as HTMLElement
     if (target.tagName === 'A' && target.parentElement!.classList.contains(
       'leaflet-control-attribution'
@@ -100,7 +101,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
       event.stopPropagation()
       await openUrl((target as HTMLAnchorElement).href)
     }
-  }
+  } : undefined
 }>
   <SveafletMap options={{
     crs,
