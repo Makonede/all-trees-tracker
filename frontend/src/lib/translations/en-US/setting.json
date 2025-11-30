@@ -1,11 +1,18 @@
 {
   "advanced": "Advanced",
   "category": {
+    "trees": "Trees",
     "connection": "Connection"
   },
   "button": {
     "connect": "Connect",
     "disconnect": "Disconnect"
+  },
+  "dlc": {
+    "name": "Category",
+    "description": "Whether to include DLC-exclusive trees (Extended) or not (Original).",
+    "on": "Extended",
+    "off": "Original"
   },
   "address": {
     "name": "Server address",

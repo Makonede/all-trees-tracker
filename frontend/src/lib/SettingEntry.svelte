@@ -18,6 +18,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 <script lang='ts'>
   import CircleQuestionMark from '@lucide/svelte/icons/circle-question-mark'
+  import { Switch } from '@skeletonlabs/skeleton-svelte'
 
   import { settings } from './config.svelte'
   import { t } from './translations.svelte'
@@ -52,7 +53,20 @@ this program. If not, see <https://www.gnu.org/licenses/>.
         >{@html $t(`setting.${name}.description`)}</div>
       </div>
     </div>
-    {#if kind === SettingType.Text}
+    {#if kind === SettingType.Toggle}
+      <Switch checked={settings[name] as boolean} onCheckedChange={
+        ({ checked }) => { (settings[name] as boolean) = checked }
+      }>
+        <Switch.Label class='text-lg'>{$t(`setting.${name}.off`)}</Switch.Label>
+        <Switch.Control
+          class='preset-filled-surface-100-900 data-[state=checked]:preset-filled-primary-500'
+        >
+          <Switch.Thumb />
+        </Switch.Control>
+        <Switch.Label class='text-lg'>{$t(`setting.${name}.on`)}</Switch.Label>
+        <Switch.HiddenInput />
+      </Switch>
+    {:else if kind === SettingType.Text}
       <input
         type='text' placeholder={$t(`setting.${name}.placeholder`)}
         class='2xl:w-1/2 font-mono placeholder:text-surface-500 input preset-filled-surface-100-900'

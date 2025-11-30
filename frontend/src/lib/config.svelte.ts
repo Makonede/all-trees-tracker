@@ -21,17 +21,19 @@ import { isTauri } from '@tauri-apps/api/core'
 import { SvelteMap } from 'svelte/reactivity'
 
 type Settings = {
+  dlc: boolean
+  colors: SvelteMap<string, string>
   address: string
   port: number
   proxy: string
   connected?: boolean
-  colors: SvelteMap<string, string>
 }
 
 export let settings: Settings = $state({
+  dlc: false,
+  colors: new SvelteMap<string, string>(),
   address: '',
   port: 5001,
   proxy: !isTauri() ? 'ws://localhost:5002' : '',
   connected: false,
-  colors: new SvelteMap<string, string>(),
 })

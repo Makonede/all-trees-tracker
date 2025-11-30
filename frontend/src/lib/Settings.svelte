@@ -23,7 +23,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
   import { connect, disconnect, errorsEffect } from './client.svelte'
   import { settings } from './config.svelte'
-  import SettingEntry from './Setting.svelte'
+  import SettingEntry from './SettingEntry.svelte'
   import { t } from './translations.svelte'
   import {
     type ErrorReason, type IconType, type Setting, SettingType
@@ -58,9 +58,17 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
   let categories: Record<Category, {
     settings: Setting[]
-    advancedSettings: Setting[]
-    buttons: Button[]
+    advancedSettings?: Setting[]
+    buttons?: Button[]
   }> = $derived({
+    trees: {
+      settings: [
+        {
+          name: 'dlc',
+          kind: SettingType.Toggle,
+        },
+      ],
+    },
     connection: {
       settings: [
         {
@@ -78,7 +86,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
           name: 'proxy',
           kind: SettingType.Text,
         },
-      ] : [],
+      ] : undefined,
       buttons: [
         {
           name: 'connect',
@@ -141,7 +149,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     {#each categorySettings as { name, kind, options, tooltip, help } (name)}
       <SettingEntry {name} kind={kind as any} {options} {tooltip} {help} />
     {/each}
-    {#if categoryAdvancedSettings.length}
+    {#if categoryAdvancedSettings != null && categoryAdvancedSettings.length}
       <details bind:open={tabState.advanced![i]}>
         <summary class='cursor-pointer'>{$t('setting.advanced')}</summary>
         {#each categoryAdvancedSettings as {
@@ -151,7 +159,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
         {/each}
       </details>
     {/if}
-    {#if categoryButtons.length}
+    {#if categoryButtons != null && categoryButtons.length}
       <hr class='hr border-surface-300-700'>
       <div
         class='flex flex-col 2xl:flex-row gap-4 2xl:justify-around items-center'
@@ -164,9 +172,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
       </div>
       <svelte:boundary>
         {@const error = errors[categoryName as Category]}
-        <p class='{error ? '' : 'hidden '}flex justify-center text-error-500'>
-          {error}
-        </p>
+        {#if error}
+          <p class='flex justify-center text-error-500'>
+            {error}
+          </p>
+        {/if}
       </svelte:boundary>
     {/if}
   {/each}

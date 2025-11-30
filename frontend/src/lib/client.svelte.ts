@@ -44,7 +44,7 @@ export const loadTrees = (hashes: Iterable<number>) => {
   lastTree = -1
 }
 
-let socket: WebSocket | undefined = $state()
+let socket = $state<WebSocket>()
 
 export const connect = async (
   address: string, port: number, proxy: string, callback: () => void
