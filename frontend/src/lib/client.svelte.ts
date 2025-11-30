@@ -44,6 +44,8 @@ export const loadTrees = (hashes: Iterable<number>) => {
   lastTree = -1
 }
 
+let socket: WebSocket | undefined = $state()
+
 export const connect = async (
   address: string, port: number, proxy: string, callback: () => void
 ) => {
@@ -53,7 +55,6 @@ export const connect = async (
   } }
 
   if (!isTauri()) {
-    let socket: WebSocket
     try { socket = new WebSocket(proxy) }
     catch (e) {
       const exception = e as DOMException
@@ -66,20 +67,23 @@ export const connect = async (
     socket.binaryType = 'arraybuffer'
 
     socket.addEventListener('message', (event) => {
-      if (event.data instanceof ArrayBuffer) {
-        const view = new DataView(event.data)
-        cut(view.getUint32(0))
-      }
+      if (event.data instanceof ArrayBuffer)
+        cut(new DataView(event.data).getUint32(0))
     })
 
-    socket.addEventListener('open', () => {
-      socket.send(address)
-      socket.send(port.toString())
+    socket.addEventListener('open', function () {
+      const buffer = new ArrayBuffer(2)
+      new DataView(buffer).setUint16(0, port)
+
+      this.send(address)
+      this.send(buffer)
+
       callback()
     })
 
     try {
       await new Promise((resolve, reject) => {
+        socket = socket!
         socket.addEventListener('error', reject)
         socket.addEventListener('close', resolve)
       })
@@ -96,4 +100,7 @@ export const connect = async (
   await invoke('connect', { address, port, tracker })
 }
 
-export const disconnect = () => { invoke('disconnect') }
+export const disconnect = () => {
+  if (isTauri()) invoke('disconnect')
+  else if (socket != null) socket.close()
+}

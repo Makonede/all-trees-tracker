@@ -70,7 +70,10 @@ pub async fn connect(
         }
 
         match stream.try_read(&mut hash) {
-            Ok(_) => { tracker.send(u32::from_le_bytes(hash)).unwrap(); }
+            Ok(n) => {
+                if n == 0 { return Err(io::Error::from(io::ErrorKind::ConnectionAborted).into()); }
+                tracker.send(u32::from_le_bytes(hash)).unwrap();
+            }
             Err(e) if e.kind() != io::ErrorKind::WouldBlock => { return Err(e.into()); }
             _ => {}
         }

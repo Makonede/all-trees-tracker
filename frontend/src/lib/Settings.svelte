@@ -18,7 +18,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 <script lang='ts'>
   import { isTauri } from '@tauri-apps/api/core'
-
+  import { isValid as isValidIp } from 'ipaddr.js'
   import type { MouseEventHandler } from 'svelte/elements'
 
   import { connect, disconnect, errorsEffect } from './client.svelte'
@@ -50,9 +50,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   let errors: Record<Category, string> = $state(Object.fromEntries(
     CATEGORIES.map((category) => [category, ''])
   ) as Record<Category, string>)
-
-  const IPV4_REGEX =
-    /^(?!0)(?!.*\.$)(?:(?:1?\d?\d|2[0-4]\d|25[0-5])(?:\.|$)){4}$/
 
   const translateError = (key: string) => $t('error.reason', {
     kind: 'Error',
@@ -90,7 +87,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
           callback: async () => {
             errors.connection = ''
 
-            if (!settings.address.match(IPV4_REGEX)) {
+            if (!isValidIp(settings.address)) {
               errors.connection = translateError('invalidAddress')
               return
             }

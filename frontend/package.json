@@ -41,6 +41,7 @@
     "@types/node": "^24.10.1",
     "flowbite": "^4.0.1",
     "flowbite-svelte": "^1.28.1",
+    "ipaddr.js": "^2.3.0",
     "layerchart": "^2.0.0-next.43",
     "sveaflet": "^0.1.4",
     "svelte": "^5.45.2",

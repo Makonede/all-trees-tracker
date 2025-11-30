@@ -54,6 +54,7 @@ and translate the strings within.
 
 ## Development
 
-This project consists of two parts: the [backend](backend), a LayeredFS mod for
-*Breath of the Wild* 1.6.0, and the [frontend](frontend), a Tauri SvelteKit app.
-See their respective `README`s for development instructions.
+This project consists of three components: the [backend](backend), a LayeredFS
+mod for *Breath of the Wild* 1.6.0, the [frontend](frontend), a Tauri SvelteKit
+app, and the [proxy](proxy), a WebSocket server that interfaces the backend and
+the web frontend. See their respective `README`s for development instructions.
