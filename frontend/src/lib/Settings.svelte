@@ -164,7 +164,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
       </div>
       <svelte:boundary>
         {@const error = errors[categoryName as Category]}
-        <p class='{error ? '' : 'hidden'} flex justify-center text-error-500'>
+        <p class='{error ? '' : 'hidden '}flex justify-center text-error-500'>
           {error}
         </p>
       </svelte:boundary>
