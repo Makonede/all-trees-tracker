@@ -54,7 +54,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
       </div>
     </div>
     {#if kind === SettingType.Toggle}
-      <Switch checked={settings[name] as boolean} onCheckedChange={
+      <Switch class='justify-center' checked={
+        settings[name] as boolean
+      } onCheckedChange={
         ({ checked }) => { (settings[name] as boolean) = checked }
       }>
         <Switch.Label class='text-lg'>{$t(`setting.${name}.off`)}</Switch.Label>

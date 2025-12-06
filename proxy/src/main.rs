@@ -95,10 +95,10 @@ async fn main() -> Result<!, Error> {
                 loop {
                     switch.readable().await?;
                     match switch.try_read(&mut hash) {
-                        Ok(n) => {
-                            if n == 0 { return Err(io::Error::from(
-                                io::ErrorKind::ConnectionAborted
-                            ).into()); }
+                        Ok(0) => {
+                            return Err(io::Error::from(io::ErrorKind::ConnectionAborted).into());
+                        }
+                        Ok(_) => {
                             write.send(Message::Binary(Bytes::from_static(Box::leak(Box::from(
                                 u32::from_le_bytes(hash).to_be_bytes()
                             ))))).await?;
