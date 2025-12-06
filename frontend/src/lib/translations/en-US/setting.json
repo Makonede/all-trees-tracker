@@ -14,6 +14,12 @@
     "on": "Extended",
     "off": "Original"
   },
+  "fly": {
+    "name": "Fly to last tree",
+    "description": "Whether to fly (pan and zoom) the map view to trees as they are cut.",
+    "on": "On",
+    "off": "Off"
+  },
   "address": {
     "name": "Server address",
     "description": "The IP address of the machine running the game. On console, this can be found in '<code class=\"code\">'System Settings > Internet'</code>'.",

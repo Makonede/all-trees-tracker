@@ -22,6 +22,7 @@ import { SvelteMap } from 'svelte/reactivity'
 
 type Settings = {
   dlc: boolean
+  fly: boolean
   colors: SvelteMap<string, string>
   address: string
   port: number
@@ -31,6 +32,7 @@ type Settings = {
 
 export let settings: Settings = $state({
   dlc: false,
+  fly: true,
   colors: new SvelteMap<string, string>(),
   address: '',
   port: 5001,

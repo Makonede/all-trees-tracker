@@ -77,9 +77,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     const hash = getLastTree()
     if (hash !== -1) {
       trees.get(hash)!.remove()
-      // TODO: make fly configurable
-      const tree = baseTrees.get(hash)!
-      map?.flyTo(L.latLng(tree.pos[2], tree.pos[0]), TREE_ZOOM)
+      if (settings.fly) {
+        const tree = baseTrees.get(hash)!
+        map?.flyTo(L.latLng(tree.pos[2], tree.pos[0]), TREE_ZOOM)
+      }
     }
     else treeGroup = L.layerGroup([...trees.entries().filter(
       (tree) => !cutTrees.get(tree[0])!

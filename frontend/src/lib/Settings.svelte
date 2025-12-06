@@ -67,6 +67,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
           name: 'dlc',
           kind: SettingType.Toggle,
         },
+        {
+          name: 'fly',
+          kind: SettingType.Toggle,
+        },
       ],
     },
     connection: {
