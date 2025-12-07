@@ -28,17 +28,21 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
       - id: rustup-unix
-        name: Install Rust (UNIX)
+        name: Install Rust (UNIX only)
         if: matrix.platform == 'ubuntu-latest' || matrix.platform == 'macos-latest'
         run: |
           curl -fsSL --tlsv1.3 https://sh.rustup.rs | bash -s -- -vy --no-modify-path
           realpath ~/.cargo/bin >> "$GITHUB_PATH"
+      - id: rustup-nightly
+        name: Install nightly Rust toolchain (UNIX only)
+        if: matrix.platform == 'ubuntu-latest' || matrix.platform == 'macos-latest'
+        run: rustup default nightly
       - id: rustup-windows
-        name: Install Rust (Windows)
+        name: Install Rust (Windows only)
         if: matrix.platform == 'windows-2025'
         run: |
           rustup update
-          rustup default stable-msvc
+          rustup default nightly-msvc
       - id: rust-macos
         name: Add macOS Rust targets (macOS only)
         if: matrix.platform == 'macos-latest'
