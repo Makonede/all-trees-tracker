@@ -27,6 +27,7 @@ jobs:
       - id: build
         name: Build app for web
         run: turbo --ui stream build
+        working-directory: frontend
       - id: upload
         name: Upload web artifact
         uses: actions/upload-artifact@v4
