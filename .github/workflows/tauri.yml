@@ -96,7 +96,7 @@ jobs:
       - id: build-android
         name: Build app for Android (Ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
-        uses: tauri-apps/tauri-action@v1
+        uses: tauri-apps/tauri-action@v0
         with:
           projectPath: ${{ github.workspace }}/frontend
           tauriScript: turbo --ui stream tauri -- android
