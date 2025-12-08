@@ -42,7 +42,9 @@ jobs:
         run: bash -c '. megaton install -V'
       - id: build
         name: Build project
-        run: bash -c '. megaton build -LV'
+        run: |
+          bash -c '. megaton checkenv'
+          bash -c '. megaton build -LVT'
         working-directory: backend
       - id: package
         name: Package artifact
