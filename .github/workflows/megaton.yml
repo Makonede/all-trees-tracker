@@ -51,10 +51,10 @@ jobs:
       - id: package
         name: Package artifact
         run: |
-          mkdir out
-          cp "${{ github.workspace }}"/backend/target/megaton/none/*.nso out/subsdk9
-          cp "${{ github.workspace }}"/backend/target/megaton/none/main.npdm out
-        working-directory: ${{ runner.temp }}
+          mkdir "${{ runner.temp }}"/out
+          cp *.nso "${{ runner.temp }}"/out/subsdk9
+          cp main.npdm "${{ runner.temp }}"/out
+        working-directory: backend/target/megaton/none
       - id: upload
         name: Upload artifact
         uses: actions/upload-artifact@v4
