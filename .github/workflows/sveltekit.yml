@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [main]
 jobs:
-  build-sveltekit:
+  build:
     env:
       CI: true
       DO_NOT_TRACK: 1
@@ -14,7 +14,7 @@ jobs:
     steps:
       - id: checkout
         name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - id: bun
         name: Install Bun
         uses: oven-sh/setup-bun@v2

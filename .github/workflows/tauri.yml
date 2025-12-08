@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [main]
 jobs:
-  build-tauri:
+  build:
     env:
       CI: true
       DO_NOT_TRACK: 1
@@ -20,7 +20,7 @@ jobs:
     steps:
       - id: checkout
         name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - id: tauri-dependencies
         name: Install Tauri dependencies (Ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
@@ -50,7 +50,7 @@ jobs:
       - id: jetbrains-runtime
         name: Install JetBrains Runtime (Ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: jetbrains
           java-version: 21
@@ -96,7 +96,7 @@ jobs:
       - id: build-android
         name: Build app for Android (Ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
-        uses: tauri-apps/tauri-action@v0
+        uses: tauri-apps/tauri-action@v1
         with:
           projectPath: ${{ github.workspace }}/frontend
           tauriScript: turbo --ui stream tauri -- android
