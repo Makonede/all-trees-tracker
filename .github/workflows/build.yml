@@ -309,7 +309,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: proxy-windows
-          path: proxy/target/release/all-trees-tracker-proxy
+          path: proxy/target/release/all-trees-tracker-proxy.exe
       - id: upload-macos
         name: Upload macOS artifact
         if: matrix.platform == 'macos-latest'
