@@ -1,11 +1,72 @@
-name: Build Tauri app
+name: Build app
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
 jobs:
-  build:
+  build-megaton:
+    name: Build Megaton project
+    runs-on: ubuntu-latest
+    container:
+      image: devkitpro/devkita64
+      env:
+        CARGO_TERM_COLOR: always
+    steps:
+      - id: checkout
+        name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          submodules: true
+      - id: build-essential
+        name: Install build-essential
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential
+      - id: rustup
+        name: Install Rust
+        run: |
+          curl -fsSL --tlsv1.3 https://sh.rustup.rs | bash -s -- -vy --no-modify-path
+          realpath ~/.cargo/bin >> "$GITHUB_PATH"
+      - id: clone-megaton
+        name: Clone Megaton
+        run: git clone -b static_linking_fix --depth 1 --single-branch https://github.com/Pistonite/megaton.git
+        working-directory: ${{ runner.temp }}
+      - id: build-megaton
+        name: Build Megaton
+        run: |
+          echo "MEGATON_HOME=`pwd`" >> "$GITHUB_ENV"
+          cargo run -vr --bin megaton-buildtool -- install || true
+          chmod +x bin/megaton
+          realpath bin >> "$GITHUB_PATH"
+        working-directory: ${{ runner.temp }}/megaton
+      - id: megaton
+        name: Install Megaton
+        run: bash -c '. megaton install -V'
+      - id: build
+        name: Build project
+        run: |
+          bash -c '. megaton checkenv'
+          bash -c '. megaton build -LVT'
+        working-directory: backend
+      - id: package
+        name: Package artifact
+        run: |
+          EXEFS=out/atmosphere/contents/01007EF00011E000/exefs
+          BUILD="$GITHUB_WORKSPACE"/backend/target/megaton/none
+          mkdir -p $EXEFS
+          cd $EXEFS
+          cp $BUILD/*.nso subsdk9
+          cp $BUILD/main.npdm .
+        working-directory: ${{ runner.temp }}
+      - id: upload
+        name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: all-trees-tracker
+          path: ${{ runner.temp }}/out
+  build-tauri:
+    name: Build Tauri app
     env:
       CI: true
       DO_NOT_TRACK: 1
@@ -15,7 +76,7 @@ jobs:
         platform:
           - ubuntu-latest
           - windows-2025
-          # - macos-latest
+          - macos-latest
     runs-on: ${{ matrix.platform }}
     steps:
       - id: checkout
@@ -36,12 +97,14 @@ jobs:
       - id: rustup-nightly
         name: Install nightly Rust toolchain (UNIX only)
         if: matrix.platform == 'ubuntu-latest' || matrix.platform == 'macos-latest'
-        run: rustup default nightly
+        run: |
+          rustup update nightly
+          rustup default nightly
       - id: rustup-windows
         name: Install Rust (Windows only)
         if: matrix.platform == 'windows-2025'
         run: |
-          rustup update
+          rustup update nightly-msvc
           rustup default nightly-msvc
       - id: rust-macos
         name: Add macOS Rust targets (macOS only)
@@ -139,26 +202,118 @@ jobs:
         if: matrix.platform == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: binaries-linux
+          name: frontend-linux
           path: ${{ runner.temp }}/binaries-linux
       - id: upload-android
         name: Upload Android artifact
         if: matrix.platform == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: binaries-android
+          name: frontend-android
           path: ${{ runner.temp }}/binaries-android
       - id: upload-windows
         name: Upload Windows artifact
         if: matrix.platform == 'windows-2025'
         uses: actions/upload-artifact@v4
         with:
-          name: binaries-windows
+          name: frontend-windows
           path: ${{ runner.temp }}/binaries-windows
       - id: upload-macos
         name: Upload macOS artifact
         if: matrix.platform == 'macos-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: binaries-macos
+          name: frontend-macos
           path: ${{ runner.temp }}/binaries-macos
+  build-sveltekit:
+    name: Build SvelteKit app
+    env:
+      CI: true
+      DO_NOT_TRACK: 1
+      CARGO_TERM_COLOR: always
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout
+        name: Check out repository
+        uses: actions/checkout@v6
+      - id: bun
+        name: Install Bun
+        uses: oven-sh/setup-bun@v2
+      - id: dependencies
+        name: Install app dependencies
+        run: |
+          bun i --frozen-lockfile
+          bun i -g turbo
+        working-directory: frontend
+      - id: build
+        name: Build app for web
+        run: turbo --ui stream build
+        working-directory: frontend
+      - id: upload
+        name: Upload web artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-web
+          path: ${{ github.workspace }}/frontend/build
+  build-proxy:
+    name: Build proxy
+    env:
+      CARGO_TERM_COLOR: always
+    strategy:
+      matrix:
+        platform:
+          - ubuntu-latest
+          - windows-2025
+          - macos-latest
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - id: checkout
+        name: Check out repository
+        uses: actions/checkout@v6
+      - id: rustup-unix
+        name: Install Rust (UNIX only)
+        if: matrix.platform == 'ubuntu-latest' || matrix.platform == 'macos-latest'
+        run: |
+          curl -fsSL --tlsv1.3 https://sh.rustup.rs | bash -s -- -vy --no-modify-path
+          realpath ~/.cargo/bin >> "$GITHUB_PATH"
+      - id: rustup-nightly
+        name: Install nightly Rust toolchain (UNIX only)
+        if: matrix.platform == 'ubuntu-latest' || matrix.platform == 'macos-latest'
+        run: |
+          rustup update nightly
+          rustup default nightly
+      - id: rustup-windows
+        name: Install Rust (Windows only)
+        if: matrix.platform == 'windows-2025'
+        run: |
+          rustup update nightly-msvc
+          rustup default nightly-msvc
+      - id: rust-macos
+        name: Add macOS Rust targets (macOS only)
+        if: matrix.platform == 'macos-latest'
+        run: rustup target add aarch64-apple-darwin x86_64-apple-darwin
+      - id: build
+        name: Build app
+        run: cargo build -vr
+        working-directory: proxy
+      - id: upload-linux
+        name: Upload Linux artifact
+        if: matrix.platform == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: proxy-linux
+          path: proxy/target/release/all-trees-tracker-proxy
+      - id: upload-windows
+        name: Upload Windows artifact
+        if: matrix.platform == 'windows-2025'
+        uses: actions/upload-artifact@v4
+        with:
+          name: proxy-windows
+          path: proxy/target/release/all-trees-tracker-proxy
+      - id: upload-macos
+        name: Upload macOS artifact
+        if: matrix.platform == 'macos-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: proxy-macos
+          path: proxy/target/release/all-trees-tracker-proxy
