@@ -27,7 +27,7 @@ jobs:
           realpath ~/.cargo/bin >> "$GITHUB_PATH"
       - id: clone-megaton
         name: Clone Megaton
-        run: git clone https://github.com/Pistonite/megaton.git
+        run: git clone -b static_linking_fix --depth 1 --single-branch https://github.com/Pistonite/megaton.git
         working-directory: ${{ runner.temp }}
       - id: build-megaton
         name: Build Megaton
