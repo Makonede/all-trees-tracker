@@ -52,12 +52,12 @@ jobs:
         name: Package artifact
         run: |
           mkdir out
-          cp *.nso out/subsdk9
-          cp main.npdm out
-        working-directory: backend/target/megaton/none
+          cp "${{ github.workspace }}"/backend/target/megaton/none/*.nso out/subsdk9
+          cp "${{ github.workspace }}"/backend/target/megaton/none/main.npdm out
+        working-directory: ${{ runner.temp }}
       - id: upload
         name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: botw-autosplitter-client
-          path: ${{ github.workspace }}/target/megaton/none/out
+          name: all-trees-tracker
+          path: ${{ runner.temp }}/out
