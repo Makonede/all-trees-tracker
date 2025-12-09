@@ -2,6 +2,7 @@ name: Build app
 on:
   push:
     branches: [main]
+    tags: ['*.*.*']
   pull_request:
     branches: [main]
 jobs:
@@ -63,7 +64,7 @@ jobs:
         name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: all-trees-tracker
+          name: backend
           path: ${{ runner.temp }}/out
   build-tauri:
     name: Build Tauri app
@@ -75,8 +76,8 @@ jobs:
       matrix:
         platform:
           - ubuntu-latest
-          - windows-2025
-          - macos-latest
+          - windows-latest
+          - macos-26
     runs-on: ${{ matrix.platform }}
     steps:
       - id: checkout
@@ -90,25 +91,25 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
       - id: rustup-unix
         name: Install Rust (UNIX only)
-        if: matrix.platform == 'ubuntu-latest' || matrix.platform == 'macos-latest'
+        if: matrix.platform == 'ubuntu-latest' || matrix.platform == 'macos-26'
         run: |
           curl -fsSL --tlsv1.3 https://sh.rustup.rs | bash -s -- -vy --no-modify-path
           realpath ~/.cargo/bin >> "$GITHUB_PATH"
       - id: rustup-nightly
         name: Install nightly Rust toolchain (UNIX only)
-        if: matrix.platform == 'ubuntu-latest' || matrix.platform == 'macos-latest'
+        if: matrix.platform == 'ubuntu-latest' || matrix.platform == 'macos-26'
         run: |
           rustup update nightly
           rustup default nightly
       - id: rustup-windows
         name: Install Rust (Windows only)
-        if: matrix.platform == 'windows-2025'
+        if: matrix.platform == 'windows-latest'
         run: |
           rustup update nightly-msvc
           rustup default nightly-msvc
       - id: rust-macos
         name: Add macOS Rust targets (macOS only)
-        if: matrix.platform == 'macos-latest'
+        if: matrix.platform == 'macos-26'
         run: rustup target add aarch64-apple-darwin x86_64-apple-darwin
       - id: jetbrains-runtime
         name: Install JetBrains Runtime (Ubuntu only)
@@ -155,7 +156,7 @@ jobs:
         with:
           projectPath: ${{ github.workspace }}/frontend
           tauriScript: turbo --ui stream tauri --
-          args: ${{ matrix.platform == 'macos-latest' && '-t universal-apple-darwin' || '' }}
+          args: ${{ matrix.platform == 'macos-26' && '-t universal-apple-darwin' || '' }}
       - id: build-android
         name: Build app for Android (Ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
@@ -183,7 +184,7 @@ jobs:
         working-directory: ${{ runner.temp }}
       - id: bundle-windows
         name: Bundle Windows artifact
-        if: matrix.platform == 'windows-2025'
+        if: matrix.platform == 'windows-latest'
         run: |
           New-Item binaries-windows -ItemType Directory
           Set-Location binaries-windows
@@ -191,7 +192,7 @@ jobs:
         working-directory: ${{ runner.temp }}
       - id: bundle-macos
         name: Bundle macOS artifact
-        if: matrix.platform == 'macos-latest'
+        if: matrix.platform == 'macos-26'
         run: |
           mkdir binaries-macos
           cd binaries-macos
@@ -213,14 +214,14 @@ jobs:
           path: ${{ runner.temp }}/binaries-android
       - id: upload-windows
         name: Upload Windows artifact
-        if: matrix.platform == 'windows-2025'
+        if: matrix.platform == 'windows-latest'
         uses: actions/upload-artifact@v4
         with:
           name: frontend-windows
           path: ${{ runner.temp }}/binaries-windows
       - id: upload-macos
         name: Upload macOS artifact
-        if: matrix.platform == 'macos-latest'
+        if: matrix.platform == 'macos-26'
         uses: actions/upload-artifact@v4
         with:
           name: frontend-macos
@@ -263,8 +264,8 @@ jobs:
       matrix:
         platform:
           - ubuntu-latest
-          - windows-2025
-          - macos-latest
+          - windows-latest
+          - macos-26
     runs-on: ${{ matrix.platform }}
     steps:
       - id: checkout
@@ -272,25 +273,25 @@ jobs:
         uses: actions/checkout@v6
       - id: rustup-unix
         name: Install Rust (UNIX only)
-        if: matrix.platform == 'ubuntu-latest' || matrix.platform == 'macos-latest'
+        if: matrix.platform == 'ubuntu-latest' || matrix.platform == 'macos-26'
         run: |
           curl -fsSL --tlsv1.3 https://sh.rustup.rs | bash -s -- -vy --no-modify-path
           realpath ~/.cargo/bin >> "$GITHUB_PATH"
       - id: rustup-nightly
         name: Install nightly Rust toolchain (UNIX only)
-        if: matrix.platform == 'ubuntu-latest' || matrix.platform == 'macos-latest'
+        if: matrix.platform == 'ubuntu-latest' || matrix.platform == 'macos-26'
         run: |
           rustup update nightly
           rustup default nightly
       - id: rustup-windows
         name: Install Rust (Windows only)
-        if: matrix.platform == 'windows-2025'
+        if: matrix.platform == 'windows-latest'
         run: |
           rustup update nightly-msvc
           rustup default nightly-msvc
       - id: rust-macos
         name: Add macOS Rust targets (macOS only)
-        if: matrix.platform == 'macos-latest'
+        if: matrix.platform == 'macos-26'
         run: rustup target add aarch64-apple-darwin x86_64-apple-darwin
       - id: build
         name: Build app
@@ -305,15 +306,50 @@ jobs:
           path: proxy/target/release/all-trees-tracker-proxy
       - id: upload-windows
         name: Upload Windows artifact
-        if: matrix.platform == 'windows-2025'
+        if: matrix.platform == 'windows-latest'
         uses: actions/upload-artifact@v4
         with:
           name: proxy-windows
           path: proxy/target/release/all-trees-tracker-proxy.exe
       - id: upload-macos
         name: Upload macOS artifact
-        if: matrix.platform == 'macos-latest'
+        if: matrix.platform == 'macos-26'
         uses: actions/upload-artifact@v4
         with:
           name: proxy-macos
           path: proxy/target/release/all-trees-tracker-proxy
+  release:
+    name: Publish release
+    needs: [build-megaton, build-tauri, build-sveltekit, build-proxy]
+    if: github.ref_type == 'tag'
+    env:
+      GH_TOKEN: ${{ github.token }}
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout
+        name: Check out repository
+        uses: actions/checkout@v6
+      - id: downloaad
+        name: Download artifacts
+        uses: actions/download-artifact@v5
+      - id: bundle
+        name: Bundle artifacts
+        run: |
+          NAME=${{ github.event.repository.name }}
+          BACKEND_NAME=$NAME-backend
+          FRONTEND_NAME=$NAME-frontend
+          PROXY_NAME=$NAME-proxy
+          mkdir release
+          zip -r release/$BACKEND_NAME backend/*
+          for platform in linux android windows macos web; do
+            zip -r release/$FRONTEND_NAME-$platform frontend-$platform/*
+          done
+          for platform in linux windows macos; do
+            zip -r release/$PROXY_NAME-$platform proxy-$platform/*
+          done
+      - id: release-notes
+        name: Generate release notes
+        uses: mindsers/changelog-reader-action@v2
+      - id: release
+        name: Create release
+        run: gh release create $GITHUB_REF_NAME release/* -n '${{ steps.release-notes.outputs.changes }}'
