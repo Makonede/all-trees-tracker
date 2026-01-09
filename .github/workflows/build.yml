@@ -303,21 +303,21 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: proxy-linux
-          path: proxy/target/release/all-trees-tracker-proxy
+          path: proxy/target/release/${{ github.event.repository.name }}-proxy
       - id: upload-windows
         name: Upload Windows artifact
         if: matrix.platform == 'windows-latest'
         uses: actions/upload-artifact@v4
         with:
           name: proxy-windows
-          path: proxy/target/release/all-trees-tracker-proxy.exe
+          path: proxy/target/release/${{ github.event.repository.name }}-proxy.exe
       - id: upload-macos
         name: Upload macOS artifact
         if: matrix.platform == 'macos-26'
         uses: actions/upload-artifact@v4
         with:
           name: proxy-macos
-          path: proxy/target/release/all-trees-tracker-proxy
+          path: proxy/target/release/${{ github.event.repository.name }}-proxy
   release:
     name: Publish release
     needs: [build-megaton, build-tauri, build-sveltekit, build-proxy]
