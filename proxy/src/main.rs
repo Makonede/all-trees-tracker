@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 /*
+Copyright (C) 2025-2026 Mako
+
 This file is part of All Trees Tracker.
-Copyright (C) 2025 Mako
 
 All Trees Tracker is free software: you can redistribute it and/or modify it under the terms of the
 GNU General Public License as published by the Free Software Foundation, either version 3 of the

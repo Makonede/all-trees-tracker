@@ -219,9 +219,15 @@ mod for *Breath of the Wild* 1.6.0, the [frontend](frontend), a Tauri SvelteKit
 app, and the [proxy](proxy), a WebSocket server that interfaces the backend and
 the web frontend. See their respective `README`s for development instructions.
 
+## License
+
+All Trees Tracker is licensed under the [GNU GPLv3]. Copyright notices specify
+inclusive ranges of copyright years.
+
 [Atmosphère]: https://github.com/Atmosphere-NX/Atmosphere
 [backend]: https://github.com/Makonede/all-trees-tracker/releases/latest/download/all-trees-tracker-backend.zip
 [web app]: https://trees.zelda.sr
 [latest release]: https://github.com/Makonede/all-trees-tracker/releases/latest
 [*Breath of the Wild* Speedrunning Discord server]: https://discord.com/invite/Nmphzaq
 [IETF BCP 47 language tag]: https://developer.mozilla.org/en-US/docs/Glossary/BCP_47_language_tag
+[GNU GPLv3]: https://www.gnu.org/licenses/gpl-3.0.html
