@@ -342,12 +342,18 @@ jobs:
           FRONTEND_NAME=$NAME-frontend
           PROXY_NAME=$NAME-proxy
           mkdir release
-          zip -r release/$BACKEND_NAME backend/*
+          cd backend
+          zip -r ../release/$BACKEND_NAME .
+          cd ..
           for platform in linux android windows macos web; do
-            zip -r release/$FRONTEND_NAME-$platform frontend-$platform/*
+            cd frontend-$platform
+            zip -r ../release/$FRONTEND_NAME-$platform .
+            cd ..
           done
           for platform in linux windows macos; do
-            zip -r release/$PROXY_NAME-$platform proxy-$platform/*
+            cd proxy-$platform
+            zip -r ../release/$PROXY_NAME-$platform .
+            cd ..
           done
         working-directory: ${{ runner.temp }}
       - id: release-notes
