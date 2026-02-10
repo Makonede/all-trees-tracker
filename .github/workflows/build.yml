@@ -332,6 +332,8 @@ jobs:
       - id: downloaad
         name: Download artifacts
         uses: actions/download-artifact@v5
+        with:
+          path: ${{ runner.temp }}
       - id: bundle
         name: Bundle artifacts
         run: |
@@ -347,6 +349,7 @@ jobs:
           for platform in linux windows macos; do
             zip -r release/$PROXY_NAME-$platform proxy-$platform/*
           done
+        working-directory: ${{ runner.temp }}
       - id: release-notes
         name: Generate release notes
         uses: mindsers/changelog-reader-action@v2
