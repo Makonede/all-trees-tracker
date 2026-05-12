@@ -76,7 +76,7 @@ jobs:
       matrix:
         platform:
           - ubuntu-latest
-          - windows-latest
+          - windows-2025-vs2026
           - macos-26
     runs-on: ${{ matrix.platform }}
     steps:
@@ -103,7 +103,7 @@ jobs:
           rustup default nightly
       - id: rustup-windows
         name: Install Rust (Windows only)
-        if: matrix.platform == 'windows-latest'
+        if: matrix.platform == 'windows-2025-vs2026'
         run: |
           rustup update nightly-msvc
           rustup default nightly-msvc
@@ -184,7 +184,7 @@ jobs:
         working-directory: ${{ runner.temp }}
       - id: bundle-windows
         name: Bundle Windows artifact
-        if: matrix.platform == 'windows-latest'
+        if: matrix.platform == 'windows-2025-vs2026'
         run: |
           New-Item binaries-windows -ItemType Directory
           Set-Location binaries-windows
@@ -214,7 +214,7 @@ jobs:
           path: ${{ runner.temp }}/binaries-android
       - id: upload-windows
         name: Upload Windows artifact
-        if: matrix.platform == 'windows-latest'
+        if: matrix.platform == 'windows-2025-vs2026'
         uses: actions/upload-artifact@v4
         with:
           name: frontend-windows
@@ -264,7 +264,7 @@ jobs:
       matrix:
         platform:
           - ubuntu-latest
-          - windows-latest
+          - windows-2025-vs2026
           - macos-26
     runs-on: ${{ matrix.platform }}
     steps:
@@ -285,7 +285,7 @@ jobs:
           rustup default nightly
       - id: rustup-windows
         name: Install Rust (Windows only)
-        if: matrix.platform == 'windows-latest'
+        if: matrix.platform == 'windows-2025-vs2026'
         run: |
           rustup update nightly-msvc
           rustup default nightly-msvc
@@ -306,7 +306,7 @@ jobs:
           path: proxy/target/release/${{ github.event.repository.name }}-proxy
       - id: upload-windows
         name: Upload Windows artifact
-        if: matrix.platform == 'windows-latest'
+        if: matrix.platform == 'windows-2025-vs2026'
         uses: actions/upload-artifact@v4
         with:
           name: proxy-windows
