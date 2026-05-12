@@ -28,6 +28,7 @@
     "@toolwind/anchors": "^1.0.10",
     "@types/leaflet": "^1.9.21",
     "@types/node": "^25.7.0",
+    "@typescript/native-preview": "^7.0.0-dev.20260421.2",
     "flowbite": "^4.0.1",
     "flowbite-svelte": "^1.33.1",
     "ipaddr.js": "^2.4.0",
@@ -39,7 +40,6 @@
     "sveltekit-i18n": "^2.4.2",
     "tailwindcss": "^4.3.0",
     "tslib": "^2.8.1",
-    "typescript": "^6.0.3",
     "vite": "^8.0.12"
   }
 }
