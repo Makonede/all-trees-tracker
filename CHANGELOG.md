@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+### Changed
+
+- Update backend, frontend, and proxy dependencies.
+
 ## [1.0.0] - 2025-12-08
 
 ### Added

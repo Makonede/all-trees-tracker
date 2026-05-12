@@ -19,8 +19,8 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 import { loadTrees } from './client.svelte'
 
-import hyrule from './trees_hyrule.json'
-import tots from './trees_tots.json'
+import hyrule from './trees_hyrule.json' with { type: 'json' }
+import tots from './trees_tots.json' with { type: 'json' }
 
 const REGIONS_BASE = [
   'akkala',

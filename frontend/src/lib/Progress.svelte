@@ -67,23 +67,28 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   tabState.filters ??= ['region']
   let chart = $state(ProgressBar)
 
-  $effect(() => { switch (tabState.chartType) {
-    case ChartType.ProgressBar:
-      icon.icon = ChartNoAxesCombined
-      chart = ProgressBar
-      break
-    case ChartType.BarChart:
-      icon.icon = ChartColumn
-      chart = BarChart
-      break
-    case ChartType.LineChart:
-      icon.icon = ChartLine
-      chart = LineChart
-      break
-    case ChartType.PieChart:
-      icon.icon = ChartPie
-      chart = PieChart
-  } })
+  $effect(() => {
+    switch (tabState.chartType) {
+      case ChartType.ProgressBar:
+        icon.icon = ChartNoAxesCombined
+        chart = ProgressBar
+        break
+
+      case ChartType.BarChart:
+        icon.icon = ChartColumn
+        chart = BarChart
+        break
+
+      case ChartType.LineChart:
+        icon.icon = ChartLine
+        chart = LineChart
+        break
+
+      case ChartType.PieChart:
+        icon.icon = ChartPie
+        chart = PieChart
+    }
+  })
 </script>
 
 <div

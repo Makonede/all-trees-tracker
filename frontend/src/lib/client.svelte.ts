@@ -48,12 +48,14 @@ export const loadTrees = (hashes: Iterable<number>) => {
 let socket = $state<WebSocket>()
 
 export const connect = async (
-  address: string, port: number, proxy: string, callback: () => void
+  address: string, port: number, proxy: string, callback: () => void,
 ) => {
-  const cut = (hash: number) => { if (cutTrees.has(hash)) {
-    cutTrees.set(hash, true)
-    if (baseTrees.has(hash)) lastTree = hash
-  } }
+  const cut = (hash: number) => {
+    if (cutTrees.has(hash)) {
+      cutTrees.set(hash, true)
+      if (baseTrees.has(hash)) lastTree = hash
+    }
+  }
 
   if (!isTauri()) {
     try { socket = new WebSocket(proxy) }

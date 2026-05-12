@@ -26,8 +26,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 @import '@skeletonlabs/skeleton';
 @import '@skeletonlabs/skeleton/themes/cerberus';
 
-@import '@layerstack/tailwind/themes/skeleton.css';
-
 @import '@fontsource-variable/fira-code';
 @import '@fontsource-variable/roboto';
 

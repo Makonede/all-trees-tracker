@@ -39,7 +39,7 @@ pub enum Error {
 #[derive(Parser)]
 #[command(
     version, about = "Connect the All Trees Tracker web app to Breath of the Wild.",
-    long_about = None
+    long_about = None,
 )]
 #[clap_i18n]
 struct Args {
@@ -61,7 +61,7 @@ async fn main() -> Result<!, Error> {
 
     loop {
         let (stream, frontend) = server.accept().await?;
-        let _ = tokio::spawn(async move || -> Result<(), Error> {
+        let _ = tokio::spawn(async move {
             let websocket = accept_async(stream).await?;
             println!("Frontend connected from {:?}", frontend);
             let (mut write, mut read) = websocket.split();
@@ -78,24 +78,24 @@ async fn main() -> Result<!, Error> {
                 _ => { return Ok(()); }
             };
 
-            let switch_address = SocketAddr::new({
+            let backend_address = SocketAddr::new({
                 let Ok(address) = address.parse() else { return Ok(()); };
                 address
             }, port);
-            println!("Connecting to {:?}...", switch_address);
-            let std_switch = std::net::TcpStream::connect_timeout(
-                &switch_address, Duration::from_secs(10)
+            println!("Connecting to {:?}...", backend_address);
+            let std_backend = std::net::TcpStream::connect_timeout(
+                &backend_address, Duration::from_secs(10),
             )?;
-            std_switch.set_nonblocking(true)?;
-            let switch = TcpStream::from_std(std_switch)?;
-            println!("Connected to backend at {:?}", switch.peer_addr()?);
+            std_backend.set_nonblocking(true)?;
+            let backend = TcpStream::from_std(std_backend)?;
+            println!("Connected to backend at {:?}", backend.peer_addr()?);
 
             let mut connect = async move || -> Result<(), Error> {
                 let mut hash = [0u8; 4];
 
                 loop {
-                    switch.readable().await?;
-                    match switch.try_read(&mut hash) {
+                    backend.readable().await?;
+                    match backend.try_read(&mut hash) {
                         Ok(0) => {
                             return Err(io::Error::from(io::ErrorKind::ConnectionAborted).into());
                         }
@@ -117,7 +117,7 @@ async fn main() -> Result<!, Error> {
                     else { Ok(()) }
                 }) => Ok(res?),
             }
-        }()).await?;
+        }).await?;
 
         println!("Frontend disconnected");
     }

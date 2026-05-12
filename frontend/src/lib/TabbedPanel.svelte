@@ -74,7 +74,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
         </div>
       {/snippet}
       <section>
-        <!-- svelte-ignore binding_property_non_reactive  -->
         <Content bind:icon={icons[i]} bind:tabState={tabState[i]} />
       </section>
     </TabItem>

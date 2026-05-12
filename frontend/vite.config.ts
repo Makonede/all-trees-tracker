@@ -4,11 +4,11 @@ import { defineConfig } from 'vite'
 
 const host = process.env.TAURI_DEV_HOST
 
-export default defineConfig(async () => ({
+export default defineConfig(() => ({
   plugins: [sveltekit(), tailwindcss()],
   clearScreen: false,
   server: {
-    allowedHosts: true,
+    allowedHosts: <true>true,
     port: 1420,
     strictPort: true,
     host: host || false,

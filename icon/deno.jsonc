@@ -1,0 +1,6 @@
+{
+  "tasks": {
+    "build": "prism tree.ts > tree.svg && prism -p tree.png tree.ts",
+    "lint": "biome check --write"
+  }
+}

@@ -27,11 +27,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   import SettingEntry from './SettingEntry.svelte'
   import { t } from './translations.svelte'
   import {
-    type ErrorReason, type IconType, type Setting, SettingType
+    type ErrorReason, type IconType, type Setting, SettingType,
   } from './types.svelte'
 
   let { icon = $bindable(), tabState = $bindable() }: {
-    icon: IconType, tabState: { advanced?: boolean[] }
+    icon: IconType, tabState: { advanced?: boolean[] },
   } = $props()
 
   interface Button {
@@ -49,7 +49,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   tabState.advanced ??= Array(CATEGORIES.length).fill(false)
 
   let errors: Record<Category, string> = $state(Object.fromEntries(
-    CATEGORIES.map((category) => [category, ''])
+    CATEGORIES.map((category) => [category, '']),
   ) as Record<Category, string>)
 
   const translateError = (key: string) => $t('error.reason', {
@@ -104,6 +104,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
               errors.connection = translateError('invalidAddress')
               return
             }
+
             if (!(
               Number.isInteger(settings.port)
               && settings.port
@@ -117,7 +118,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
             try {
               await connect(
                 settings.address, settings.port, settings.proxy,
-                () => { settings.connected = true }
+                () => { settings.connected = true },
               )
               settings.connected = false
             }
@@ -125,7 +126,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
               const reason = error as ErrorReason
               errors.connection = $t('error.reason', {
                 kind: reason.kind ?? $t('error.error'),
-                message: reason.message
+                message: reason.message,
               })
               settings.connected = false
             }
@@ -147,7 +148,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 <div class='p-8 space-y-4 w-full text-lg card preset-filled-surface-200-800'>
   {#each Object.entries(categories) as [categoryName, {
     settings: categorySettings, advancedSettings: categoryAdvancedSettings,
-    buttons: categoryButtons
+    buttons: categoryButtons,
   }], i (categoryName)}
     <h2 class='h2'>{$t(`setting.category.${categoryName}`)}</h2>
     <hr class='hr border-surface-500'>

@@ -28,7 +28,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![client::connect, client::disconnect])
         .setup(|app| {
             app.manage(AsyncAtomic::new(bool::default()));
-            #[cfg(any(target_os = "linux", target_os = "macos"))] {
+            #[cfg(any(target_os = "linux", target_os = "macos"))]
+            {
                 let window = app.get_window("main").unwrap();
                 window.set_theme(Some(tauri::Theme::Dark))?;
             }

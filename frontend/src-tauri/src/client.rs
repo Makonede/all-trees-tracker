@@ -16,10 +16,15 @@ You should have received a copy of the GNU General Public License along with thi
 see <https://www.gnu.org/licenses/>.
 */
 
-use std::{io, net::{AddrParseError, SocketAddr}, ops::Not, time::Duration};
+use std::{
+    io,
+    net::{AddrParseError, SocketAddr},
+    ops::Not,
+    time::Duration,
+};
 
 use async_atomic::{AsyncAtomic, AsyncAtomicRef};
-use serde::{ser::Serializer, Serialize};
+use serde::{Serialize, ser::Serializer};
 use tauri::{AppHandle, Emitter, State, ipc::Channel};
 use tokio::net::TcpStream;
 
@@ -39,7 +44,10 @@ enum ErrorKind {
 }
 
 impl Serialize for Error {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error> where S: Serializer {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
         let error_message = self.to_string();
         let error_kind = match self {
             Self::AddrParseError(_) => ErrorKind::AddrParseError(error_message),
@@ -52,10 +60,11 @@ impl Serialize for Error {
 #[tauri::command]
 pub async fn connect(
     app: AppHandle, address: String, port: u16, tracker: Channel<u32>,
-    connected: State<'_, AsyncAtomic<bool>>
+    connected: State<'_, AsyncAtomic<bool>>,
 ) -> Result<(), Error> {
     let std_stream = std::net::TcpStream::connect_timeout(
-        &SocketAddr::new(address.parse()?, port), Duration::from_secs(10)
+        &SocketAddr::new(address.parse()?, port),
+        Duration::from_secs(10),
     )?;
     std_stream.set_nonblocking(true)?;
     let stream = TcpStream::from_std(std_stream)?;
@@ -71,9 +80,13 @@ pub async fn connect(
         }
 
         match stream.try_read(&mut hash) {
-            Ok(0) => { return Err(io::Error::from(io::ErrorKind::ConnectionAborted).into()); }
+            Ok(0) => {
+                return Err(io::Error::from(io::ErrorKind::ConnectionAborted).into());
+            }
             Ok(_) => tracker.send(u32::from_le_bytes(hash)).unwrap(),
-            Err(e) if e.kind() != io::ErrorKind::WouldBlock => { return Err(e.into()); }
+            Err(e) if e.kind() != io::ErrorKind::WouldBlock => {
+                return Err(e.into());
+            }
             _ => {}
         }
     }
@@ -82,6 +95,4 @@ pub async fn connect(
 }
 
 #[tauri::command]
-pub fn disconnect(connected: State<'_, AsyncAtomic<bool>>) {
-    connected.store(false);
-}
+pub fn disconnect(connected: State<'_, AsyncAtomic<bool>>) { connected.store(false); }

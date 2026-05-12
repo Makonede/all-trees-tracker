@@ -28,8 +28,6 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include <nn/socket.h>
 
 namespace tcp {
-    void server_thread(void* const server) noexcept;
-
     class Server {
     public:
         void init() noexcept;
@@ -38,7 +36,6 @@ namespace tcp {
 
     private:
         void run() noexcept;
-        friend void server_thread(void* const server) noexcept;
 
         s32 server_socket = -1;
         s32 client_socket = -1;

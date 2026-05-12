@@ -33,7 +33,7 @@ import {
 } from '../trees.svelte'
 
 let cut = $derived(Array.from(cutTrees.entries().filter(
-  ([, cut]) => cut
+  ([, cut]) => cut,
 ).map(([hash]) => hash)))
 
 const PERCENTAGE: Intl.NumberFormatOptions = {
@@ -65,60 +65,70 @@ const countRegion = (regions: SvelteMap<Region, number>, tree: MapTree) =>
   regions.set(tree.region, regions.get(tree.region)! + 1)
 
 let regionValues = $derived(getTrees().entries().reduce((
-  regions, [hash, tree]
+  regions, [hash, tree],
 ) => cut.includes(hash) ? countRegion(regions, tree) : regions, new SvelteMap(
-  regionCounts
+  regionCounts,
 )))
 let regionMaxes = $derived(getTrees().values().reduce((
-  regions, tree
+  regions, tree,
 ) => countRegion(regions, tree), new SvelteMap(regionCounts)))
 let regionPercentages = $derived(new SvelteMap(
-  regionValues.entries().map(([region, count]) => [region, (
-    count / regionMaxes.get(region)! * 100
-  ).toLocaleString(locale.get(), PERCENTAGE)])
+  regionValues.entries().map(([region, count]) => [
+    region, (count / regionMaxes.get(region)! * 100).toLocaleString(
+      locale.get(), PERCENTAGE,
+    ),
+  ])
 ))
 
 let regionTrees = $derived(getRegions().map((region): [
-  string, [number, number, string]
-] => [regionNames.get(region)!, [
-  regionValues, regionMaxes, regionPercentages
-].map((map) => map.get(region)!) as [number, number, string]]).toSorted(
+  string, [number, number, string],
+] => [
+  regionNames.get(region)!,
+  [regionValues, regionMaxes, regionPercentages].map(
+    (map) => map.get(region)!,
+  ) as [number, number, string],
+]).toSorted(
   ((collator) => ([nameA], [nameB]) => collator.compare(
-    nameA, nameB
-  ))(new Intl.Collator(locale.get()))
+    nameA, nameB,
+  ))(new Intl.Collator(locale.get())),
 ))
 export const getRegionTrees = () => regionTrees
 
 const treeTypeCounts: [TreeType, number][] = TREE_TYPES.map(
-  (treeType) => [treeType, 0]
+  (treeType) => [treeType, 0],
 )
 const countTreeType = (treeTypes: SvelteMap<TreeType, number>, tree: MapTree) =>
   treeTypes.set(ACTOR_TYPES[tree.name], treeTypes.get(
-    ACTOR_TYPES[tree.name]
+    ACTOR_TYPES[tree.name],
   )! + 1)
 
 let treeTypeValues = $derived(getTrees().entries().reduce(
   (treeTypes, [hash, tree]) => cut.includes(hash) ? countTreeType(
-    treeTypes, tree
+    treeTypes, tree,
   ) : treeTypes,
   new SvelteMap(treeTypeCounts),
 ))
 let treeTypeMaxes = $derived(getTrees().values().reduce((
-  treeTypes, tree
+  treeTypes, tree,
 ) => countTreeType(treeTypes, tree), new SvelteMap(treeTypeCounts)))
 let treeTypePercentages = $derived(new SvelteMap(treeTypeValues.entries().map(
-  ([treeType, count]) => [treeType, (
-    count / treeTypeMaxes.get(treeType)! * 100
-  ).toLocaleString(locale.get(), PERCENTAGE)]
+  ([treeType, count]) => [
+    treeType, (count / treeTypeMaxes.get(treeType)! * 100).toLocaleString(
+      locale.get(), PERCENTAGE,
+    )
+  ],
 )))
 
 let treeTypeTrees = $derived(TREE_TYPES.map((treeType): [
-  string, [number, number, string]
-] => [treeTypeNames.get(treeType)!, [
-  treeTypeValues, treeTypeMaxes, treeTypePercentages
-].map((map) => map.get(treeType)!) as [number, number, string]]).toSorted(
+  string, [number, number, string],
+] => [
+  treeTypeNames.get(treeType)!,
+  [treeTypeValues, treeTypeMaxes, treeTypePercentages].map(
+    (map) => map.get(treeType)!,
+  ) as [number, number, string],
+]).toSorted(
   ((collator) => ([nameA], [nameB]) => collator.compare(
-    nameA, nameB
-  ))(new Intl.Collator(locale.get()))
+    nameA, nameB,
+  ))(new Intl.Collator(locale.get())),
 ))
 export const getTreeTypeTrees = () => treeTypeTrees

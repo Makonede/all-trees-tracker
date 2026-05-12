@@ -141,21 +141,22 @@ jobs:
           base64 -d <<< "${{ secrets.ANDROID_KEY_BASE64 }}" > "$RUNNER_TEMP/keystore.jks"
           echo "storeFile=$RUNNER_TEMP/keystore.jks" >> keystore.properties
         working-directory: frontend/src-tauri/gen/android
-      - id: bun
-        name: Install Bun
-        uses: oven-sh/setup-bun@v2
+      - id: deno
+        name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: canary
+          cache: true
       - id: dependencies
         name: Install app dependencies
-        run: |
-          bun i --frozen-lockfile
-          bun i -g turbo
+        run: deno i
         working-directory: frontend
       - id: build-desktop
         name: Build app for desktop
         uses: tauri-apps/tauri-action@v0
         with:
           projectPath: ${{ github.workspace }}/frontend
-          tauriScript: turbo --ui stream tauri --
+          tauriScript: deno task tauri
           args: ${{ matrix.platform == 'macos-26' && '-t universal-apple-darwin' || '' }}
       - id: build-android
         name: Build app for Android (Ubuntu only)
@@ -163,7 +164,7 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         with:
           projectPath: ${{ github.workspace }}/frontend
-          tauriScript: turbo --ui stream tauri -- android
+          tauriScript: deno task tauri android
       - id: bundle-linux
         name: Bundle Linux artifact
         if: matrix.platform == 'ubuntu-latest'
@@ -237,18 +238,16 @@ jobs:
       - id: checkout
         name: Check out repository
         uses: actions/checkout@v6
-      - id: bun
-        name: Install Bun
-        uses: oven-sh/setup-bun@v2
+      - id: deno
+        name: Install Deno
+        uses: denoland/setup-deno@v2
       - id: dependencies
         name: Install app dependencies
-        run: |
-          bun i --frozen-lockfile
-          bun i -g turbo
+        run: deno i
         working-directory: frontend
       - id: build
         name: Build app for web
-        run: turbo --ui stream build
+        run: deno task build
         working-directory: frontend
       - id: upload
         name: Upload web artifact

@@ -26,7 +26,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   import { type Setting, SettingType } from './types.svelte'
 
   let {
-    name, kind, options, tooltip = $bindable(), help = $bindable()
+    name, kind, options, tooltip = $bindable(), help = $bindable(),
   }: Setting = $props()
 </script>
 
@@ -40,18 +40,18 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     <div class='flex 2xl:gap-2 justify-between 2xl:justify-normal items-center'>
       <p>{$t(`setting.${name}.name`)}</p>
       <div>
-        <!-- svelte-ignore binding_property_non_reactive  -->
         <CircleQuestionMark
           class='cursor-help anchor/(--anchor)' bind:this={help}
           onmouseenter={enter} onmouseleave={leave} onfocus={enter}
           onblur={leave}
         />
-        <!-- svelte-ignore binding_property_non_reactive  -->
         <div
           popover='hint'
           class='p-4 mt-2 max-w-150 opacity-0 open:opacity-100 starting:open:opacity-0 transition-[display,opacity,overlay] transition-discrete duration-300 anchored/(--anchor) card preset-filled-surface-100-900 preset-outlined-primary-500'
           bind:this={tooltip}
-        >{@html $t(`setting.${name}.description`)}</div>
+        >
+          {@html $t(`setting.${name}.description`)}
+        </div>
       </div>
     </div>
     {#if kind === SettingType.Toggle}

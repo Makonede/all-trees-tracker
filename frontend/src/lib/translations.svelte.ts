@@ -38,10 +38,10 @@ const CONFIG: Config = {
   loaders: LOCALES.flatMap((locale) => KEYS.map(
     (key) => ({ locale, key, loader: ((locale, key) => async () => (
       await import(`./translations/${locale}/${key}.json`)
-    ).default)(locale, key) })
+    ).default)(locale, key) }),
   )),
 }
 
 export const {
-  t, locale, locales, loading, loadTranslations
+  t, locale, locales, loading, loadTranslations,
 } = new i18n(CONFIG)

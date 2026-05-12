@@ -1,0 +1,15 @@
+color = "Always"
+fn_params_layout = "Compressed"
+fn_single_line = true
+hex_literal_case = "Lower"
+float_literal_trailing_zero = "IfNoPostfix"
+imports_granularity = "Crate"
+normalize_doc_attributes = true
+overflow_delimited_expr = true
+reorder_impl_items = true
+group_imports = "StdExternalCrate"
+short_array_element_width_threshold = 100
+unstable_features = true
+use_field_init_shorthand = true
+use_small_heuristics = "Max"
+use_try_shorthand = true

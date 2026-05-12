@@ -33,7 +33,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   const WIDTH = 24000
   const HEIGHT = 20000
   const BOUNDS = L.latLngBounds(
-    [-HEIGHT / 2, -WIDTH / 2], [HEIGHT / 2, WIDTH / 2]
+    [-HEIGHT / 2, -WIDTH / 2], [HEIGHT / 2, WIDTH / 2],
   )
   const CENTER = L.latLng(HEIGHT / 2, WIDTH / 2)
 
@@ -43,7 +43,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   const TREE_ZOOM = 8
 
   const crs = { ...L.CRS.Simple, transformation: L.transformation(
-    4 / 0x100, WIDTH / 0x100, 4 / 0x100, HEIGHT / 0x100
+    4 / 0x100, WIDTH / 0x100, 4 / 0x100, HEIGHT / 0x100,
   ) }
 
   const trees = new Map<number, L.Circle>()
@@ -55,6 +55,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
       }))`
       settings.colors.set(tree.name, treeColor)
     }
+
     trees.set(hash, L.circle(L.latLng(tree.pos[2], tree.pos[0]), {
       radius: 1,
       color: treeColor,
@@ -62,17 +63,19 @@ this program. If not, see <https://www.gnu.org/licenses/>.
   }
 
   let treeGroup: L.LayerGroup = L.layerGroup([...trees.entries().filter(
-    (tree) => !cutTrees.get(tree[0])!
+    (tree) => !cutTrees.get(tree[0])!,
   ).map((tree) => tree[1])])
   let map = $state<L.Map>()
   let mapReady = false
 
-  $effect(() => { if (!mapReady && map != null) {
-    mapReady = true
-    map.getContainer().classList.add('bg-black!', 'rounded-lg!')
-    map.setView(L.latLng(0, 0), undefined, { animate: false })
-    treeGroup.addTo(map)
-  } })
+  $effect(() => {
+    if (!mapReady && map != null) {
+      mapReady = true
+      map.getContainer().classList.add('bg-black!', 'rounded-lg!')
+      map.setView(L.latLng(0, 0), undefined, { animate: false })
+      treeGroup.addTo(map)
+    }
+  })
 
   $effect(() => {
     const hash = getLastTree()
@@ -84,20 +87,22 @@ this program. If not, see <https://www.gnu.org/licenses/>.
       }
     }
     else treeGroup = L.layerGroup([...trees.entries().filter(
-      (tree) => !cutTrees.get(tree[0])!
+      (tree) => !cutTrees.get(tree[0])!,
     ).map((tree) => tree[1])])
   })
 
-  $effect(() => { for (const [hash, tree] of trees) tree.setStyle({
-    color: settings.colors.get(baseTrees.get(hash)!.name)!
-  }) })
+  $effect(() => {
+    for (const [hash, tree] of trees) tree.setStyle({
+      color: settings.colors.get(baseTrees.get(hash)!.name)!,
+    })
+  })
 </script>
 
 <div class='h-full bg-black rounded-lg' onclickcapture={
   isTauri() ? async (event: MouseEvent) => {
     const target = event.target! as HTMLElement
     if (target.tagName === 'A' && target.parentElement!.classList.contains(
-      'leaflet-control-attribution'
+      'leaflet-control-attribution',
     )) {
       event.preventDefault()
       event.stopPropagation()

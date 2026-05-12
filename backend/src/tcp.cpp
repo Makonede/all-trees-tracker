@@ -27,11 +27,11 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "utility.hpp"
 
 namespace tcp {
-    void server_thread(void* const server) noexcept {
-        static_cast<Server*>(server)->run();
+    void Server::init() noexcept {
+        start_thread([](void* const server) noexcept {
+            static_cast<Server*>(server)->run();
+        }, this);
     }
-
-    void Server::init() noexcept { start_thread(server_thread, this); }
 
     void Server::start(const u16 port) noexcept {
         if (connected) [[unlikely]] return;
@@ -43,6 +43,7 @@ namespace tcp {
     void Server::send(const u32 hash) noexcept {
         if (!connected || client_socket < 0) [[unlikely]]
             return trees.push(hash);
+
         if (nn::socket::Send(
             client_socket, &hash, sizeof hash, 0
         ) <= 0) [[unlikely]] {
@@ -51,6 +52,7 @@ namespace tcp {
             trees.push(hash);
             return yield();
         }
+
         if (!trees.empty()) trees.pop();
         trees.push(hash);
     }
@@ -119,18 +121,18 @@ namespace tcp {
         while (true) [[likely]] {
             if (client_socket < 0 && (client_socket = nn::socket::Accept(
                 server_socket, nullptr, nullptr
-            )) >= 0) [[unlikely]] for (
-                ; !trees.empty(); trees.pop()
-            ) [[unlikely]] {
-                const auto tree = trees.front();
-                if (nn::socket::Send(
-                    client_socket, &tree, sizeof tree, 0
-                ) <= 0) [[unlikely]] {
-                    nn::socket::Close(client_socket);
-                    client_socket = -1;
-                    break;
+            )) >= 0) [[unlikely]]
+                for (; !trees.empty(); trees.pop()) [[unlikely]] {
+                    const auto tree = trees.front();
+                    if (nn::socket::Send(
+                        client_socket, &tree, sizeof tree, 0
+                    ) <= 0) [[unlikely]] {
+                        nn::socket::Close(client_socket);
+                        client_socket = -1;
+                        break;
+                    }
                 }
-            }
+
             yield();
         }
     }

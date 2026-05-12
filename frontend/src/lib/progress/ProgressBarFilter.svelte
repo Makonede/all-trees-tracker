@@ -45,7 +45,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
           'progress.cutTreesShort', {
             cut: value.toString(),
             total: max.toString(),
-          }
+          },
         )})
       </p>
       <Progress class='col-span-2' {value} {max}>
