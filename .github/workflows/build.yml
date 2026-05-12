@@ -62,7 +62,7 @@ jobs:
         working-directory: ${{ runner.temp }}
       - id: upload
         name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: backend
           path: ${{ runner.temp }}/out
@@ -201,28 +201,28 @@ jobs:
       - id: upload-linux
         name: Upload Linux artifact
         if: matrix.platform == 'ubuntu-latest'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: frontend-linux
           path: ${{ runner.temp }}/binaries-linux
       - id: upload-android
         name: Upload Android artifact
         if: matrix.platform == 'ubuntu-latest'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: frontend-android
           path: ${{ runner.temp }}/binaries-android
       - id: upload-windows
         name: Upload Windows artifact
         if: matrix.platform == 'windows-2025-vs2026'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: frontend-windows
           path: ${{ runner.temp }}/binaries-windows
       - id: upload-macos
         name: Upload macOS artifact
         if: matrix.platform == 'macos-26'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: frontend-macos
           path: ${{ runner.temp }}/binaries-macos
@@ -252,7 +252,7 @@ jobs:
         working-directory: frontend
       - id: upload
         name: Upload web artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: frontend-web
           path: ${{ github.workspace }}/frontend/build
@@ -300,21 +300,21 @@ jobs:
       - id: upload-linux
         name: Upload Linux artifact
         if: matrix.platform == 'ubuntu-latest'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: proxy-linux
           path: proxy/target/release/${{ github.event.repository.name }}-proxy
       - id: upload-windows
         name: Upload Windows artifact
         if: matrix.platform == 'windows-2025-vs2026'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: proxy-windows
           path: proxy/target/release/${{ github.event.repository.name }}-proxy.exe
       - id: upload-macos
         name: Upload macOS artifact
         if: matrix.platform == 'macos-26'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: proxy-macos
           path: proxy/target/release/${{ github.event.repository.name }}-proxy
