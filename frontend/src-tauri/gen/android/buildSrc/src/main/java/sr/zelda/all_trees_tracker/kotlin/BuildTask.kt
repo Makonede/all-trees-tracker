@@ -16,7 +16,7 @@ open class BuildTask : DefaultTask() {
 
     @TaskAction
     fun assemble() {
-        val executable = """bun""";
+        val executable = """deno""";
         try {
             runTauriCli(executable)
         } catch (e: Exception) {
@@ -37,6 +37,7 @@ open class BuildTask : DefaultTask() {
         project.exec {
             workingDir(File(project.projectDir, rootDirRel))
             executable(executable)
+            args("task")
             args(args)
             if (project.logger.isEnabled(LogLevel.DEBUG)) {
                 args("-vv")
