@@ -145,7 +145,6 @@ jobs:
         name: Install Deno
         uses: denoland/setup-deno@v2
         with:
-          deno-version: canary
           cache: true
       - id: dependencies
         name: Install app dependencies
@@ -156,7 +155,7 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         with:
           projectPath: ${{ github.workspace }}/frontend
-          tauriScript: deno task tauri
+          tauriScript: deno task tauri -v
           args: ${{ matrix.platform == 'macos-26' && '-t universal-apple-darwin' || '' }}
       - id: build-android
         name: Build app for Android (Ubuntu only)
@@ -164,7 +163,7 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         with:
           projectPath: ${{ github.workspace }}/frontend
-          tauriScript: deno task tauri android
+          tauriScript: deno task tauri -v android
       - id: bundle-linux
         name: Bundle Linux artifact
         if: matrix.platform == 'ubuntu-latest'
@@ -241,6 +240,8 @@ jobs:
       - id: deno
         name: Install Deno
         uses: denoland/setup-deno@v2
+        with:
+          cache: true
       - id: dependencies
         name: Install app dependencies
         run: deno i
