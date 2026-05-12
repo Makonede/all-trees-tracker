@@ -1,5 +1,5 @@
 product-name = "All Trees Tracker"
-version = "1.0.0"
+version = "1.0.1"
 identifier = "sr.zelda.all-trees-tracker"
 
 [build]

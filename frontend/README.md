@@ -15,6 +15,7 @@ This directory contains the frontend, a Tauri SvelteKit app.
 
 ```sh
 deno i                         # Install dependencies
+deno task build                # Build for web
 deno task tauri build          # Build for desktop
 deno task tauri android build  # Build for Android
 ```
@@ -26,6 +27,7 @@ The AppImage, `.deb`, and `.rpm` bundles can be found in
 ## Develop
 
 ```sh
-deno task tauri dev                # run development server
-deno task check && deno task lint  # lint Svelte and TypeScript code
+deno task dev                      # Run development server with web client
+deno task tauri dev                # Run development server with desktop client
+deno task check && deno task lint  # Lint Svelte and TypeScript code
 ```

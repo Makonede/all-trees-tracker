@@ -361,4 +361,4 @@ jobs:
         uses: mindsers/changelog-reader-action@v2
       - id: release
         name: Create release
-        run: gh release create $GITHUB_REF_NAME release/* -n '${{ steps.release-notes.outputs.changes }}'
+        run: gh release create $GITHUB_REF_NAME "${{ runner.temp }}"/release/* -n '${{ steps.release-notes.outputs.changes }}'

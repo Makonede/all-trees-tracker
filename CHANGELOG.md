@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-05-12
+
 ### Changed
 
 - Update backend, frontend, and proxy dependencies.
@@ -29,5 +31,6 @@ and this project adheres to
 - Proxy, a CLI program for Linux, Windows, and macOS that proxies the connection
   between the backend and web frontend.
 
-[Unreleased]: https://github.com/Makonede/all-trees-tracker/compare/1.0.0...HEAD
+[Unreleased]: https://github.com/Makonede/all-trees-tracker/compare/1.0.1...HEAD
+[1.0.1]: https://github.com/Makonede/all-trees-tracker/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/Makonede/all-trees-tracker/releases/tag/1.0.0
