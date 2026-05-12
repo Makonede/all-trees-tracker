@@ -36,7 +36,7 @@ jobs:
       - id: build-megaton
         name: Build Megaton
         run: |
-          echo "MEGATON_HOME=`pwd`" >> "$GITHUB_ENV"
+          echo "MEGATON_HOME=$(pwd)" >> "$GITHUB_ENV"
           cargo run -vr --bin megaton-buildtool -- install || true
           chmod +x bin/megaton
           realpath bin >> "$GITHUB_PATH"
@@ -127,7 +127,7 @@ jobs:
       - id: android-licenses
         name: Accept Android SDK licenses (Ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
-        run: yes | sdkmanager --licenses > /dev/null
+        run: yes | sdkmanager --licenses &> /dev/null
       - id: rust-android
         name: Add Android Rust targets (Ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
