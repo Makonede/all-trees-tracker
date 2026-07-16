@@ -10,9 +10,8 @@ A tracker mod for the *Breath of the Wild* All Trees challenge run.
   emulator with support for Atmosphère LayeredFS
 - *The Legend of Zelda: Breath of the Wild* 1.6.0
 - To use the web app:
+  - A modern Linux, Windows, or macOS device
   - A modern web browser
-  - A modern Linux, Windows, or macOS device, either being the one running the
-    browser or on the same network as it
 - To use the desktop or mobile app:
   - A modern Linux, Windows, macOS, or Android device
 
@@ -99,19 +98,6 @@ To run the proxy, download it from the [latest release] and execute it. Run
 
 > [!IMPORTANT]
 > The proxy must be running at all times in order to use the frontend.
-
-<details>
-  <summary>
-
-#### Running the proxy and frontend on separate devices
-
-  </summary>
-
-  The frontend supports connecting to remote proxies. Expand
-  `Connection > Advanced` in Settings and change the address (by default
-  `localhost`) to that of the device running the proxy.
-
-</details>
 
 ## Usage
 
