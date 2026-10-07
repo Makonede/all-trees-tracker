@@ -18,10 +18,10 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 -->
 
 <script lang='ts'>
-  import { settings } from '$lib/config.svelte'
-  import TabbedPanel from '$lib/TabbedPanel.svelte'
-  import TreeMap from '$lib/TreeMap.svelte'
-  import { loadBase, loadExtended } from '$lib/trees.svelte'
+  import { settings } from '#lib/config.svelte'
+  import TabbedPanel from '#lib/TabbedPanel.svelte'
+  import TreeMap from '#lib/TreeMap.svelte'
+  import { loadBase, loadExtended } from '#lib/trees.svelte'
 
   $effect(() => {
     if (settings.dlc) loadExtended()

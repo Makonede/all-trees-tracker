@@ -16,15 +16,25 @@ You should have received a copy of the GNU General Public License along with thi
 see <https://www.gnu.org/licenses/>.
 */
 
-#![feature(never_type)]
-
-use std::{io, net::{Ipv6Addr, SocketAddr}, time::Duration};
+use std::{
+    io,
+    net::{Ipv6Addr, SocketAddr},
+    time::Duration,
+};
 
 use clap::Parser;
-use clap_i18n_richformatter::{ClapI18nRichFormatter, clap_i18n, init_clap_rich_formatter_localizer};
+use clap_i18n_richformatter::{
+    ClapI18nRichFormatter, clap_i18n, init_clap_rich_formatter_localizer,
+};
 use futures::{SinkExt, StreamExt, TryStreamExt};
-use tokio::{net::{TcpListener, TcpStream}, task::JoinError};
-use tokio_tungstenite::{accept_async, tungstenite::{self, Bytes, Message}};
+use tokio::{
+    net::{TcpListener, TcpStream},
+    task::JoinError,
+};
+use tokio_tungstenite::{
+    accept_async,
+    tungstenite::{self, Bytes, Message},
+};
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
@@ -51,10 +61,12 @@ struct Args {
 #[tokio::main]
 async fn main() -> Result<!, Error> {
     init_clap_rich_formatter_localizer();
-    let args = Args::try_parse().map_err(|e| {
-        let e = e.apply::<ClapI18nRichFormatter>();
-        e.exit();
-    }).unwrap();
+    let args = Args::try_parse()
+        .map_err(|e| {
+            let e = e.apply::<ClapI18nRichFormatter>();
+            e.exit();
+        })
+        .unwrap();
 
     let server = TcpListener::bind((Ipv6Addr::LOCALHOST, args.port)).await?;
     println!("WebSocket server started on {:?}", server.local_addr()?);
@@ -68,24 +80,34 @@ async fn main() -> Result<!, Error> {
 
             let address = match read.try_next().await {
                 Ok(Some(Message::Text(bytes))) => bytes,
-                _ => { return Ok(()); }
+                _ => {
+                    return Ok(());
+                }
             };
             let port = match read.try_next().await {
                 Ok(Some(Message::Binary(bytes))) => {
-                    let Ok(bytes) = (*bytes).try_into() else { return Ok(()); };
+                    let Ok(bytes) = (*bytes).try_into() else {
+                        return Ok(());
+                    };
                     u16::from_be_bytes(bytes)
                 }
-                _ => { return Ok(()); }
+                _ => {
+                    return Ok(());
+                }
             };
 
-            let backend_address = SocketAddr::new({
-                let Ok(address) = address.parse() else { return Ok(()); };
-                address
-            }, port);
+            let backend_address = SocketAddr::new(
+                {
+                    let Ok(address) = address.parse() else {
+                        return Ok(());
+                    };
+                    address
+                },
+                port,
+            );
             println!("Connecting to {:?}...", backend_address);
-            let std_backend = std::net::TcpStream::connect_timeout(
-                &backend_address, Duration::from_secs(10),
-            )?;
+            let std_backend =
+                std::net::TcpStream::connect_timeout(&backend_address, Duration::from_secs(10))?;
             std_backend.set_nonblocking(true)?;
             let backend = TcpStream::from_std(std_backend)?;
             println!("Connected to backend at {:?}", backend.peer_addr()?);
@@ -100,12 +122,18 @@ async fn main() -> Result<!, Error> {
                             return Err(io::Error::from(io::ErrorKind::ConnectionAborted).into());
                         }
                         Ok(_) => {
-                            write.send(Message::Binary(Bytes::from_static(Box::leak(Box::from(
-                                u32::from_le_bytes(hash).to_be_bytes()
-                            ))))).await?;
+                            write
+                                .send(Message::Binary(Bytes::from_owner(
+                                    u32::from_le_bytes(hash).to_be_bytes(),
+                                )))
+                                .await?;
                         }
-                        Err(e) if e.kind() == io::ErrorKind::WouldBlock => { continue; }
-                        Err(e) => { return Err(e.into()); }
+                        Err(e) if e.kind() == io::ErrorKind::WouldBlock => {
+                            continue;
+                        }
+                        Err(e) => {
+                            return Err(e.into());
+                        }
                     }
                 }
             };
@@ -117,7 +145,8 @@ async fn main() -> Result<!, Error> {
                     else { Ok(()) }
                 }) => Ok(res?),
             }
-        }).await?;
+        })
+        .await?;
 
         println!("Frontend disconnected");
     }
