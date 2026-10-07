@@ -8,7 +8,7 @@ on:
 jobs:
   build-megaton:
     name: Build Megaton project
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     container:
       image: devkitpro/devkita64
       env:
@@ -75,9 +75,9 @@ jobs:
     strategy:
       matrix:
         platform:
-          - ubuntu-latest
-          - windows-2025-vs2026
-          - macos-26
+          - ubuntu-26.04
+          - windows-latest
+          - xcode-27
     runs-on: ${{ matrix.platform }}
     steps:
       - id: checkout
@@ -85,56 +85,56 @@ jobs:
         uses: actions/checkout@v6
       - id: tauri-dependencies
         name: Install Tauri dependencies (Ubuntu only)
-        if: matrix.platform == 'ubuntu-latest'
+        if: matrix.platform == 'ubuntu-26.04'
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
       - id: rustup-unix
         name: Install Rust (UNIX only)
-        if: matrix.platform == 'ubuntu-latest' || matrix.platform == 'macos-26'
+        if: matrix.platform == 'ubuntu-26.04' || matrix.platform == 'xcode-27'
         run: |
           curl -fsSL --tlsv1.3 https://sh.rustup.rs | bash -s -- -vy --no-modify-path
           realpath ~/.cargo/bin >> "$GITHUB_PATH"
       - id: rustup-nightly
         name: Install nightly Rust toolchain (UNIX only)
-        if: matrix.platform == 'ubuntu-latest' || matrix.platform == 'macos-26'
+        if: matrix.platform == 'ubuntu-26.04' || matrix.platform == 'xcode-27'
         run: |
           rustup update nightly
           rustup default nightly
       - id: rustup-windows
         name: Install Rust (Windows only)
-        if: matrix.platform == 'windows-2025-vs2026'
+        if: matrix.platform == 'windows-latest'
         run: |
           rustup update nightly-msvc
           rustup default nightly-msvc
       - id: rust-macos
         name: Add macOS Rust targets (macOS only)
-        if: matrix.platform == 'macos-26'
+        if: matrix.platform == 'xcode-27'
         run: rustup target add aarch64-apple-darwin x86_64-apple-darwin
       - id: jetbrains-runtime
         name: Install JetBrains Runtime (Ubuntu only)
-        if: matrix.platform == 'ubuntu-latest'
+        if: matrix.platform == 'ubuntu-26.04'
         uses: actions/setup-java@v5
         with:
           distribution: jetbrains
           java-version: 21
       - id: android-environment
         name: Configure Android SDK environment variables (Ubuntu only)
-        if: matrix.platform == 'ubuntu-latest'
+        if: matrix.platform == 'ubuntu-26.04'
         run: |
           echo "NDK_HOME=$ANDROID_NDK_HOME" >> "$GITHUB_ENV"
           echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
       - id: android-licenses
         name: Accept Android SDK licenses (Ubuntu only)
-        if: matrix.platform == 'ubuntu-latest'
+        if: matrix.platform == 'ubuntu-26.04'
         run: yes | sdkmanager --licenses &> /dev/null
       - id: rust-android
         name: Add Android Rust targets (Ubuntu only)
-        if: matrix.platform == 'ubuntu-latest'
+        if: matrix.platform == 'ubuntu-26.04'
         run: rustup target add aarch64-linux-android armv7-linux-androideabi x86_64-linux-android i686-linux-android
       - id: android-signing
         name: Set up Android signing (Ubuntu only)
-        if: matrix.platform == 'ubuntu-latest'
+        if: matrix.platform == 'ubuntu-26.04'
         run: |
           echo "password=${{ secrets.ANDROID_KEY_PASSWORD }}" > keystore.properties
           echo keyAlias=upload >> keystore.properties
@@ -156,17 +156,17 @@ jobs:
         with:
           projectPath: ${{ github.workspace }}/frontend
           tauriScript: deno task tauri -v
-          args: ${{ matrix.platform == 'macos-26' && '-t universal-apple-darwin' || '' }}
+          args: ${{ matrix.platform == 'xcode-27' && '-t universal-apple-darwin' || '' }}
       - id: build-android
         name: Build app for Android (Ubuntu only)
-        if: matrix.platform == 'ubuntu-latest'
+        if: matrix.platform == 'ubuntu-26.04'
         uses: tauri-apps/tauri-action@v0
         with:
           projectPath: ${{ github.workspace }}/frontend
           tauriScript: deno task tauri -v android
       - id: bundle-linux
         name: Bundle Linux artifact
-        if: matrix.platform == 'ubuntu-latest'
+        if: matrix.platform == 'ubuntu-26.04'
         run: |
           mkdir binaries-linux
           cd binaries-linux
@@ -176,7 +176,7 @@ jobs:
         working-directory: ${{ runner.temp }}
       - id: bundle-android
         name: Bundle Android artifact
-        if: matrix.platform == 'ubuntu-latest'
+        if: matrix.platform == 'ubuntu-26.04'
         run: |
           mkdir binaries-android
           cd binaries-android
@@ -184,7 +184,7 @@ jobs:
         working-directory: ${{ runner.temp }}
       - id: bundle-windows
         name: Bundle Windows artifact
-        if: matrix.platform == 'windows-2025-vs2026'
+        if: matrix.platform == 'windows-latest'
         run: |
           New-Item binaries-windows -ItemType Directory
           Set-Location binaries-windows
@@ -192,7 +192,7 @@ jobs:
         working-directory: ${{ runner.temp }}
       - id: bundle-macos
         name: Bundle macOS artifact
-        if: matrix.platform == 'macos-26'
+        if: matrix.platform == 'xcode-27'
         run: |
           mkdir binaries-macos
           cd binaries-macos
@@ -200,28 +200,28 @@ jobs:
         working-directory: ${{ runner.temp }}
       - id: upload-linux
         name: Upload Linux artifact
-        if: matrix.platform == 'ubuntu-latest'
+        if: matrix.platform == 'ubuntu-26.04'
         uses: actions/upload-artifact@v7
         with:
           name: frontend-linux
           path: ${{ runner.temp }}/binaries-linux
       - id: upload-android
         name: Upload Android artifact
-        if: matrix.platform == 'ubuntu-latest'
+        if: matrix.platform == 'ubuntu-26.04'
         uses: actions/upload-artifact@v7
         with:
           name: frontend-android
           path: ${{ runner.temp }}/binaries-android
       - id: upload-windows
         name: Upload Windows artifact
-        if: matrix.platform == 'windows-2025-vs2026'
+        if: matrix.platform == 'windows-latest'
         uses: actions/upload-artifact@v7
         with:
           name: frontend-windows
           path: ${{ runner.temp }}/binaries-windows
       - id: upload-macos
         name: Upload macOS artifact
-        if: matrix.platform == 'macos-26'
+        if: matrix.platform == 'xcode-27'
         uses: actions/upload-artifact@v7
         with:
           name: frontend-macos
@@ -232,7 +232,7 @@ jobs:
       CI: true
       DO_NOT_TRACK: 1
       CARGO_TERM_COLOR: always
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - id: checkout
         name: Check out repository
@@ -263,9 +263,9 @@ jobs:
     strategy:
       matrix:
         platform:
-          - ubuntu-latest
-          - windows-2025-vs2026
-          - macos-26
+          - ubuntu-26.04
+          - windows-latest
+          - xcode-27
     runs-on: ${{ matrix.platform }}
     steps:
       - id: checkout
@@ -273,25 +273,25 @@ jobs:
         uses: actions/checkout@v6
       - id: rustup-unix
         name: Install Rust (UNIX only)
-        if: matrix.platform == 'ubuntu-latest' || matrix.platform == 'macos-26'
+        if: matrix.platform == 'ubuntu-26.04' || matrix.platform == 'xcode-27'
         run: |
           curl -fsSL --tlsv1.3 https://sh.rustup.rs | bash -s -- -vy --no-modify-path
           realpath ~/.cargo/bin >> "$GITHUB_PATH"
       - id: rustup-nightly
         name: Install nightly Rust toolchain (UNIX only)
-        if: matrix.platform == 'ubuntu-latest' || matrix.platform == 'macos-26'
+        if: matrix.platform == 'ubuntu-26.04' || matrix.platform == 'xcode-27'
         run: |
           rustup update nightly
           rustup default nightly
       - id: rustup-windows
         name: Install Rust (Windows only)
-        if: matrix.platform == 'windows-2025-vs2026'
+        if: matrix.platform == 'windows-latest'
         run: |
           rustup update nightly-msvc
           rustup default nightly-msvc
       - id: rust-macos
         name: Add macOS Rust targets (macOS only)
-        if: matrix.platform == 'macos-26'
+        if: matrix.platform == 'xcode-27'
         run: rustup target add aarch64-apple-darwin x86_64-apple-darwin
       - id: build
         name: Build app
@@ -299,21 +299,21 @@ jobs:
         working-directory: proxy
       - id: upload-linux
         name: Upload Linux artifact
-        if: matrix.platform == 'ubuntu-latest'
+        if: matrix.platform == 'ubuntu-26.04'
         uses: actions/upload-artifact@v7
         with:
           name: proxy-linux
           path: proxy/target/release/${{ github.event.repository.name }}-proxy
       - id: upload-windows
         name: Upload Windows artifact
-        if: matrix.platform == 'windows-2025-vs2026'
+        if: matrix.platform == 'windows-latest'
         uses: actions/upload-artifact@v7
         with:
           name: proxy-windows
           path: proxy/target/release/${{ github.event.repository.name }}-proxy.exe
       - id: upload-macos
         name: Upload macOS artifact
-        if: matrix.platform == 'macos-26'
+        if: matrix.platform == 'xcode-27'
         uses: actions/upload-artifact@v7
         with:
           name: proxy-macos
@@ -324,7 +324,7 @@ jobs:
     if: github.ref_type == 'tag'
     env:
       GH_TOKEN: ${{ github.token }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - id: checkout
         name: Check out repository
