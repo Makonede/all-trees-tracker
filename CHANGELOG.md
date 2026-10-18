@@ -8,6 +8,10 @@ and this project adheres to
 
 ## [Unreleased]
 
+- Fix a bug causing 4 bytes of memory to be leaked by the proxy each time a tree
+  is cut.
+- Update backend, frontend, and proxy dependencies.
+
 ## [1.0.1] - 2026-05-12
 
 ### Changed
