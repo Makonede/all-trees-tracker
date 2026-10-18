@@ -62,7 +62,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
       }>
         <Switch.Label class='text-lg'>{$t(`setting.${name}.off`)}</Switch.Label>
         <Switch.Control
-          class='preset-filled-surface-100-900 data-[state=checked]:preset-filled-primary-500'
+          class='cursor-pointer preset-filled-surface-100-900 data-[state=checked]:preset-filled-primary-500'
         >
           <Switch.Thumb />
         </Switch.Control>

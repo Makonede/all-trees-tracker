@@ -111,7 +111,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
       {#if i}<hr class='hr border-surface-300-700'>{/if}
       <Accordion.Item value={filter}>
         <h3 class='text-lg'>
-          <Accordion.ItemTrigger class='flex justify-between items-center'>
+          <Accordion.ItemTrigger
+            class='flex justify-between items-center cursor-pointer'
+          >
             <div class='flex gap-4'>
               <Icon />
               {$t(name)}

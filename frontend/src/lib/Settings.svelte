@@ -172,7 +172,9 @@ this program. If not, see <https://www.gnu.org/licenses/>.
       >
         {#each categoryButtons as { name, color, disabled, callback } (name)}
           <button
-            {disabled} class='{color} btn btn-lg' onclick={callback}
+            {disabled}
+            class='{color} btn btn-lg cursor-pointer disabled:cursor-not-allowed'
+            onclick={callback}
           >{$t(`setting.button.${name}`)}</button>
         {/each}
       </div>

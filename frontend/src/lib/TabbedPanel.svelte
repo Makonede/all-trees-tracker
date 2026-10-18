@@ -60,7 +60,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
     {@const Content = content}
     {@const Icon = icons[i].icon}
     {@const CLASS =
-      'flex p-2 w-full border-b-4 rounded-sm transition-colors duration-300'
+      'flex p-2 w-full border-b-4 rounded-sm transition-colors duration-300 cursor-pointer'
     }
     <TabItem
       open={!i} activeClass='{CLASS} text-primary-500'
