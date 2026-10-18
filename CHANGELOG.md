@@ -8,6 +8,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-10-18
+
 - Fix a bug causing 4 bytes of memory to be leaked by the proxy each time a tree
   is cut.
 - Update backend, frontend, and proxy dependencies.
@@ -35,6 +37,7 @@ and this project adheres to
 - Proxy, a CLI program for Linux, Windows, and macOS that proxies the connection
   between the backend and web frontend.
 
-[Unreleased]: https://github.com/Makonede/all-trees-tracker/compare/1.0.1...HEAD
+[Unreleased]: https://github.com/Makonede/all-trees-tracker/compare/1.0.2...HEAD
+[1.0.2]: https://github.com/Makonede/all-trees-tracker/compare/1.0.1...1.0.2
 [1.0.1]: https://github.com/Makonede/all-trees-tracker/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/Makonede/all-trees-tracker/releases/tag/1.0.0
